@@ -1,12 +1,13 @@
 <template>
     <nav class="menu-bar">
         <div class="left-section">
-            <button class="join-btn">Join now</button>
-            <span class="login-text">Login</span>
-        </div>
+            <button class="join-btn">Únete ahora</button>
+            </div>
 
         <div class="center-section">
-            <span class="brand">SUNNA PILATES</span>
+            <a href="/" class="brand">
+                <img src="../assets/images/logo-navbar.png" alt="SUNNA Pilates" class="logo" />
+            </a>
         </div>
 
         <div class="right-section">
@@ -25,6 +26,7 @@ export default {
 
 <style scoped>
 .menu-bar {
+    border-radius: 0 0 15px 15px;
     display: flex;
     justify-content: space-between;
     align-items: center;
@@ -54,22 +56,26 @@ export default {
 }
 
 .brand {
-    font-size: 1.5rem;
-    font-weight: bold;
-    text-transform: uppercase;
+    text-decoration: none;
+    color: var(--black-main);
+    display: flex;
+}
+
+.logo {
+    height: 40px;
+    width: auto;
 }
 
 .join-btn {
     padding: 0.6rem 1.5rem;
     border-radius: 2rem;
-    background-color: var(--black-main);
+    background-color: var(--corporative-color);
     color: var(--white-main);
-    font-size: 0.9rem;
-    border: 1px solid var(--black-main);
+    font-size: 1rem;
+    border: 1px solid var(--corporative-color);
     cursor: pointer;
-    font-weight: 500;
-    transition: all 0.3s ease;
     letter-spacing: 0.5px;
+    transition: all 0.3s ease;
 }
 
 .join-btn:hover {
@@ -79,7 +85,8 @@ export default {
 
 .login-text, .about-text {
     cursor: pointer;
-    font-size: 0.9rem;
+    font-size: 1rem;
+    font-weight: 300;
     position: relative;
     padding-bottom: 2px;
 }
@@ -92,7 +99,6 @@ export default {
     bottom: 0;
     left: 0;
     background-color: var(--black-main);
-    transition: width 0.3s ease;
 }
 
 .login-text:hover::after, .about-text:hover::after {

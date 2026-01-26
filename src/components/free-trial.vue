@@ -1,7 +1,7 @@
 <template>
     <div class="hero-container">
-        <h1 class="slogan">Lorem ipsum dolor sit amet consectetur adipiscing elit</h1>
-        <button class="trial-btn">Free trial</button>
+        <h1 class="slogan">Tu cuerpo. Tu ritmo. Tu entrenamiento.</h1>
+        <button class="trial-btn">Comienza tu prueba gratuita</button>
     </div>
 </template>
 
@@ -13,6 +13,8 @@ export default {
 
 <style scoped>
 .hero-container {
+    margin-top: 15px;
+    border-radius: 20px;
     display: flex;
     flex-direction: column;
     justify-content: center;
@@ -20,29 +22,32 @@ export default {
     height: 80vh;
     text-align: center;
     position: relative;
-    background-image: url('../assets/free-trial.jpg');
+    background-image: url('../assets/images/home-sunna.jpg');
     background-size: cover;
     background-position: center;
 }
 
 .slogan {
+    font-style: italic;
+    font-weight: bold;
     font-size: 3rem;
+    font-weight: 500;
     margin-bottom: 2rem;
-    font-weight: 300;
-    color: var(--black-main);
+    color: var(--white-main);
 }
 
 .trial-btn {
     padding: 1rem 2.5rem;
     border-radius: 2rem;
-    background-color: var(--black-main);
+    background-color: transparent;
     color: var(--white-main);
-    font-size: 1.2rem;
-    border: 1px solid var(--black-main);
+    font-size: 1rem;
+    border: 1px solid var(--white-main);
     cursor: pointer;
     font-weight: 500;
     transition: all 0.3s ease;
     position: absolute;
-    bottom: 2rem;
+    bottom: 12rem;
 }
+
 </style>
