@@ -1,6 +1,6 @@
 <template>
-    <div class="hero-container">
-        <h1 class="slogan">Tu cuerpo. Tu ritmo. Tu entrenamiento.</h1>
+    <div class="image-container">
+        <h2 class="slogan">Tu cuerpo. Tu ritmo. Tu entrenamiento.</h2>
         <button class="trial-btn">Comienza tu prueba gratuita</button>
     </div>
 </template>
@@ -12,9 +12,9 @@ export default {
 </script>
 
 <style scoped>
-.hero-container {
-    margin-top: 15px;
-    border-radius: 20px;
+.image-container {
+    margin: 15px 15px 0 15px;
+    /*border-radius: 20px;*/
     display: flex;
     flex-direction: column;
     justify-content: center;
@@ -39,8 +39,8 @@ export default {
 .trial-btn {
     padding: 1rem 2.5rem;
     border-radius: 2rem;
-    background-color: transparent;
-    color: var(--white-main);
+    background-color: var(--white-main);
+    color: var(--black-main);
     font-size: 1rem;
     border: 1px solid var(--white-main);
     cursor: pointer;

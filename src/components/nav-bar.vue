@@ -1,55 +1,85 @@
 <template>
     <nav class="menu-bar">
-        <div class="left-section">
-            <button class="join-btn">Únete ahora</button>
-            </div>
+        <button class="hamburger-btn" @click="toggleMenu" aria-label="Menú">
+            <span class="bar"></span>
+            <span class="bar"></span>
+            <span class="bar"></span>
+        </button>
 
-        <div class="center-section">
+        <div class="logo-section">
             <a href="/" class="brand">
+                <!-- SUNNA PILATES --> 
                 <img src="../assets/images/logo-navbar.png" alt="SUNNA Pilates" class="logo" />
             </a>
         </div>
 
-        <div class="right-section">
-            <span class="about-text">Nuestro estudio</span>
+        <div class="menu-items" :class="{ 'open': isMenuOpen }">
             <span class="about-text">Quienes somos</span>
             <span class="about-text">Contacto</span>
+            <span class="about-text">Únete ahora</span>
+        <!-- <button class="join-btn">Únete ahora</button> -->
         </div>
     </nav>
 </template>
 
 <script lang="ts">
 export default {
-    name: 'MenuBar'
+    name: 'MenuBar',
+    data() {
+        return {
+            isMenuOpen: false
+        }
+    },
+    methods: {
+        toggleMenu() {
+            this.isMenuOpen = !this.isMenuOpen;
+        }
+    }
 }
 </script>
 
 <style scoped>
 .menu-bar {
-    border-radius: 0 0 15px 15px;
+    /*border-radius: 0 0 15px 15px; */
     display: flex;
     justify-content: space-between;
     align-items: center;
-    padding: 1rem 2rem;
+    padding: 20px 15px 20px 15px;
     background-color: var(--white-main);
     color: var(--black-main);
     position: relative;
     box-shadow: 0 2px 5px rgba(0, 0, 0, 0.05);
+    z-index: 100;
 }
 
-.left-section {
+.hamburger-btn {
+    display: none;
+    flex-direction: column;
+    justify-content: space-between;
+    width: 30px;
+    height: 21px;
+    background: transparent;
+    border: none;
+    cursor: pointer;
+    padding: 0;
+    z-index: 10;
+}
+
+.bar {
+    width: 100%;
+    height: 3px;
+    background-color: var(--black-main);
+    border-radius: 10px;
+    transition: all 0.3s linear;
+}
+
+.logo-section {
     display: flex;
     align-items: center;
     gap: 1.5rem;
 }
 
-.center-section {
-    position: absolute;
-    left: 50%;
-    transform: translateX(-50%);
-}
-
-.right-section {
+.menu-items {
     display: flex;
     align-items: center;
     gap: 1.5rem;
@@ -103,5 +133,37 @@ export default {
 
 .login-text:hover::after, .about-text:hover::after {
     width: 100%;
+}
+
+@media (max-width: 768px) {
+    .hamburger-btn {
+        display: flex;
+    }
+
+    .logo-section {
+        position: absolute;
+        left: 50%;
+        transform: translateX(-50%);
+    }
+
+    .menu-items {
+        position: absolute;
+        top: 100%;
+        left: 0;
+        width: 100%;
+        background-color: var(--white-main);
+        flex-direction: column;
+        align-items: center;
+        padding: 0;
+        max-height: 0;
+        overflow: hidden;
+        transition: max-height 0.3s ease-in-out, padding 0.3s ease-in-out;
+        box-shadow: 0 5px 5px rgba(0, 0, 0, 0.05);
+    }
+
+    .menu-items.open {
+        max-height: 300px;
+        padding: 20px 0;
+    }
 }
 </style>
