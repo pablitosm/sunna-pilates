@@ -68,6 +68,7 @@ export default {
 @media (max-width: 768px) {
     .join-now-container {
         flex-direction: column;
+        gap: 0px;
     }
     
     .text-column {
