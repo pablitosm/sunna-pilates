@@ -1,7 +1,7 @@
 <template>
     <div class="join-now-container">
         <div class="text-column">
-          <h2 class="title">Comienza tu prueba gratuita.</h2>
+          <h2 class="title">Lorem ipsum dolor sit amet, consectetur.</h2>
           <button class="join-btn">Únete ahora</button>
         </div>
         <div class="image-column">
