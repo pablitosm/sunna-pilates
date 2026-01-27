@@ -1,7 +1,7 @@
 <template>
     <div class="image-container">
         <h2 class="slogan">Tu cuerpo. Tu ritmo. Tu entrenamiento.</h2>
-        <button class="trial-btn">Comienza tu prueba gratuita</button>
+        <!--<button class="trial-btn">Comienza tu prueba gratuita</button>-->
     </div>
 </template>
 
@@ -14,7 +14,7 @@ export default {
 <style scoped>
 .image-container {
     margin: 15px 15px 0 15px;
-    /*border-radius: 20px;*/
+    border-radius: 10px;
     display: flex;
     flex-direction: column;
     justify-content: center;
@@ -22,6 +22,7 @@ export default {
     height: 80vh;
     text-align: center;
     position: relative;
+    border: 1px solid var(--black-main);
     background-image: url('../assets/images/home-sunna.jpg');
     background-size: cover;
     background-position: center;
@@ -31,7 +32,7 @@ export default {
     font-style: italic;
     font-weight: bold;
     font-size: 3rem;
-    font-weight: 500;
+    font-weight: 300;
     margin-bottom: 2rem;
     color: var(--white-main);
 }
@@ -42,10 +43,9 @@ export default {
     background-color: var(--white-main);
     color: var(--black-main);
     font-size: 1rem;
-    border: 1px solid var(--white-main);
+    border: 1px solid var(--black-main);
     cursor: pointer;
     font-weight: 500;
-    transition: all 0.3s ease;
     position: absolute;
     bottom: 12rem;
 }

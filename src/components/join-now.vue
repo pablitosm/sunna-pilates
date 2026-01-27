@@ -1,7 +1,8 @@
 <template>
     <div class="join-now-container">
         <div class="text-column">
-
+          <h2 class="title">Comienza tu prueba gratuita.</h2>
+          <button class="join-btn">Únete ahora</button>
         </div>
         <div class="image-column">
             <img src="../assets/images/join-now.jpg" alt="Free Trial" class="image" />
@@ -16,21 +17,31 @@ export default {
 </script>
 
 <style scoped>
+
 .join-now-container {
     display: flex;
     flex-direction: row;
     padding: 15px;
-    gap: 40px;
     align-items: center;
     justify-content: center;
+    max-height: 80vh;
 }
 
 .text-column {
+    margin-right: 15px;
     flex: 1;
     display: flex;
     flex-direction: column;
-    align-items: flex-start;
-    gap: 20px;
+    justify-content: center;
+    align-items: center;
+    text-align: center;
+}
+
+.title {
+    font-size: 2.2rem;
+    font-weight: 300;
+    margin-bottom: 30px;
+    color: var(--black-main);
 }
 
 .text {
@@ -41,39 +52,56 @@ export default {
 
 .join-btn {
     padding: 1rem 2.5rem;
-    background-color: var(--corporative-color);
+    border-radius: 10px;
+    background-color: var(--black-main);
     color: var(--white-main);
     font-size: 1.1rem;
-    border: 1px solid var(--corporative-color);
     cursor: pointer;
-    transition: all 0.3s ease;
     font-weight: 500;
-}
-
-.join-btn:hover {
-    background-color: transparent;
-    color: var(--corporative-color);
 }
 
 .image-column {
     flex: 1;
+    max-height: 80vh;
 }
 
 .image {
+    border-radius: 10px;
+    box-sizing: border-box;
+    border: 1px solid var(--black-main);
     width: 100%;
-    height: auto;
+    max-height: 80vh;
     object-fit: cover;
 }
 
 @media (max-width: 768px) {
     .join-now-container {
         flex-direction: column;
-        gap: 0px;
+        padding: 15px;
+        max-height: none;
     }
-    
+
     .text-column {
+        margin-right: 0;
+        margin-bottom: 15px;
         align-items: center;
         text-align: center;
     }
+
+    .title {
+        margin-bottom: 15px;
+        font-size: 1.8rem;
+    }
+
+    .image-column {
+        width: 100%;
+        max-height: none;
+    }
+
+    .image {
+        width: 100%;
+        max-height: none;
+    }
 }
+
 </style>

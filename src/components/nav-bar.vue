@@ -8,7 +8,7 @@
 
         <div class="logo-section">
             <a href="/" class="brand">
-                <!-- SUNNA PILATES --> 
+                <!-- SUNNA PILATES -->
                 <img src="../assets/images/logo-navbar.png" alt="SUNNA Pilates" class="logo" />
             </a>
         </div>
@@ -40,7 +40,6 @@ export default {
 
 <style scoped>
 .menu-bar {
-    /*border-radius: 0 0 15px 15px; */
     display: flex;
     justify-content: space-between;
     align-items: center;
@@ -48,7 +47,7 @@ export default {
     background-color: var(--white-main);
     color: var(--black-main);
     position: relative;
-    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.05);
+    border-bottom: 1px solid var(--black-main);
     z-index: 100;
 }
 
@@ -113,7 +112,8 @@ export default {
     color: var(--black-main);
 }
 
-.login-text, .about-text {
+.login-text,
+.about-text {
     cursor: pointer;
     font-size: 1rem;
     font-weight: 300;
@@ -121,19 +121,23 @@ export default {
     padding-bottom: 2px;
 }
 
-.login-text::after, .about-text::after {
+.login-text::after,
+.about-text::after {
     content: '';
     position: absolute;
-    width: 0;
-    height: 1px;
-    bottom: 0;
     left: 0;
+    bottom: 0;
+    width: 100%;
+    height: 1px;
     background-color: var(--black-main);
+    transform: scaleX(0);
 }
 
-.login-text:hover::after, .about-text:hover::after {
-    width: 100%;
+.login-text:hover::after,
+.about-text:hover::after {
+    transform: scaleX(1);
 }
+
 
 @media (max-width: 768px) {
     .hamburger-btn {

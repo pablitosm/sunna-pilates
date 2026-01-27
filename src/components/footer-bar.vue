@@ -3,7 +3,7 @@
         <div class="footer-content">
             <div class="brand-section">
                 <h2 class="brand-name">SUNNA PILATES</h2>
-            </div>            
+            </div>
             <div class="divider"></div>
             <nav class="nav-section">
                 <a href="#" class="footer-link">Inicio</a>
@@ -24,7 +24,7 @@ export default {
 <style scoped>
 .footer {
     padding: 50px;
-    background-color: var(--white-main, #ffffff);
+    background-color: var(--white-main);
 }
 
 .footer-content {
@@ -38,7 +38,7 @@ export default {
 .brand-name {
     font-size: 1.2rem;
     font-weight: 600;
-    color: var(--black-main, #000000);
+    color: var(--black-main);
     margin: 0;
     letter-spacing: 0.5px;
     white-space: nowrap;
@@ -47,7 +47,7 @@ export default {
 .divider {
     width: 1px;
     height: 24px;
-    background-color: var(--black-main, #000000);
+    background-color: var(--black-main);
     opacity: 0.2;
 }
 
@@ -59,15 +59,26 @@ export default {
 }
 
 .footer-link {
+    position: relative;
     text-decoration: none;
-    color: var(--black-main, #000000);
+    color: var(--black-main);
     font-size: 0.95rem;
     font-weight: 400;
-    transition: opacity 0.2s ease;
 }
 
-.footer-link:hover {
-    opacity: 0.6;
+.footer-link::after {
+    content: '';
+    position: absolute;
+    left: 0;
+    bottom: -2px;
+    width: 100%;
+    height: 1px;
+    background-color: var(--black-main);
+    transform: scaleX(0);
+}
+
+.footer-link:hover::after {
+    transform: scaleX(1);
 }
 
 @media (max-width: 768px) {
