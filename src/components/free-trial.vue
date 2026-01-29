@@ -13,7 +13,7 @@ export default {
 
 <style scoped>
 .image-container {
-    margin: 15px 15px 0 15px;
+    margin: 30px 30px 0 30px;
     border-radius: 10px;
     display: flex;
     flex-direction: column;
@@ -23,7 +23,7 @@ export default {
     text-align: center;
     position: relative;
     border: 1px solid var(--black-main);
-    background-image: url('../assets/images/home-sunna.jpg');
+    background-image: url('https://placehold.co/1920x1080');
     background-size: cover;
     background-position: center;
 }

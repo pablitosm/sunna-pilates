@@ -9,7 +9,7 @@
         <div class="logo-section">
             <a href="/" class="brand">
                 <!-- SUNNA PILATES -->
-                <img src="../assets/images/logo-navbar.png" alt="SUNNA Pilates" class="logo" />
+                <img src="../assets/images/nav-bar/logo-navbar.png" alt="SUNNA Pilates" class="logo" />
             </a>
         </div>
 

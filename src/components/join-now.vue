@@ -5,7 +5,7 @@
           <button class="join-btn">Únete ahora</button>
         </div>
         <div class="image-column">
-            <img src="../assets/images/join-now.jpg" alt="Free Trial" class="image" />
+            <img src="https://placehold.co/800x1200" alt="Free Trial" class="image" />
         </div>
     </div>
 </template>
@@ -21,14 +21,14 @@ export default {
 .join-now-container {
     display: flex;
     flex-direction: row;
-    padding: 15px;
+    padding: 30px;
     align-items: center;
     justify-content: center;
     max-height: 80vh;
 }
 
 .text-column {
-    margin-right: 15px;
+    margin-right: 30px;
     flex: 1;
     display: flex;
     flex-direction: column;
@@ -77,19 +77,19 @@ export default {
 @media (max-width: 768px) {
     .join-now-container {
         flex-direction: column;
-        padding: 15px;
+        padding: 30px;
         max-height: none;
     }
 
     .text-column {
         margin-right: 0;
-        margin-bottom: 15px;
+        margin-bottom: 30px;
         align-items: center;
         text-align: center;
     }
 
     .title {
-        margin-bottom: 15px;
+        margin-bottom: 30px;
         font-size: 1.8rem;
     }
 
