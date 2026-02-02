@@ -1,7 +1,10 @@
 <template>
     <div class="image-container">
-        <h2 class="slogan">Tu cuerpo. Tu ritmo. Tu entrenamiento.</h2>
-        <!--<button class="trial-btn">Comienza tu prueba gratuita</button>-->
+        <div class="content-wrapper">
+            <h2 class="slogan">Pilates flexible. Sin horarios fijos.</h2>
+            <p class="description">Un sistema semi-autónomo que se adapta a tu agenda. Reserva tu hueco, ven cuando quieras y entrena a tu propio ritmo con nuestra supervisión.</p>
+            <button class="trial-btn">Comienza tu prueba gratuita</button>
+        </div>
     </div>
 </template>
 
@@ -18,14 +21,24 @@ export default {
     display: flex;
     flex-direction: column;
     justify-content: center;
-    align-items: center;
+    justify-content: flex-start;
+    align-items: flex-start;
     height: 80vh;
-    text-align: center;
     position: relative;
     border: 1px solid var(--black-main);
-    background-image: url('https://placehold.co/1920x1080');
+    background-image: url('../assets/images/free-trial/home-sunna-1.jpg');
     background-size: cover;
     background-position: center;
+    padding: 0 60px;
+    padding: 100px 60px;
+}
+
+.content-wrapper {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 20px;
+    max-width: 50%;
 }
 
 .slogan {
@@ -33,21 +46,29 @@ export default {
     font-weight: bold;
     font-size: 3rem;
     font-weight: 300;
-    margin-bottom: 2rem;
-    color: var(--white-main);
+    color: var(--black-main);
+    text-align: left;
+    margin: 0;
+}
+
+.description {
+    font-size: 1.2rem;
+    color: var(--black-main);
+    font-weight: 300;
+    text-align: left;
+    margin: 0;
 }
 
 .trial-btn {
-    padding: 1rem 2.5rem;
+    padding: 1.5rem 3rem;
     border-radius: 2rem;
     background-color: var(--white-main);
     color: var(--black-main);
-    font-size: 1rem;
-    border: 1px solid var(--black-main);
+    font-size: 1.2rem;
+    border: none;
     cursor: pointer;
     font-weight: 500;
-    position: absolute;
-    bottom: 12rem;
+    transition: transform 0.3s ease;
 }
 
 </style>

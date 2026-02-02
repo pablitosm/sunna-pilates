@@ -5,7 +5,8 @@
           <button class="join-btn">Únete ahora</button>
         </div>
         <div class="image-column">
-            <img src="https://placehold.co/800x1200" alt="Free Trial" class="image" />
+        <img src="../assets/images/join-now/join-now.jpg" alt="Free Trial" class="image" />
+        <!--<img src="https://placehold.co/800x1200" alt="Free Trial" class="image" /> -->
         </div>
     </div>
 </template>

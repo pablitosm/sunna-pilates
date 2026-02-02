@@ -8,16 +8,16 @@
 
         <div class="logo-section">
             <a href="/" class="brand">
-                <!-- SUNNA PILATES -->
-                <img src="../assets/images/nav-bar/logo-navbar.png" alt="SUNNA Pilates" class="logo" />
+                SUNNA PILATES
+                <!-- <img src="../assets/images/nav-bar/logo-navbar.png" alt="SUNNA Pilates" class="logo" /> -->
             </a>
         </div>
 
         <div class="menu-items" :class="{ 'open': isMenuOpen }">
             <span class="about-text">Quienes somos</span>
             <span class="about-text">Contacto</span>
-            <span class="about-text">Únete ahora</span>
-        <!-- <button class="join-btn">Únete ahora</button> -->
+            <!-- <span class="about-text">Únete ahora</span> -->
+            <button class="join-btn">Únete ahora</button>
         </div>
     </nav>
 </template>
@@ -88,6 +88,7 @@ export default {
     text-decoration: none;
     color: var(--black-main);
     display: flex;
+    font-size: 1.2rem;
 }
 
 .logo {
@@ -97,7 +98,7 @@ export default {
 
 .join-btn {
     padding: 0.6rem 1.5rem;
-    border-radius: 2rem;
+    border-radius: 1rem;
     background-color: var(--corporative-color);
     color: var(--white-main);
     font-size: 1rem;
