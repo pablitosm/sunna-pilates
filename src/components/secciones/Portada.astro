@@ -1,0 +1,224 @@
+---
+import CtaButton from '../CtaButton.astro';
+import PhotoSlot from '../PhotoSlot.astro';
+import type { Ajustes, Home } from '../../lib/content';
+
+interface Props {
+  ajustes: Ajustes;
+  home: Home;
+}
+const { ajustes, home } = Astro.props;
+const { portada } = home;
+const conFecha = ajustes.estado === 'preapertura' && ajustes.fechaApertura;
+const lugar = conFecha
+  ? `${ajustes.direccion.ciudad} · ${portada.abrimos} ${ajustes.fechaApertura}`
+  : ajustes.direccion.ciudad;
+---
+
+<section id="portada" class:list={['portada', { 'portada--foto': portada.foto }]} aria-labelledby="portada-titulo">
+  {
+    portada.foto ? (
+      <div class="portada__fondo" aria-hidden="true">
+        <PhotoSlot foto={portada.foto} loading="eager" sizes="100vw" class="portada__foto" />
+        <div class="portada__velo" />
+      </div>
+    ) : (
+      <div class="portada__portal" aria-hidden="true">
+        <span class="portada__sol" />
+      </div>
+    )
+  }
+  <div class="portada__halo" aria-hidden="true"></div>
+
+  <div class="portada__tarjeta vidrio">
+    <p class="etiqueta portada__lugar">{lugar}</p>
+    <h1 id="portada-titulo" class="t-display portada__titulo">{portada.titular}</h1>
+    <p class="portada__subtitulo">{portada.subtitulo}</p>
+    <div class="portada__acciones">
+      <CtaButton ajustes={ajustes} home={home} />
+      <a class="portada__secundario" href="#como-funciona">{home.botones.secundario}</a>
+    </div>
+  </div>
+</section>
+
+<style>
+  .portada {
+    position: relative;
+    isolation: isolate;
+    min-height: max(100svh, 46rem);
+    max-height: 60rem;
+    display: flex;
+    align-items: center;
+    padding: 7.5rem var(--gutter) 4rem;
+    overflow: hidden;
+    background: linear-gradient(180deg, var(--crema), var(--tostado));
+  }
+
+  /* Con foto real */
+  .portada__fondo {
+    position: absolute;
+    inset: 0;
+    z-index: -3;
+  }
+
+  .portada :global(.portada__foto) {
+    position: absolute;
+    inset: 0;
+  }
+
+  .portada__velo {
+    position: absolute;
+    inset: 0;
+    background: linear-gradient(
+      rgb(253 246 238 / 0.62),
+      rgb(253 246 238 / 0.34) 45%,
+      rgb(253 246 238 / 0.86)
+    );
+  }
+
+  /* Sin foto: el portal (arco) con el sol dentro */
+  .portada__portal {
+    position: absolute;
+    z-index: -2;
+    right: var(--gutter);
+    bottom: 0;
+    width: clamp(20rem, 32vw, 30rem);
+    height: min(82%, 44rem);
+    border-radius: 999px 999px 0 0;
+    background: linear-gradient(180deg, var(--n50) 0%, var(--n100) 55%, var(--n200) 100%);
+    overflow: hidden;
+  }
+
+  .portada__sol {
+    position: absolute;
+    left: 50%;
+    top: 22%;
+    width: 62%;
+    aspect-ratio: 1;
+    translate: -50% 0;
+    border-radius: 999px;
+    background: radial-gradient(
+      closest-side,
+      rgb(255 241 230 / 0.95) 0%,
+      var(--n200) 40%,
+      var(--n300) 64%,
+      var(--n500) 86%,
+      var(--n500) 100%
+    );
+  }
+
+  /* Halo de sol: radial 500 → 200 → crema, sin borde. Respira 14 s. */
+  .portada__halo {
+    position: absolute;
+    z-index: -1;
+    left: 50%;
+    top: 7.5rem;
+    width: min(77.5rem, 160vw);
+    height: 56.25rem;
+    translate: -50% 0;
+    pointer-events: none;
+    background: radial-gradient(
+      closest-side,
+      rgb(255 130 53 / 0.5) 0%,
+      rgb(255 167 107 / 0.32) 34%,
+      rgb(255 196 154 / 0.16) 58%,
+      rgb(253 246 238 / 0) 100%
+    );
+    animation: respirar 14s ease-in-out infinite;
+  }
+
+  @keyframes respirar {
+    0%,
+    100% {
+      transform: scale(1);
+      opacity: 0.92;
+    }
+    50% {
+      transform: scale(1.06);
+      opacity: 1;
+    }
+  }
+
+  .portada__tarjeta {
+    width: min(100%, 47.25rem);
+    padding: clamp(1.75rem, 0.5rem + 4vw, 3.5rem) clamp(1.5rem, 0.5rem + 4vw, 3.5rem) clamp(1.75rem, 1rem + 2vw, 2.75rem);
+    border-radius: var(--r-l);
+  }
+
+  .portada__lugar {
+    margin-bottom: 1.625rem;
+  }
+
+  .portada__titulo {
+    margin-bottom: 1.375rem;
+    max-width: 11ch;
+  }
+
+  /* Titular por líneas con máscara (lo prepara el script de movimiento) */
+  :global(.js-lineas) .portada__titulo {
+    visibility: hidden;
+    animation: mostrar-titular 0s 1.4s forwards;
+  }
+
+  @keyframes mostrar-titular {
+    to {
+      visibility: visible;
+    }
+  }
+
+  .portada__titulo :global(.linea) {
+    display: block;
+    overflow: hidden;
+    padding-bottom: 0.08em;
+    margin-bottom: -0.08em;
+  }
+
+  .portada__titulo :global(.linea__in) {
+    display: block;
+    animation: linea-sube 0.9s var(--ease) both;
+  }
+
+  @keyframes linea-sube {
+    from {
+      transform: translateY(105%);
+    }
+  }
+
+  .portada__subtitulo {
+    max-width: 52ch;
+    margin-bottom: 2.25rem;
+    font-size: 1.125rem;
+    line-height: 1.6;
+  }
+
+  .portada__acciones {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: 1.25rem 2rem;
+  }
+
+  .portada__secundario {
+    font-size: 1rem;
+    color: var(--n900);
+  }
+
+  @media (max-width: 56.25rem) {
+    .portada {
+      align-items: flex-end;
+      max-height: none;
+      /* Hueco para la barra fija inferior */
+      padding: 6.5rem 0.75rem calc(5.5rem + env(safe-area-inset-bottom));
+    }
+    .portada__portal {
+      right: 50%;
+      translate: 50% 0;
+      width: min(80vw, 22rem);
+      height: 70%;
+    }
+    /* En móvil el botón está en la barra fija inferior */
+    .portada__acciones > :global(.cta) {
+      display: none;
+    }
+  }
+</style>

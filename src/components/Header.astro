@@ -1,0 +1,123 @@
+---
+import Logo from './Logo.astro';
+import CtaButton from './CtaButton.astro';
+import MobileMenu from './vue/MobileMenu.vue';
+import type { Ajustes, Home } from '../lib/content';
+import { whatsappUrl } from '../lib/content';
+
+interface Props {
+  ajustes: Ajustes;
+  home: Home;
+  inicio?: string;
+}
+const { ajustes, home, inicio = '' } = Astro.props;
+const links = home.menu.map((m) => ({ texto: m.texto, href: `${inicio}#${m.ancla}` }));
+---
+
+<header class="cabecera" data-cabecera>
+  <div class="cabecera__pildora vidrio">
+    <a class="cabecera__logo" href={inicio || '/'} aria-label="SUNNA, ir al inicio">
+      <Logo label="SUNNA" />
+    </a>
+
+    <nav class="cabecera__nav" aria-label="Principal">
+      <ul role="list">
+        {
+          links.map((l) => (
+            <li>
+              <a href={l.href}>{l.texto}</a>
+            </li>
+          ))
+        }
+      </ul>
+    </nav>
+
+    <CtaButton ajustes={ajustes} home={home} corto tamano="compacto" class="cabecera__cta" />
+
+    <MobileMenu
+      client:media="(max-width: 56.25rem)"
+      links={links}
+      whatsapp={whatsappUrl(ajustes.contacto.whatsapp)}
+      whatsappTexto={home.panel.whatsapp}
+      instagram={ajustes.contacto.instagram}
+      cerrar={home.panel.cerrar}
+    />
+  </div>
+</header>
+
+<style>
+  .cabecera {
+    position: fixed;
+    inset: 0 0 auto;
+    z-index: 40;
+    padding: 1rem var(--gutter-cabecera, 2.5rem) 0;
+    pointer-events: none;
+  }
+
+  .cabecera__pildora {
+    pointer-events: auto;
+    display: flex;
+    align-items: center;
+    gap: 2rem;
+    width: min(100%, 85rem);
+    margin-inline: auto;
+    padding: 0.75rem 0.875rem 0.75rem 1.625rem;
+    border-radius: var(--r-pill);
+    transition: width 0.5s var(--ease);
+  }
+
+  /* Al bajar se compacta la píldora; el logo mantiene su tamaño */
+  .es-compacta .cabecera__pildora {
+    width: min(100%, 64rem);
+  }
+
+  .cabecera__logo {
+    flex: none;
+    display: block;
+    height: 26px;
+  }
+
+  .cabecera__logo :global(.logo) {
+    width: auto;
+    height: 100%;
+  }
+
+  .cabecera__nav {
+    margin-inline: 0.875rem auto;
+  }
+
+  .cabecera__nav ul {
+    display: flex;
+    gap: 1.625rem;
+  }
+
+  .cabecera__nav a {
+    padding-bottom: 2px;
+    color: var(--tinta);
+    font-size: 0.9375rem;
+    text-decoration: none;
+    border-bottom: 1.5px solid transparent;
+    transition: border-color 0.22s var(--ease);
+  }
+
+  .cabecera__nav a:hover {
+    border-bottom-color: var(--n500);
+  }
+
+  @media (max-width: 56.25rem) {
+    .cabecera {
+      padding: 0.75rem 0.75rem 0;
+    }
+    .cabecera__pildora {
+      padding: 0.375rem 0.375rem 0.375rem 1.25rem;
+      justify-content: space-between;
+    }
+    .cabecera__nav,
+    .cabecera :global(.cabecera__cta) {
+      display: none;
+    }
+    .cabecera__logo {
+      height: 22px;
+    }
+  }
+</style>

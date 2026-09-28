@@ -1,0 +1,152 @@
+---
+import '../styles/global.css';
+import Header from '../components/Header.astro';
+import Footer from '../components/Footer.astro';
+import MobileBar from '../components/MobileBar.astro';
+import BookingPanel from '../components/vue/BookingPanel.vue';
+import CookieConsent from '../components/vue/CookieConsent.vue';
+import DevCursorToggle from '../components/DevCursorToggle.astro';
+import Logo from '../components/Logo.astro';
+import { getSite, mapsUrl, whatsappUrl, type Lang } from '../lib/content';
+
+interface Props {
+  titulo?: string;
+  descripcion?: string;
+  lang?: Lang;
+  inicio?: string;
+  indexar?: boolean;
+}
+const { titulo, descripcion, lang = 'es', inicio = '', indexar = true } = Astro.props;
+const { ajustes, home } = await getSite(lang);
+
+const title = titulo ? `${titulo} · SUNNA` : ajustes.seo.titulo;
+const description = descripcion ?? ajustes.seo.descripcion;
+const canonical = Astro.site ? new URL(Astro.url.pathname, Astro.site).href : undefined;
+const wa = whatsappUrl(ajustes.contacto.whatsapp);
+const hayMedicion = Boolean(ajustes.medicion.googleAnalyticsId || ajustes.medicion.metaPixelId);
+
+// Datos estructurados de negocio local (SEO local).
+const negocio = {
+  '@context': 'https://schema.org',
+  '@type': 'ExerciseGym',
+  name: 'SUNNA Pilates',
+  description: ajustes.seo.descripcion,
+  ...(Astro.site ? { url: Astro.site.href } : {}),
+  address: {
+    '@type': 'PostalAddress',
+    streetAddress: ajustes.direccion.calle,
+    postalCode: ajustes.direccion.codigoPostal,
+    addressLocality: ajustes.direccion.ciudad,
+    addressRegion: ajustes.direccion.provincia,
+    addressCountry: ajustes.direccion.pais,
+  },
+  hasMap: mapsUrl(ajustes),
+  ...(ajustes.contacto.telefonoAyuda ? { telephone: ajustes.contacto.telefonoAyuda } : {}),
+  ...(ajustes.contacto.email ? { email: ajustes.contacto.email } : {}),
+  sameAs: [ajustes.contacto.instagram, ajustes.contacto.googleBusiness].filter(Boolean),
+};
+---
+
+<!doctype html>
+<html lang={lang} data-cursor={ajustes.cursorPersonalizado ? 'on' : 'off'}>
+  <head>
+    <meta charset="utf-8" />
+    <script is:inline>
+      // Carga: solo la primera vez en la sesión. Titular por líneas: se prepara antes de pintar.
+      (function () {
+        var h = document.documentElement;
+        try {
+          if (sessionStorage.getItem('sunna-cargado')) h.classList.add('ya-cargado');
+          else sessionStorage.setItem('sunna-cargado', '1');
+        } catch (e) {}
+        if (!window.matchMedia('(prefers-reduced-motion: reduce)').matches) h.classList.add('js-lineas');
+      })();
+    </script>
+    {
+      import.meta.env.DEV && (
+        <script is:inline>
+          try {
+            var c = localStorage.getItem('sunna-cursor-dev');
+            if (c) document.documentElement.dataset.cursor = c;
+          } catch (e) {}
+        </script>
+      )
+    }
+    <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
+    <title>{title}</title>
+    <meta name="description" content={description} />
+    {canonical && <link rel="canonical" href={canonical} />}
+    {!indexar && <meta name="robots" content="noindex" />}
+    <meta name="theme-color" content="#fdf6ee" />
+    <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
+    <meta property="og:type" content="website" />
+    <meta property="og:locale" content="es_ES" />
+    <meta property="og:site_name" content="SUNNA Pilates" />
+    <meta property="og:title" content={title} />
+    <meta property="og:description" content={description} />
+    {canonical && <meta property="og:url" content={canonical} />}
+    <meta name="geo.region" content="ES-TF" />
+    <meta name="geo.placename" content={ajustes.direccion.ciudad} />
+    <script type="application/ld+json" set:html={JSON.stringify(negocio)} />
+  </head>
+  <body>
+    <div class="carga" aria-hidden="true">
+      <div class="carga__halo"></div>
+      <div class="carga__logo"><Logo label="" /></div>
+    </div>
+    <a class="saltar" href="#contenido">Saltar al contenido</a>
+    <Header ajustes={ajustes} home={home} inicio={inicio} />
+    <main id="contenido">
+      <slot />
+    </main>
+    <Footer ajustes={ajustes} home={home} />
+    <MobileBar ajustes={ajustes} home={home} />
+
+    <BookingPanel
+      client:idle
+      estado={ajustes.estado}
+      endpoint={ajustes.formulario.endpoint}
+      reservaUrl={ajustes.reservas.primeraSesionUrl}
+      whatsapp={wa}
+      instagram={ajustes.contacto.instagram}
+      privacidadUrl="/privacidad"
+      textos={home.panel}
+    />
+
+    {
+      hayMedicion && (
+        <CookieConsent
+          client:idle
+          gaId={ajustes.medicion.googleAnalyticsId}
+          pixelId={ajustes.medicion.metaPixelId}
+          cookiesUrl="/cookies"
+          textos={home.cookies}
+        />
+      )
+    }
+    <DevCursorToggle />
+    <script>
+      import '../scripts/cursor';
+      import '../scripts/movimiento';
+    </script>
+  </body>
+</html>
+
+<style>
+  .saltar {
+    position: fixed;
+    top: 0.75rem;
+    left: 0.75rem;
+    z-index: 60;
+    padding: 0.75rem 1.25rem;
+    border-radius: var(--r-pill);
+    background: var(--tinta);
+    color: var(--crema);
+    transform: translateY(-200%);
+    transition: transform 0.3s var(--ease);
+  }
+
+  .saltar:focus {
+    transform: translateY(0);
+  }
+</style>

@@ -1,0 +1,115 @@
+---
+/*
+ * Botón firma: la píldora fundida (Naranja 500 + círculo con flecha, algo
+ * más alto que la píldora). Abre el panel de reserva / lista de espera.
+ * Sin JavaScript, sigue el enlace.
+ */
+import Icon from './Icon.astro';
+import { ctaHref, type Ajustes, type Home } from '../lib/content';
+
+interface Props {
+  ajustes: Ajustes;
+  home: Home;
+  corto?: boolean;
+  tamano?: 'normal' | 'compacto';
+  class?: string;
+}
+const { ajustes, home, corto = false, tamano = 'normal', class: className } = Astro.props;
+const textos = corto ? home.botones.principalCorto : home.botones.principal;
+const label = textos[ajustes.estado];
+const href = ctaHref(ajustes);
+const externo = href.startsWith('http');
+---
+
+<a
+  class:list={['cta', `cta--${tamano}`, className]}
+  href={href}
+  data-open-booking
+  data-cur="cta"
+  {...externo ? { target: '_blank', rel: 'noopener' } : {}}
+>
+  <span class="cta__texto">{label}</span>
+  <span class="cta__circulo"><Icon name="flecha" size={tamano === 'compacto' ? 18 : 22} /></span>
+</a>
+
+<style>
+  .cta {
+    --alto: 4rem;
+    --circulo: 4.375rem;
+    display: inline-flex;
+    align-items: center;
+    height: var(--alto);
+    padding: 0 0.375rem 0 2.125rem;
+    border-radius: var(--r-pill);
+    background: var(--n500);
+    color: var(--tinta);
+    font-size: 1.1875rem;
+    font-weight: 400;
+    line-height: 1.2;
+    text-decoration: none;
+    white-space: nowrap;
+    box-shadow: var(--sombra-boton);
+    transition:
+      background-color 0.22s var(--ease),
+      box-shadow 0.22s var(--ease);
+    -webkit-tap-highlight-color: transparent;
+  }
+
+  .cta--compacto {
+    --alto: 3rem;
+    --circulo: 3.25rem;
+    padding: 0 0.25rem 0 1.375rem;
+    font-size: 0.9375rem;
+  }
+
+  .cta__circulo {
+    flex: none;
+    display: grid;
+    place-items: center;
+    width: var(--circulo);
+    height: var(--circulo);
+    margin-left: 1.25rem;
+    border-radius: 50%;
+    background: var(--n500);
+    box-shadow: inset 0 0 0 1px rgb(59 29 14 / 0.1);
+    transition:
+      transform 0.22s var(--ease),
+      background-color 0.22s var(--ease);
+  }
+
+  .cta--compacto .cta__circulo {
+    margin-left: 0.875rem;
+  }
+
+  @media (hover: hover) {
+    .cta:hover {
+      background: var(--n300);
+    }
+    .cta:hover .cta__circulo {
+      transform: translateX(6px);
+    }
+  }
+
+  .cta:active {
+    background: var(--n300);
+  }
+
+  .cta:focus-visible {
+    outline: 3px solid var(--n500);
+    outline-offset: 4px;
+    border-radius: var(--r-pill);
+  }
+
+  @media (max-width: 40rem) {
+    .cta--normal {
+      --alto: 3.5rem;
+      --circulo: 3.75rem;
+      padding-left: 1.5rem;
+      font-size: 1rem;
+      white-space: normal;
+    }
+    .cta--normal .cta__circulo {
+      margin-left: auto;
+    }
+  }
+</style>

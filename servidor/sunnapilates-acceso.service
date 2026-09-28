@@ -1,0 +1,16 @@
+[Unit]
+Description=Acceso privado a sunnapilates.es
+After=network.target
+
+[Service]
+EnvironmentFile=/etc/sunnapilates-acceso.env
+ExecStart=/usr/bin/python3 /opt/sunnapilates-acceso/acceso.py
+Restart=on-failure
+DynamicUser=yes
+NoNewPrivileges=yes
+ProtectSystem=strict
+ProtectHome=yes
+PrivateTmp=yes
+
+[Install]
+WantedBy=multi-user.target

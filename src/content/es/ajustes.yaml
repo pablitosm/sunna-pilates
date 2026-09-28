@@ -1,0 +1,77 @@
+# ─────────────────────────────────────────────────────────────
+#  AJUSTES GENERALES DE LA WEB DE SUNNA
+#  Edita los valores entre comillas. Las líneas que empiezan por #
+#  son notas y no se ven en la web.
+#  Después de guardar, vuelve a generar la web (npm run build).
+# ─────────────────────────────────────────────────────────────
+
+# ESTADO DE LA WEB
+#   preapertura → el botón principal dice "Quiero ser socio/a fundador/a"
+#                 y abre el formulario de lista de espera.
+#   abierto     → el botón principal dice "Reserva tu primera sesión gratis"
+#                 y lleva a la reserva de bsport.
+estado: preapertura
+
+# Fecha de apertura en texto libre, p. ej. "15 de noviembre".
+# Mientras esté vacía (""), la web no muestra ninguna fecha.
+fechaApertura: ""
+
+direccion:
+  # PENDIENTE: confirmación final de la dirección.
+  calle: "C/ San Francisco Javier 5, bajo exterior"
+  codigoPostal: "38001"
+  ciudad: "Santa Cruz de Tenerife"
+  provincia: "Santa Cruz de Tenerife"
+  pais: "ES"
+  # Opcional: guaguas, tranvía, aparcamiento… Vacío = no se muestra.
+  comoLlegar: ""
+
+contacto:
+  # WhatsApp: de momento no se usa. Si se activa, número con prefijo y solo
+  # dígitos, p. ej. "34600111222". Mientras esté vacío no aparece en la web.
+  whatsapp: ""
+  # PENDIENTE: teléfono de ayuda, tal cual quieras que se vea, p. ej. "+34 600 111 222".
+  telefonoAyuda: ""
+  email: ""
+  instagram: "https://www.instagram.com/sunnapilates/"
+  # PENDIENTE: enlace a la ficha de Google Business.
+  googleBusiness: ""
+
+reservas:
+  # Enlaces de bsport. Cada enlace solo aparece en la web cuando está relleno.
+  # Reservar la primera sesión gratis (estado "abierto").
+  primeraSesionUrl: ""
+  # Ver horarios (aparece junto al horario, en Cómo funciona).
+  horariosUrl: ""
+  # Comprar membresías (aparece debajo de las tarjetas de precios).
+  membresiasUrl: ""
+  # Descargar la app de SUNNA (aparece junto al horario y en el pie).
+  appUrl: ""
+
+formulario:
+  # Dirección a la que se envían los datos del formulario de preapertura
+  # (nombre, email, teléfono y consentimiento), por ejemplo la de bsport,
+  # Brevo, Formspree o la herramienta que elijáis. Vacío = el formulario
+  # propone escribir por WhatsApp.
+  endpoint: ""
+
+fundadores:
+  # Muestra u oculta el bloque de Socios Fundadores.
+  mostrar: true
+  plazasTotales: 40
+  # Actualiza este número a mano cuando se ocupen plazas.
+  plazasLibres: 40
+
+# Cursor personalizado (punto naranja + círculo de vidrio que lo sigue).
+# true = activado en la web publicada. En desarrollo hay un interruptor para probarlo.
+cursorPersonalizado: true
+
+medicion:
+  # Solo se cargan si la persona acepta las cookies.
+  # Mientras los dos estén vacíos, no aparece el banner de cookies.
+  googleAnalyticsId: ""   # p. ej. "G-XXXXXXXXXX"
+  metaPixelId: ""         # p. ej. "123456789012345"
+
+seo:
+  titulo: "SUNNA · Pilates reformer en Santa Cruz de Tenerife"
+  descripcion: "Pilates reformer en Santa Cruz de Tenerife. Entrenas cuando quieres, a tu ritmo, con una clase guiada en pantalla, y nunca empiezas sola/o: la primera vez te lo enseñamos todo."

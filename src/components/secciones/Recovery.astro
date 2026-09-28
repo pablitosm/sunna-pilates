@@ -1,0 +1,112 @@
+---
+import PhotoSlot from '../PhotoSlot.astro';
+import type { Home } from '../../lib/content';
+
+interface Props {
+  home: Home;
+}
+const { recovery } = Astro.props.home;
+---
+
+<section id="recovery" class="recovery seccion" aria-labelledby="recovery-titulo">
+  <div class="envoltura recovery__rejilla">
+    <div>
+      <p class="etiqueta recovery__etiqueta">{recovery.etiqueta}</p>
+      <h2 id="recovery-titulo" class="t-h2 recovery__titulo">{recovery.titulo}</h2>
+      {recovery.lineas.map((l, i) => <p class:list={['recovery__linea', { 'recovery__linea--suave': i > 0 }]}>{l}</p>)}
+    </div>
+    <div class="recovery__lado">
+      {
+        recovery.foto ? (
+          <PhotoSlot foto={recovery.foto} class="recovery__foto" sizes="(min-width: 56rem) 520px, 100vw" />
+        ) : (
+          <div class="recovery__portales" aria-hidden="true">
+            <span class="recovery__portal recovery__portal--luz" />
+            <span class="recovery__portal recovery__portal--sauna" />
+          </div>
+        )
+      }
+      {recovery.aviso && <p class="recovery__aviso">{recovery.aviso}</p>}
+    </div>
+  </div>
+</section>
+
+<style>
+  .recovery {
+    background: var(--n50);
+  }
+
+  .recovery__rejilla {
+    display: grid;
+    grid-template-columns: minmax(0, 1fr) minmax(0, 32.5rem);
+    gap: clamp(2.5rem, 1rem + 5vw, 5rem);
+    align-items: center;
+  }
+
+  .recovery__etiqueta {
+    margin-bottom: 1.625rem;
+  }
+
+  .recovery__titulo {
+    margin-bottom: 1.375rem;
+  }
+
+  .recovery__linea {
+    max-width: 44ch;
+    margin-bottom: 1.125rem;
+    font-size: 1.1875rem;
+    line-height: 1.6;
+  }
+
+  .recovery__linea--suave {
+    font-size: 1.0625rem;
+    color: var(--tinta-60);
+  }
+
+  .recovery__lado {
+    display: flex;
+    flex-direction: column;
+    gap: 0.75rem;
+  }
+
+  .recovery :global(.recovery__foto) {
+    height: 18rem;
+    border-radius: var(--r-l);
+  }
+
+  /* Dos portales: la luz roja y la sauna, separadas por cortina */
+  .recovery__portales {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 0.75rem;
+  }
+
+  .recovery__portal {
+    display: block;
+    height: clamp(14rem, 10rem + 10vw, 20rem);
+    border-radius: 999px 999px var(--r-s) var(--r-s);
+  }
+
+  .recovery__portal--luz {
+    background: radial-gradient(90% 70% at 50% 45%, var(--n300) 0%, var(--n500) 45%, var(--n700) 80%, var(--n900) 100%);
+  }
+
+  .recovery__portal--sauna {
+    background: linear-gradient(180deg, var(--n100) 0%, var(--n200) 60%, var(--n300) 100%);
+  }
+
+  .recovery__aviso {
+    padding: 1.25rem 1.5rem;
+    border-radius: var(--r-s);
+    border: 1px solid var(--linea-fuerte);
+    font-size: 0.8125rem;
+    line-height: 1.7;
+    color: var(--tinta-60);
+  }
+
+  @media (max-width: 56.25rem) {
+    .recovery__rejilla {
+      grid-template-columns: 1fr;
+    }
+  }
+</style>

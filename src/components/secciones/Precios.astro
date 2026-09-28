@@ -1,0 +1,307 @@
+---
+import CtaButton from '../CtaButton.astro';
+import type { Ajustes, Home } from '../../lib/content';
+
+interface Props {
+  ajustes: Ajustes;
+  home: Home;
+}
+const { ajustes, home } = Astro.props;
+const { precios } = home;
+const f = precios.fundadores;
+const { plazasTotales, plazasLibres, mostrar } = ajustes.fundadores;
+const libres = Math.min(plazasLibres, plazasTotales);
+const euros = (n: number) => new Intl.NumberFormat('es-ES').format(n);
+---
+
+<section id="precios" class="precios" aria-labelledby="precios-titulo">
+  <div class="envoltura precios__cabeza">
+    <div class="cabeza-seccion">
+      <h2 id="precios-titulo" class="t-h2">{precios.titulo}</h2>
+      <span class="etiqueta">{precios.subtitulo}</span>
+    </div>
+  </div>
+
+  {
+    mostrar && (
+      <div id="fundadores" class="fundadores" aria-labelledby="fundadores-titulo">
+        <div class="envoltura fundadores__rejilla">
+          <div>
+            <p class="etiqueta fundadores__etiqueta">{f.etiqueta}</p>
+            <h3 id="fundadores-titulo" class="fundadores__titulo">{f.titulo}</h3>
+            <ol role="list" class="ventajas">
+              {f.ventajas.map((v, i) => (
+                <li>
+                  <span class="ventajas__num" aria-hidden="true">
+                    {String(i + 1).padStart(2, '0')}
+                  </span>
+                  <span>{v}</span>
+                </li>
+              ))}
+            </ol>
+            <CtaButton ajustes={ajustes} home={home} class="fundadores__cta" />
+          </div>
+
+          <div class="fundadores__tarjeta">
+            <div class="contador">
+              <span class="contador__cifra">{libres}</span>
+              <span class="contador__texto">
+                {f.plazas} {plazasTotales}
+              </span>
+            </div>
+            <div class="pack">
+              <p class="etiqueta">{f.pack.titulo}</p>
+              <p class="pack__texto">{f.pack.texto}</p>
+            </div>
+          </div>
+        </div>
+      </div>
+    )
+  }
+
+  <div class="envoltura precios__tarjetas">
+    <ul role="list" class="membresias">
+      {
+        precios.membresias.map((m) => (
+          <li class:list={['membresia', { 'membresia--destacada': m.destacada }]}>
+            {m.etiqueta && <span class="membresia__etiqueta">{m.etiqueta}</span>}
+            <h3 class="etiqueta membresia__nombre">{m.nombre}</h3>
+            <p class="membresia__precio">
+              <span class="membresia__cifra">
+                {euros(m.precio)} €
+              </span>
+              <span class="membresia__mes">/mes</span>
+            </p>
+            <p class="membresia__sesion">
+              {m.precioSesion} {precios.porSesion}
+            </p>
+            <ul role="list" class="membresia__incluye">
+              <li>{m.pilates}</li>
+              <li>{m.recovery}</li>
+              {m.extra && <li>{m.extra}</li>}
+            </ul>
+          </li>
+        ))
+      }
+    </ul>
+    {
+      ajustes.reservas.membresiasUrl && (
+        <p class="precios__enlace">
+          <a class="enlace-flecha" href={ajustes.reservas.membresiasUrl} target="_blank" rel="noopener">
+            {home.enlaces.membresias} →
+          </a>
+        </p>
+      )
+    }
+  </div>
+</section>
+
+<style>
+  .precios {
+    padding-block: var(--seccion);
+  }
+
+  /* ── Socios fundadores: franja Naranja 900 ── */
+  .fundadores {
+    margin-bottom: clamp(3rem, 2rem + 3vw, 5rem);
+    padding-block: clamp(4rem, 2.5rem + 5vw, 6.875rem);
+    background: var(--n900);
+    color: var(--crema);
+  }
+
+  .fundadores__rejilla {
+    display: grid;
+    grid-template-columns: minmax(0, 1fr) minmax(0, 38.75rem);
+    gap: clamp(2.5rem, 1rem + 5vw, 5rem);
+    align-items: start;
+  }
+
+  .fundadores__etiqueta {
+    margin-bottom: 1.625rem;
+    color: rgb(253 246 238 / 0.7);
+  }
+
+  .fundadores__titulo {
+    margin-bottom: 2.125rem;
+    font-size: clamp(2.25rem, 1.4rem + 3vw, 3.75rem);
+    line-height: 1.04;
+    letter-spacing: -0.025em;
+  }
+
+  .ventajas {
+    display: flex;
+    flex-direction: column;
+    gap: 0.875rem;
+    max-width: 44ch;
+    font-size: 1.0625rem;
+    line-height: 1.55;
+  }
+
+  .ventajas li {
+    display: flex;
+    gap: 0.875rem;
+  }
+
+  .ventajas__num {
+    color: var(--n300);
+  }
+
+  .fundadores :global(.fundadores__cta) {
+    margin-top: 2.375rem;
+  }
+
+  .fundadores :focus-visible {
+    outline-color: var(--n200);
+  }
+
+  .fundadores__tarjeta {
+    padding: 2.125rem 2.125rem 1.875rem;
+    border-radius: var(--r-l);
+    background: var(--crema);
+    color: var(--tinta);
+  }
+
+  .contador {
+    display: flex;
+    align-items: center;
+    gap: 1.125rem;
+    padding: 1.125rem 1.375rem;
+    border-radius: var(--r-s);
+    background: var(--n50);
+  }
+
+  .contador__cifra {
+    font-size: 2.5rem;
+    line-height: 1;
+    letter-spacing: -0.02em;
+  }
+
+  .contador__texto {
+    font-size: 0.875rem;
+    line-height: 1.5;
+    color: var(--tinta-60);
+  }
+
+  .pack {
+    margin-top: 1.5rem;
+    padding-top: 1.25rem;
+    border-top: 1px solid var(--linea);
+  }
+
+  .pack .etiqueta {
+    margin-bottom: 0.625rem;
+  }
+
+  .pack__texto {
+    font-size: 1.125rem;
+    line-height: 1.5;
+  }
+
+  .precios__enlace {
+    margin-top: 2rem;
+  }
+
+  /* ── Membresías ── */
+  .membresias {
+    display: grid;
+    grid-template-columns: repeat(4, minmax(0, 1fr));
+    gap: 1rem;
+    align-items: start;
+  }
+
+  .membresia {
+    position: relative;
+    display: flex;
+    flex-direction: column;
+    gap: 1.375rem;
+    min-height: 22rem;
+    padding: 2.125rem 1.875rem;
+    border-radius: var(--r-l);
+    background: var(--n50);
+  }
+
+  .membresia--destacada {
+    min-height: 23.75rem;
+    box-shadow:
+      inset 0 0 0 1.5px var(--n500),
+      0 24px 60px rgb(255 130 53 / 0.18);
+  }
+
+  .membresia__etiqueta {
+    position: absolute;
+    left: 1.875rem;
+    top: -0.8125rem;
+    padding: 0.375rem 0.875rem;
+    border-radius: var(--r-pill);
+    background: var(--n500);
+    color: var(--tinta);
+    font-size: 0.75rem;
+    font-weight: 500;
+  }
+
+  .membresia__nombre {
+    margin-bottom: -0.25rem;
+  }
+
+  .membresia__precio {
+    display: flex;
+    align-items: baseline;
+    gap: 0.375rem;
+  }
+
+  .membresia__cifra {
+    font-size: clamp(2.5rem, 1.9rem + 1.8vw, 3.25rem);
+    line-height: 1;
+    letter-spacing: -0.03em;
+  }
+
+  .membresia__mes {
+    color: var(--tinta-60);
+  }
+
+  .membresia__sesion {
+    font-size: 1.125rem;
+    color: var(--n900);
+  }
+
+  .membresia__incluye {
+    display: flex;
+    flex-direction: column;
+    gap: 0.75rem;
+    font-size: 1rem;
+    line-height: 1.5;
+  }
+
+  .membresia__incluye li {
+    display: flex;
+    gap: 0.75rem;
+  }
+
+  .membresia__incluye li::before {
+    content: '—';
+    color: var(--tinta-60);
+  }
+
+  @media (max-width: 64rem) {
+    .membresias {
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+      row-gap: 1.75rem;
+    }
+    .fundadores__rejilla {
+      grid-template-columns: 1fr;
+    }
+  }
+
+  @media (max-width: 36rem) {
+    .membresias {
+      grid-template-columns: 1fr;
+    }
+    .membresia,
+    .membresia--destacada {
+      min-height: 0;
+    }
+    .fundadores :global(.fundadores__cta) {
+      width: 100%;
+    }
+  }
+</style>

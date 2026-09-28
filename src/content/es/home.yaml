@@ -1,0 +1,314 @@
+# ─────────────────────────────────────────────────────────────
+#  TEXTOS DE LA HOME DE SUNNA (castellano)
+#  Todos los textos salen del brief de SUNNA. Edita solo lo que está
+#  entre comillas y respeta los espacios del principio de cada línea.
+#  Las líneas que empiezan por # son notas y no se ven en la web.
+# ─────────────────────────────────────────────────────────────
+
+# Menú: Cómo funciona · Precios · Preguntas + botón fijo.
+menu:
+  - texto: "Cómo funciona"
+    ancla: "como-funciona"
+  - texto: "Precios"
+    ancla: "precios"
+  - texto: "Preguntas"
+    ancla: "preguntas"
+
+# El botón principal cambia según el "estado" de ajustes.yaml.
+botones:
+  principal:
+    preapertura: "Quiero ser socio/a fundador/a"
+    abierto: "Reserva tu primera sesión gratis"
+  # Botón fijo del menú y de la barra del móvil.
+  principalCorto:
+    preapertura: "Quiero ser socio/a fundador/a"
+    abierto: "Primera sesión gratis"
+  secundario: "Cómo funciona"
+
+# Enlaces a bsport (se muestran solo si el enlace está en ajustes.yaml → reservas).
+enlaces:
+  horarios: "Ver horarios"
+  membresias: "Comprar membresías"
+  app: "Descargar la app"
+
+# 1 · PORTADA
+portada:
+  titular: "Pilates reformer a tu hora."
+  subtitulo: "Tu reformer, tu clase en pantalla y el estudio para ti. La primera vez, te lo enseñamos todo."
+  # Antes de abrir se muestra la fecha de apertura (ajustes.yaml → fechaApertura) cuando esté cerrada.
+  abrimos: "abrimos el"
+  # Foto opcional (foto real del estudio o de alguien en el reformer con luz natural).
+  # Para añadirla: guárdala en src/assets/fotos/ y quita las # de estas líneas.
+  # foto:
+  #   imagen: "../../assets/fotos/portada.jpg"
+  #   alt: "El estudio de SUNNA con luz natural"
+
+# 2 · QUÉ ES SUNNA (3 ideas en una fila)
+# Iconos disponibles: arco, anillo, pantalla, linea, punto, hoja, rectangulo
+queEs:
+  titulo: "Qué es SUNNA"
+  ideas:
+    - icono: "anillo"
+      titulo: "Tú eliges la hora"
+      texto: "Reservas en la app, sin horarios fijos de grupo."
+    - icono: "pantalla"
+      titulo: "Una clase guiada en tu reformer"
+      texto: "iPad en cada máquina con clases de 10 a 45 min."
+    - icono: "arco"
+      titulo: "Nunca empiezas sola/o"
+      texto: "Primera sesión de 45 min con nosotros."
+
+# 3 · CÓMO FUNCIONA, EN 4 PASOS (el bloque más importante)
+comoFunciona:
+  titulo: "Cómo funciona"
+  pasos:
+    - icono: "arco"
+      titulo: "Ven a tu primera sesión. Es gratis."
+      texto: "45 minutos con nosotros: te enseñamos el reformer, la app, cómo entrar y cómo elegir tu clase. Es obligatoria antes de entrenar por tu cuenta."
+    - icono: "anillo"
+      titulo: "Reserva tu reformer en la app."
+      texto: "Eliges día y hora. Esa hora el reformer es tuyo."
+    - icono: "pantalla"
+      titulo: "Entra con el móvil."
+      texto: "La puerta se abre con tu reserva. Sin llaves ni recepción."
+    - icono: "punto"
+      titulo: "Elige tu clase y dale al play."
+      texto: "En el iPad de tu reformer: full body, core, pierna, movilidad… de 10 a 45 minutos."
+  notaFinal: "Al terminar, deja tu reformer listo para la siguiente persona."
+  # PENDIENTE: confirmar antes de publicar. Los plazos exactos se cierran con bsport (sin cifras).
+  datos:
+    reserva: "Cada reserva es un bloque de 1 hora: hasta 50 min de clase + tiempo para entrar, colocar y salir."
+    cancelacion: "Se reserva con antelación y se cancela sin coste hasta cierto plazo antes."
+    horario:
+      titulo: "Horario"
+      fases:
+        - etiqueta: "Las 2–3 primeras semanas"
+          horas: ["08:00 — 14:00", "16:00 — 22:00"]
+          texto: "El estudio solo abre con alguien de SUNNA dentro."
+        - etiqueta: "Después"
+          horas: ["05:00 — 23:00"]
+          texto: "Acceso autónomo, con el objetivo de llegar a 05:00–23:00."
+
+# 4 · LAS CLASES
+clases:
+  titulo: "Las clases"
+  tiposTitulo: "Tipos"
+  tipos: ["Full Body", "Pierna", "Brazo", "Core", "Movilidad", "Estiramientos"]
+  duraciones:
+    - nombre: "Largas"
+      minutos: "40–45"
+    - nombre: "Cortas"
+      minutos: "15–25"
+    - nombre: "Movilidad"
+      minutos: "10–15"
+  idiomas: ["Castellano", "Inglés", "Alemán", "Francés"]
+  idiomasTexto: "El catálogo más grande es en inglés, pero hay clases de sobra en castellano."
+  cascos: "Cada reformer tiene cascos de diadema bluetooth. Si lo prefieres, trae los tuyos."
+
+# 5 · RECOVERY (dos líneas y una foto; sin promesas de salud)
+recovery:
+  etiqueta: "Recovery"
+  titulo: "Luz roja y sauna."
+  lineas:
+    - "Entran en la apertura."
+    - "Incluidas en tu membresía, según el plan."
+  # Foto opcional de la luz roja y la sauna (quita las # para añadirla).
+  # foto:
+  #   imagen: "../../assets/fotos/recovery.jpg"
+  #   alt: "Luz roja y sauna de SUNNA"
+
+# 6 · ¿Y SI…? — dudas en una línea
+dudas:
+  titulo: "¿Y si…?"
+  items:
+    - pregunta: "¿Nunca has hecho Pilates?"
+      respuesta: "La primera sesión es para eso."
+    - pregunta: "¿Y si me pierdo en la clase?"
+      respuesta: "El vídeo te guía paso a paso y puedes pausar."
+    - pregunta: "¿Estaré sola en el estudio?"
+      respuesta: "Al principio siempre habrá alguien de SUNNA. Después, solo entra quien ha reservado, con cámaras y teléfono de ayuda."
+    - pregunta: "¿Llegas tarde siempre?"
+      respuesta: "Aquí no hay “tarde”: tu clase empieza cuando le das al play."
+
+# 7 · PRECIOS
+# PENDIENTE: cifras provisionales. Confirmar si son de socio fundador o estándar.
+precios:
+  titulo: "Precios"
+  subtitulo: "Cuatro membresías mensuales."
+  porSesion: "por sesión"
+  membresias:
+    - nombre: "Basic"
+      precio: 55
+      precioSesion: "13,75 €"
+      pilates: "1 sesión/semana (4/mes)"
+      recovery: "1 luz roja"
+    - nombre: "Standard"
+      precio: 100
+      precioSesion: "12,50 €"
+      pilates: "2 sesiones/semana (8/mes)"
+      recovery: "2 luz roja + 1 sauna"
+    - nombre: "Pro"
+      precio: 140
+      precioSesion: "11,67 €"
+      pilates: "3 sesiones/semana (12/mes)"
+      recovery: "3 luz roja + 2 sauna"
+    - nombre: "Premium"
+      precio: 180
+      # 180 € entre 60 sesiones al mes, el máximo reservable.
+      precioSesion: "desde 3 €"
+      pilates: "Ilimitado (según disponibilidad)"
+      recovery: "Recovery ilimitado con reserva"
+      extra: "Prioridad en reservas"
+      destacada: true
+      etiqueta: "Más popular"
+  fundadores:
+    etiqueta: "Solo 40 plazas"
+    titulo: "Sé uno de los 40 socios fundadores de SUNNA."
+    ventajas:
+      - "Precio de fundador protegido para siempre, mientras sigas de alta. Si te das de baja y vuelves, entras con la tarifa vigente, ya no como fundador."
+      - "Prioridad para reservar en la apertura e invitación al evento privado de inauguración."
+      - "Reconocimiento como miembro fundador y acceso anticipado a novedades, talleres y eventos."
+    pack:
+      titulo: "Pack de bienvenida"
+      texto: "Calcetines, tote bag, pegatinas y algún detalle más."
+    plazas: "plazas libres de"
+
+# 8 · EL ESTUDIO
+# Cada arco muestra un dato del estudio. Tonos: claro, medio, sol, tinta.
+# Iconos: arco, anillo, pantalla, linea, punto, hoja, rectangulo.
+# Para poner una foto real en un arco, añade debajo:
+#     foto:
+#       imagen: "../../assets/fotos/estudio-1.jpg"
+#       alt: "Descripción de la foto"
+estudio:
+  titulo: "El estudio"
+  espacios:
+    - icono: "rectangulo"
+      texto: "6 reformers, una persona por máquina"
+      tono: "claro"
+    - icono: "pantalla"
+      texto: "iPad y cascos bluetooth en cada reformer"
+      tono: "medio"
+    - icono: "punto"
+      texto: "Luz roja"
+      tono: "sol"
+    - icono: "arco"
+      texto: "Sauna"
+      tono: "tinta"
+  mapa:
+    direccion: "Dirección"
+    comoLlegar: "Cómo llegar"
+    boton: "Ver el mapa"
+    aviso: "El mapa de Google Maps se carga solo si lo pides."
+    abrir: "Abrir en el mapa"
+
+# 9 · PREGUNTAS FRECUENTES (acordeón)
+# Una pregunta con la respuesta vacía ("") no se muestra en la web.
+faq:
+  titulo: "Preguntas frecuentes"
+  grupos:
+    - titulo: "Empezar"
+      preguntas:
+        - pregunta: "¿Tengo que saber Pilates?"
+          respuesta: "No. La primera sesión, gratis y con nosotros, está pensada para quien empieza de cero."
+        - pregunta: "¿Qué pasa en la primera sesión?"
+          respuesta: "45 minutos en los que te enseñamos el reformer, la app, cómo entrar al estudio y cómo elegir clase. Sin ella no se puede entrenar por libre."
+        - pregunta: "¿Y si después se me olvida algo?"
+          respuesta: "Ven cuando haya alguien del equipo y lo repasamos."
+    - titulo: "Reservar y entrar"
+      preguntas:
+        - pregunta: "¿Cómo reservo?"
+          respuesta: "Desde la app de SUNNA (bsport). Eliges día, hora y reformer."
+        - pregunta: "¿Cómo entro?"
+          respuesta: "Con el móvil: la puerta se abre solo si tienes reserva en ese momento."
+        # PENDIENTE: plazo de cancelación (con bsport).
+        - pregunta: "¿Puedo cancelar?"
+          respuesta: "Sí, sin coste si avisas con antelación."
+        - pregunta: "¿Qué horario tenéis?"
+          respuesta: "Las primeras semanas, 08:00–14:00 y 16:00–22:00, siempre con alguien del equipo. Después iremos ampliando hasta 05:00–23:00."
+    - titulo: "Las clases"
+      preguntas:
+        - pregunta: "¿Cómo es una clase?"
+          respuesta: "Eliges en el iPad de tu reformer y sigues el vídeo. Hay clases de 10 a 45 minutos: full body, core, pierna, brazo, movilidad y estiramientos."
+        - pregunta: "¿En qué idioma?"
+          respuesta: "En castellano, inglés, alemán y francés. El catálogo más grande es en inglés, pero hay clases de sobra en castellano."
+        - pregunta: "¿Necesito auriculares?"
+          respuesta: "No. Cada reformer tiene cascos de diadema bluetooth. Si lo prefieres, trae los tuyos."
+        # PENDIENTE: qué hay que llevar.
+        - pregunta: "¿Qué tengo que llevar?"
+          respuesta: ""
+    - titulo: "Seguridad y membresía"
+      preguntas:
+        - pregunta: "¿Es seguro entrenar sin monitor?"
+          respuesta: "Antes de entrenar por tu cuenta haces la sesión de iniciación. Solo entra quien ha reservado, hay cámaras en el estudio y tienes un teléfono de ayuda para hablar directamente con nosotros."
+        # PENDIENTE: confirmar plazo de baja y si se puede pausar la membresía.
+        - pregunta: "¿Puedo darme de baja?"
+          respuesta: "Sí, avisando con 10 días de antelación."
+        # PENDIENTE: confirmar edad con acompañante (14 o 16).
+        - pregunta: "¿Hay edad mínima?"
+          respuesta: "18 años para entrenar solo/a. Menores, acompañados de un adulto a partir de 16 años."
+
+# 10 · CIERRE
+cierre:
+  titulo: "Tu primera sesión es gratis."
+  texto: "Reserva y te lo enseñamos todo."
+
+# 11 · PIE
+pie:
+  horarioTitulo: "Horario"
+  horario:
+    - "Las 2–3 primeras semanas: 08:00–14:00 y 16:00–22:00"
+    - "Después: 05:00–23:00"
+  legal:
+    - texto: "Aviso legal"
+      url: "/aviso-legal"
+    - texto: "Privacidad"
+      url: "/privacidad"
+    - texto: "Cookies"
+      url: "/cookies"
+    - texto: "Condiciones de membresía"
+      url: "/condiciones-membresia"
+  cookies: "Preferencias de cookies"
+
+# PANEL QUE SE ABRE CON EL BOTÓN PRINCIPAL
+panel:
+  preapertura:
+    titulo: "Quiero ser socio/a fundador/a"
+    texto: "Lista de espera y socios fundadores."
+    campos:
+      nombre: "Nombre"
+      email: "Email"
+      telefono: "Teléfono"
+    consentimiento: "Acepto que SUNNA use estos datos para la lista de espera."
+    privacidad: "Política de privacidad"
+    enviar: "Enviar"
+    enviando: "Enviando…"
+    exitoTitulo: "Ya estás en la lista."
+    exitoTexto: "Te escribiremos antes de la apertura."
+    error: "No se ha podido enviar. Revisa la conexión e inténtalo otra vez."
+    sinConexion: "Escríbenos por WhatsApp y te apuntamos."
+    sinConexionSinContacto: "Escríbenos por Instagram y te apuntamos."
+    pie: ""
+  abierto:
+    titulo: "Reserva tu primera sesión gratis"
+    texto: "45 minutos con nosotros: te enseñamos el reformer, la app, cómo entrar y cómo elegir tu clase."
+    boton: "Reservar"
+    # Texto opcional sobre la reserva (se deja vacío hasta integrar bsport).
+    widget: ""
+  whatsapp: "WhatsApp"
+  cerrar: "Cerrar"
+
+# BANNER DE COOKIES (solo aparece si hay analítica o píxel configurados)
+cookies:
+  titulo: "Cookies"
+  texto: "Usamos cookies de analítica y el píxel de Meta solo si los aceptas."
+  aceptar: "Aceptar"
+  rechazar: "Rechazar"
+  configurar: "Configurar"
+  guardar: "Guardar"
+  analitica:
+    titulo: "Analítica"
+    texto: "Google Analytics."
+  marketing:
+    titulo: "Marketing"
+    texto: "Píxel de Meta."

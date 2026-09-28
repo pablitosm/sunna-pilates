@@ -1,0 +1,112 @@
+---
+import CtaButton from '../CtaButton.astro';
+import Logo from '../Logo.astro';
+import type { Ajustes, Home } from '../../lib/content';
+
+interface Props {
+  ajustes: Ajustes;
+  home: Home;
+}
+const { ajustes, home } = Astro.props;
+const { cierre } = home;
+---
+
+<section id="cierre" class="cierre" aria-labelledby="cierre-titulo">
+  <div class="cierre__sol" aria-hidden="true"></div>
+  <div class="cierre__contenido">
+    <div class="cierre__logo">
+      <Logo label="SUNNA" />
+    </div>
+    <div class="cierre__texto">
+      <h2 id="cierre-titulo" class="t-h2">{cierre.titulo}</h2>
+      <p>{cierre.texto}</p>
+    </div>
+    <CtaButton ajustes={ajustes} home={home} />
+  </div>
+</section>
+
+<style>
+  .cierre {
+    /* Tamaño del sol: el alto de la sección se calcula a partir de él
+       para que el disco nunca quede cortado por arriba. */
+    --sol: clamp(40rem, 82vw, 90rem);
+    position: relative;
+    isolation: isolate;
+    height: max(38rem, calc(var(--sol) * 0.64 + 6rem));
+    overflow: hidden;
+    padding-inline: var(--gutter);
+  }
+
+  /* El sol: canto nítido, más claro hacia el centro. Sube 60 px con el scroll. */
+  .cierre__sol {
+    position: absolute;
+    z-index: -1;
+    left: 50%;
+    bottom: calc(var(--sol) * -0.36);
+    width: var(--sol);
+    aspect-ratio: 1;
+    translate: -50% 0;
+    border-radius: 999px;
+    background: radial-gradient(
+      closest-side,
+      rgb(255 241 230 / 0.95) 0%,
+      var(--n200) 38%,
+      var(--n300) 62%,
+      var(--n500) 84%,
+      var(--n500) 100%
+    );
+  }
+
+  @supports (animation-timeline: view()) {
+    @media (prefers-reduced-motion: no-preference) {
+      .cierre__sol {
+        animation: amanecer linear both;
+        animation-timeline: view();
+        animation-range: entry 0% cover 70%;
+      }
+    }
+  }
+
+  @keyframes amanecer {
+    from {
+      transform: translateY(60px);
+    }
+    to {
+      transform: translateY(0);
+    }
+  }
+
+  .cierre__contenido {
+    position: relative;
+    height: 100%;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: 2.75rem;
+    text-align: center;
+  }
+
+  .cierre__logo {
+    width: min(26.25rem, 70vw);
+  }
+
+  .cierre__texto {
+    display: grid;
+    gap: 0.75rem;
+  }
+
+  .cierre__texto p {
+    font-size: 1.1875rem;
+    line-height: 1.6;
+  }
+
+  @media (max-width: 40rem) {
+    .cierre__contenido {
+      gap: 2rem;
+    }
+    .cierre__contenido > :global(.cta) {
+      width: 100%;
+    }
+  }
+</style>

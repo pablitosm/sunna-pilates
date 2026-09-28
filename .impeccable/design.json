@@ -1,0 +1,594 @@
+{
+  "schemaVersion": 2,
+  "generatedAt": "2026-09-27T21:39:34.356478+00:00",
+  "title": "Design System: SUNNA",
+  "extensions": {
+    "colorMeta": {
+      "crema": {
+        "role": "neutral",
+        "displayName": "Crema",
+        "tonalRamp": [
+          "#3b1d0e",
+          "#5a3624",
+          "#7a5540",
+          "#a88a78",
+          "#d6c3b3",
+          "#f0e2d3",
+          "#f8ede0",
+          "#fdf6ee"
+        ]
+      },
+      "tostado": {
+        "role": "neutral",
+        "displayName": "Tostado",
+        "tonalRamp": [
+          "#3b1d0e",
+          "#5a3624",
+          "#7a5540",
+          "#a88a78",
+          "#d6c3b3",
+          "#f0e2d3",
+          "#f8ede0",
+          "#fdf6ee"
+        ]
+      },
+      "naranja-50": {
+        "role": "secondary",
+        "displayName": "Naranja 50",
+        "tonalRamp": [
+          "#3b1d0e",
+          "#8c3a12",
+          "#d95e1e",
+          "#ff8235",
+          "#ffa76b",
+          "#ffc49a",
+          "#ffe0c9",
+          "#fff1e6"
+        ]
+      },
+      "naranja-100": {
+        "role": "secondary",
+        "displayName": "Naranja 100",
+        "tonalRamp": [
+          "#3b1d0e",
+          "#8c3a12",
+          "#d95e1e",
+          "#ff8235",
+          "#ffa76b",
+          "#ffc49a",
+          "#ffe0c9",
+          "#fff1e6"
+        ]
+      },
+      "naranja-200": {
+        "role": "secondary",
+        "displayName": "Naranja 200",
+        "tonalRamp": [
+          "#3b1d0e",
+          "#8c3a12",
+          "#d95e1e",
+          "#ff8235",
+          "#ffa76b",
+          "#ffc49a",
+          "#ffe0c9",
+          "#fff1e6"
+        ]
+      },
+      "naranja-300": {
+        "role": "secondary",
+        "displayName": "Naranja 300",
+        "tonalRamp": [
+          "#3b1d0e",
+          "#8c3a12",
+          "#d95e1e",
+          "#ff8235",
+          "#ffa76b",
+          "#ffc49a",
+          "#ffe0c9",
+          "#fff1e6"
+        ]
+      },
+      "naranja-500": {
+        "role": "primary",
+        "displayName": "Sun Orange / Naranja 500",
+        "tonalRamp": [
+          "#3b1d0e",
+          "#8c3a12",
+          "#d95e1e",
+          "#ff8235",
+          "#ffa76b",
+          "#ffc49a",
+          "#ffe0c9",
+          "#fff1e6"
+        ]
+      },
+      "naranja-700": {
+        "role": "primary",
+        "displayName": "Ember / Naranja 700",
+        "tonalRamp": [
+          "#3b1d0e",
+          "#8c3a12",
+          "#d95e1e",
+          "#ff8235",
+          "#ffa76b",
+          "#ffc49a",
+          "#ffe0c9",
+          "#fff1e6"
+        ]
+      },
+      "naranja-900": {
+        "role": "primary",
+        "displayName": "Burnt Sienna / Naranja 900",
+        "tonalRamp": [
+          "#3b1d0e",
+          "#8c3a12",
+          "#d95e1e",
+          "#ff8235",
+          "#ffa76b",
+          "#ffc49a",
+          "#ffe0c9",
+          "#fff1e6"
+        ]
+      },
+      "tinta": {
+        "role": "neutral",
+        "displayName": "Tinta",
+        "tonalRamp": [
+          "#3b1d0e",
+          "#5a3624",
+          "#7a5540",
+          "#a88a78",
+          "#d6c3b3",
+          "#f0e2d3",
+          "#f8ede0",
+          "#fdf6ee"
+        ]
+      },
+      "tinta-60": {
+        "role": "neutral",
+        "displayName": "Tinta 60",
+        "tonalRamp": [
+          "#3b1d0e",
+          "#5a3624",
+          "#7a5540",
+          "#a88a78",
+          "#d6c3b3",
+          "#f0e2d3",
+          "#f8ede0",
+          "#fdf6ee"
+        ]
+      },
+      "linea": {
+        "role": "neutral",
+        "displayName": "Línea (12% Tinta)",
+        "tonalRamp": [
+          "#3b1d0e",
+          "#5a3624",
+          "#7a5540",
+          "#a88a78",
+          "#d6c3b3",
+          "#f0e2d3",
+          "#f8ede0",
+          "#fdf6ee"
+        ]
+      },
+      "linea-fuerte": {
+        "role": "neutral",
+        "displayName": "Línea fuerte (22% Tinta)",
+        "tonalRamp": [
+          "#3b1d0e",
+          "#5a3624",
+          "#7a5540",
+          "#a88a78",
+          "#d6c3b3",
+          "#f0e2d3",
+          "#f8ede0",
+          "#fdf6ee"
+        ]
+      },
+      "blanco": {
+        "role": "neutral",
+        "displayName": "Blanco",
+        "tonalRamp": [
+          "#3b1d0e",
+          "#5a3624",
+          "#7a5540",
+          "#a88a78",
+          "#d6c3b3",
+          "#f0e2d3",
+          "#f8ede0",
+          "#fdf6ee"
+        ]
+      },
+      "vidrio-luz-55": {
+        "role": "neutral",
+        "displayName": "Vidrio luz 55%",
+        "tonalRamp": [
+          "#3b1d0e",
+          "#5a3624",
+          "#7a5540",
+          "#a88a78",
+          "#d6c3b3",
+          "#f0e2d3",
+          "#f8ede0",
+          "#fdf6ee"
+        ]
+      },
+      "vidrio-luz-60": {
+        "role": "neutral",
+        "displayName": "Vidrio luz 60%",
+        "tonalRamp": [
+          "#3b1d0e",
+          "#5a3624",
+          "#7a5540",
+          "#a88a78",
+          "#d6c3b3",
+          "#f0e2d3",
+          "#f8ede0",
+          "#fdf6ee"
+        ]
+      },
+      "vidrio-luz-65": {
+        "role": "neutral",
+        "displayName": "Vidrio luz 65%",
+        "tonalRamp": [
+          "#3b1d0e",
+          "#5a3624",
+          "#7a5540",
+          "#a88a78",
+          "#d6c3b3",
+          "#f0e2d3",
+          "#f8ede0",
+          "#fdf6ee"
+        ]
+      }
+    },
+    "typographyMeta": {
+      "display": {
+        "displayName": "Display",
+        "purpose": "Hero headline only (44→82px)."
+      },
+      "headline": {
+        "displayName": "Headline",
+        "purpose": "Section titles (36→56px); founders title to 60px."
+      },
+      "figure": {
+        "displayName": "Figure",
+        "purpose": "Prices, counters, schedule hours (28→52px)."
+      },
+      "title": {
+        "displayName": "Title",
+        "purpose": "Step, card and idea titles; FAQ summaries (18→27px)."
+      },
+      "lead": {
+        "displayName": "Lead",
+        "purpose": "Hero subtitle, CTA label, Recovery line (18–21px)."
+      },
+      "body": {
+        "displayName": "Body",
+        "purpose": "Default running text 17px; 16px in cards."
+      },
+      "small": {
+        "displayName": "Small",
+        "purpose": "Nav, chips, footer base, notices (13–15px)."
+      },
+      "label": {
+        "displayName": "Label",
+        "purpose": "11px uppercase +0.16em corner label (.etiqueta)."
+      },
+      "pending": {
+        "displayName": "Pending",
+        "purpose": "11px monospace [PENDIENTE] marker."
+      },
+      "headline-founders": {
+        "displayName": "Headline Founders",
+        "purpose": "Founders band title (36→60px)."
+      },
+      "panel-title": {
+        "displayName": "Panel Title",
+        "purpose": "Booking panel title (32→44px, weight 450)."
+      },
+      "question": {
+        "displayName": "Question",
+        "purpose": "Question cards (26→34px)."
+      },
+      "hours": {
+        "displayName": "Hours",
+        "purpose": "Schedule hours (28→40px)."
+      },
+      "card-title": {
+        "displayName": "Card Title",
+        "purpose": "Card, idea and schedule titles (24px)."
+      },
+      "faq-plus": {
+        "displayName": "Faq Plus",
+        "purpose": "FAQ plus sign (22px)."
+      },
+      "lead-large": {
+        "displayName": "Lead Large",
+        "purpose": "CTA label, Recovery line, closing text, large chips (19px)."
+      },
+      "body-card": {
+        "displayName": "Body Card",
+        "purpose": "Card text, lists, footer (16px)."
+      },
+      "nav": {
+        "displayName": "Nav",
+        "purpose": "Nav links, compact CTA, map button (15px)."
+      },
+      "caption": {
+        "displayName": "Caption",
+        "purpose": "Chips, footer base line, Recovery notice (13px)."
+      },
+      "micro": {
+        "displayName": "Micro",
+        "purpose": "Badge, field labels, cursor text (12px)."
+      }
+    },
+    "shadows": [
+      {
+        "name": "sombra",
+        "value": "0 24px 60px rgb(59 29 14 / 0.1), 0 2px 6px rgb(59 29 14 / 0.04)",
+        "purpose": "Glass surfaces, booking panel, mobile menu, cookie card."
+      },
+      {
+        "name": "sombra-s",
+        "value": "0 10px 28px rgb(59 29 14 / 0.08), 0 1px 3px rgb(59 29 14 / 0.05)",
+        "purpose": "Floating WhatsApp button."
+      },
+      {
+        "name": "card-lift",
+        "value": "0 18px 40px rgb(59 29 14 / 0.08)",
+        "purpose": "Hover on step and question cards, with translateY(-4px)."
+      },
+      {
+        "name": "premium",
+        "value": "0 24px 60px rgb(59 29 14 / 0.22)",
+        "purpose": "Highlighted Premium membership card."
+      },
+      {
+        "name": "cta-glow",
+        "value": "0 18px 44px rgb(255 130 53 / 0.34)",
+        "purpose": "CTA pill at rest; hover 0 22px 52px rgb(255 130 53 / 0.45)."
+      },
+      {
+        "name": "glass",
+        "value": "0 24px 60px rgb(59 29 14 / 0.1), 0 2px 6px rgb(59 29 14 / 0.04), inset 1px 1px 0 rgb(255 255 255 / 0.7), inset 0 -1px 0 rgb(255 130 53 / 0.2)",
+        "purpose": "Vidrio: with blur(24px) saturate(180%) on header, mobile bar, hero card, FAQ card."
+      },
+      {
+        "name": "grain",
+        "value": "body::after SVG fractalNoise 0.85, opacity 0.035, mix-blend-mode multiply",
+        "purpose": "Film grain over the whole sheet."
+      }
+    ],
+    "motion": [
+      {
+        "name": "ease",
+        "value": "cubic-bezier(0.22, 1, 0.36, 1)",
+        "purpose": "All state transitions."
+      },
+      {
+        "name": "state",
+        "value": "0.22s",
+        "purpose": "CTA, links, cursor halo size changes."
+      },
+      {
+        "name": "disclosure",
+        "value": "0.28s",
+        "purpose": "FAQ height push and plus rotation."
+      },
+      {
+        "name": "card-lift",
+        "value": "0.3s",
+        "purpose": "Card hover lift."
+      },
+      {
+        "name": "halo-breathe",
+        "value": "14s ease-in-out infinite, scale 1→1.06",
+        "purpose": "Hero sun halo."
+      },
+      {
+        "name": "scroll-reveals",
+        "value": "animation-timeline: view()",
+        "purpose": "Portal arch opens from 40% inset; closing sun rises 60px; map pin pulses once."
+      },
+      {
+        "name": "cursor-follow",
+        "value": "~120ms exponential trail",
+        "purpose": "Glass cursor halo following the 8px dot."
+      },
+      {
+        "name": "count-up",
+        "value": "900ms ease-out cubic",
+        "purpose": "Prices and founders counter count up once on entry."
+      }
+    ],
+    "breakpoints": [
+      {
+        "name": "single",
+        "value": "30rem"
+      },
+      {
+        "name": "memberships-1col",
+        "value": "36rem"
+      },
+      {
+        "name": "mobile",
+        "value": "40rem"
+      },
+      {
+        "name": "tablet",
+        "value": "56.25rem"
+      },
+      {
+        "name": "desktop-2col",
+        "value": "64rem"
+      },
+      {
+        "name": "canvas",
+        "value": "1440px"
+      }
+    ]
+  },
+  "components": [
+    {
+      "name": "CTA Pill",
+      "kind": "button",
+      "refersTo": "button-primary",
+      "description": "The one action shape: orange pill fused with an arrow disc taller than the pill.",
+      "html": "<a class=\"ds-cta\" href=\"#\">Quiero ser socio fundador<span class=\"ds-cta__disc\"><svg width=\"20\" height=\"20\" viewBox=\"0 0 24 24\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"1.5\"><path d=\"M5 12h14M13 6l6 6-6 6\"/></svg></span></a>",
+      "css": ".ds-cta { display: inline-flex; align-items: center; height: 64px; padding: 0 6px 0 34px; border-radius: 999px; background: #ff8235; color: #3b1d0e; font: 400 19px/1.2 'DM Sans Variable','DM Sans',system-ui,sans-serif; text-decoration: none; box-shadow: 0 18px 44px rgb(255 130 53 / 0.34); transition: background-color .22s cubic-bezier(0.22,1,0.36,1), box-shadow .22s cubic-bezier(0.22,1,0.36,1); } .ds-cta__disc { display: grid; place-items: center; width: 70px; height: 70px; margin-left: 20px; border-radius: 50%; background: #ff8235; box-shadow: inset 0 0 0 1px rgb(59 29 14 / 0.1); transition: transform .22s cubic-bezier(0.22,1,0.36,1); } .ds-cta:hover { background: #ffa76b; box-shadow: 0 22px 52px rgb(255 130 53 / 0.45); } .ds-cta:hover .ds-cta__disc { transform: translateX(6px); } .ds-cta:focus-visible { outline: 3px solid #ff8235; outline-offset: 4px; }"
+    },
+    {
+      "name": "Compact CTA",
+      "kind": "button",
+      "refersTo": "button-compact",
+      "description": "Header variant of the CTA pill: 48px pill, 52px disc, 15px label.",
+      "html": "<a class=\"ds-cta-s\" href=\"#\">Reservar<span class=\"ds-cta-s__disc\"><svg width=\"20\" height=\"20\" viewBox=\"0 0 24 24\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"1.5\"><path d=\"M5 12h14M13 6l6 6-6 6\"/></svg></span></a>",
+      "css": ".ds-cta-s { display: inline-flex; align-items: center; height: 48px; padding: 0 4px 0 22px; border-radius: 999px; background: #ff8235; color: #3b1d0e; font: 400 15px/1.2 'DM Sans Variable','DM Sans',system-ui,sans-serif; text-decoration: none; box-shadow: 0 10px 30px rgb(255 130 53 / 0.28); transition: background-color .22s; } .ds-cta-s__disc { display: grid; place-items: center; width: 52px; height: 52px; margin-left: 14px; border-radius: 50%; background: #ff8235; box-shadow: inset 0 0 0 1px rgb(59 29 14 / 0.1); transition: transform .22s; } .ds-cta-s:hover { background: #ffa76b; } .ds-cta-s:hover .ds-cta-s__disc { transform: translateX(6px); } .ds-cta-s:focus-visible { outline: 3px solid #ff8235; outline-offset: 4px; }"
+    },
+    {
+      "name": "Glass Header",
+      "kind": "nav",
+      "refersTo": "button-compact",
+      "description": "Fixed frosted pill with wordmark, 15px links and compact CTA.",
+      "html": "<nav class=\"ds-nav\"><strong class=\"ds-nav__logo\">SUNNA</strong><a href=\"#\">Cómo funciona</a><a href=\"#\">Precios</a><a href=\"#\">Preguntas</a></nav>",
+      "css": ".ds-nav { display: flex; align-items: center; gap: 26px; padding: 12px 26px; border-radius: 999px; font: 400 15px 'DM Sans Variable','DM Sans',system-ui,sans-serif; color: #3b1d0e; background: linear-gradient(135deg, rgb(255 255 255 / 0.6), rgb(255 241 230 / 0.32)), rgb(253 246 238 / 0.2); -webkit-backdrop-filter: blur(24px) saturate(180%); backdrop-filter: blur(24px) saturate(180%); border: 1px solid rgb(255 255 255 / 0.65); box-shadow: 0 24px 60px rgb(59 29 14 / 0.1), 0 2px 6px rgb(59 29 14 / 0.04), inset 1px 1px 0 rgb(255 255 255 / 0.7), inset 0 -1px 0 rgb(255 130 53 / 0.2); } .ds-nav__logo { margin-right: 14px; letter-spacing: .08em; font-weight: 500; } .ds-nav a { color: #3b1d0e; text-decoration: none; padding-bottom: 2px; border-bottom: 1.5px solid transparent; transition: border-color .22s; } .ds-nav a:hover { border-bottom-color: #ff8235; } .ds-nav a:focus-visible { outline: 3px solid #ff8235; outline-offset: 3px; border-radius: 6px; }"
+    },
+    {
+      "name": "Corner Label and Pending Marker",
+      "kind": "chip",
+      "refersTo": "pending-marker",
+      "description": "11px uppercase tracked label naming a card or place; monospace [PENDIENTE] marker for missing content.",
+      "html": "<div class=\"ds-lbl-wrap\"><p class=\"ds-lbl\">Recepción</p><span class=\"ds-pend\">[PENDIENTE] Foto real del estudio</span></div>",
+      "css": ".ds-lbl-wrap { display: grid; gap: 12px; justify-items: start; } .ds-lbl { margin: 0; font: 400 11px/1.4 'DM Sans Variable','DM Sans',system-ui,sans-serif; letter-spacing: .16em; text-transform: uppercase; color: #7a5540; } .ds-pend { padding: 10px 14px; border-radius: 14px; background: rgb(253 246 238 / 0.8); border: 1px solid rgb(255 196 154 / 0.6); font: 400 11px/1.5 ui-monospace,SFMono-Regular,Menlo,monospace; color: #7a5540; }"
+    },
+    {
+      "name": "Chips",
+      "kind": "chip",
+      "refersTo": "chip",
+      "description": "Static crema pills listing class types on a peach card.",
+      "html": "<ul class=\"ds-chips\"><li>Full Body</li><li>Pierna</li><li>Brazo</li><li class=\"ds-chips__l\">Core</li></ul>",
+      "css": ".ds-chips { display: flex; flex-wrap: wrap; gap: 8px; margin: 0; padding: 24px; list-style: none; border-radius: 28px; background: #fff1e6; font: 400 13px 'DM Sans Variable','DM Sans',system-ui,sans-serif; color: #3b1d0e; } .ds-chips li { padding: 8px 14px; border-radius: 999px; background: #fdf6ee; } .ds-chips .ds-chips__l { padding: 12px 22px; font-size: 19px; }"
+    },
+    {
+      "name": "Membership Cards",
+      "kind": "card",
+      "refersTo": "card-premium",
+      "description": "Peach membership card beside the Tinta Premium card with its overlapping orange badge.",
+      "html": "<div class=\"ds-mem\"><article class=\"ds-card\"><p class=\"ds-card__n\">Esencial</p><p class=\"ds-card__p\">55 €<small>/mes</small></p><ul><li>1 sesión/semana</li></ul></article><article class=\"ds-card ds-card--top\"><span class=\"ds-card__b\">Más completa</span><p class=\"ds-card__n\">Premium</p><p class=\"ds-card__p\">180 €<small>/mes</small></p><ul><li>Ilimitado</li></ul></article></div>",
+      "css": ".ds-mem { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; padding-top: 14px; font-family: 'DM Sans Variable','DM Sans',system-ui,sans-serif; } .ds-card { position: relative; display: flex; flex-direction: column; gap: 22px; padding: 34px 30px; border-radius: 28px; background: #fff1e6; color: #3b1d0e; transition: transform .3s; } .ds-card--top { background: #3b1d0e; color: #fdf6ee; box-shadow: 0 24px 60px rgb(59 29 14 / 0.22); } .ds-card__b { position: absolute; left: 30px; top: -13px; padding: 6px 14px; border-radius: 999px; background: #ff8235; color: #3b1d0e; font-size: 12px; font-weight: 500; } .ds-card__n { margin: 0; font-size: 11px; letter-spacing: .16em; text-transform: uppercase; color: #7a5540; } .ds-card--top .ds-card__n { color: rgb(253 246 238 / 0.65); } .ds-card__p { margin: 0; font-size: 52px; line-height: 1; letter-spacing: -.03em; } .ds-card__p small { font-size: 16px; letter-spacing: 0; color: #7a5540; } .ds-card--top .ds-card__p small { color: rgb(253 246 238 / 0.65); } .ds-card ul { margin: 0; padding: 0; list-style: none; font-size: 16px; } .ds-card li::before { content: '— '; color: #d95e1e; } .ds-card--top li::before { color: #ffa76b; } .ds-card:hover { transform: translateY(-4px); }"
+    },
+    {
+      "name": "Pill Field",
+      "kind": "input",
+      "refersTo": "field",
+      "description": "White pill field with icon disc and stacked label; orange ring on focus.",
+      "html": "<label class=\"ds-field\"><span class=\"ds-field__i\">@</span><span class=\"ds-field__b\"><span class=\"ds-field__l\">Email</span><input type=\"email\" placeholder=\"tu@email.com\"></span></label>",
+      "css": ".ds-field { display: flex; align-items: center; gap: 12px; padding: 6px 20px 6px 7px; border-radius: 999px; background: #fff; box-shadow: inset 0 0 0 1px #ffe0c9; font-family: 'DM Sans Variable','DM Sans',system-ui,sans-serif; color: #3b1d0e; transition: box-shadow .25s; } .ds-field:focus-within { box-shadow: inset 0 0 0 1px #ffa76b, 0 0 0 3px #ff8235; } .ds-field__i { display: grid; place-items: center; width: 40px; height: 40px; border-radius: 50%; background: #fff1e6; color: #8c3a12; } .ds-field__b { display: grid; flex: 1; } .ds-field__l { font-size: 12px; color: #7a5540; } .ds-field input { border: 0; outline: none; background: transparent; font: inherit; font-size: 16px; color: inherit; }"
+    },
+    {
+      "name": "Glyph",
+      "kind": "custom",
+      "refersTo": "card",
+      "description": "Geometric outline medallion: 1.5px Naranja 700 circle holding one form.",
+      "html": "<div class=\"ds-glyphs\"><span class=\"ds-g\"><span class=\"ds-g__arc\"></span></span><span class=\"ds-g\"><span class=\"ds-g__ring\"></span></span><span class=\"ds-g\"><span class=\"ds-g__screen\"></span></span></div>",
+      "css": ".ds-glyphs { display: flex; gap: 16px; } .ds-g { display: flex; align-items: center; justify-content: center; width: 56px; height: 56px; border-radius: 999px; border: 1.5px solid #d95e1e; } .ds-g > span { display: block; border: 1.5px solid #d95e1e; } .ds-g__arc { width: 46%; height: 23%; border-bottom: 0 !important; border-radius: 999px 999px 0 0; } .ds-g__ring { width: 40%; height: 40%; border-radius: 999px; } .ds-g__screen { width: 36%; height: 46%; border-radius: 4px; }"
+    },
+    {
+      "name": "Portal Photo",
+      "kind": "custom",
+      "refersTo": "card",
+      "description": "Arch-topped photo (180px top radius) with an uppercase caption below.",
+      "html": "<figure class=\"ds-portal\"><div class=\"ds-portal__img\"></div><figcaption>Recepción</figcaption></figure>",
+      "css": ".ds-portal { margin: 0; width: 220px; font-family: 'DM Sans Variable','DM Sans',system-ui,sans-serif; } .ds-portal__img { height: 320px; border-radius: 180px 180px 28px 28px; background: linear-gradient(160deg, #ffc49a, #f8ede0 60%, #d95e1e); } .ds-portal figcaption { margin-top: 18px; font-size: 11px; letter-spacing: .16em; text-transform: uppercase; color: #7a5540; }"
+    },
+    {
+      "name": "FAQ Row on Glass",
+      "kind": "custom",
+      "refersTo": "inner-panel",
+      "description": "Glass card over an orange halo; 16px disclosure rows with a rotating plus.",
+      "html": "<div class=\"ds-faq\"><details class=\"ds-q\" open><summary>¿Tengo que saber Pilates?<span>+</span></summary><p>No. La primera sesión es guiada.</p></details><details class=\"ds-q\"><summary>¿Qué pasa en la primera sesión?<span>+</span></summary><p>Te enseñamos la máquina.</p></details></div>",
+      "css": ".ds-faq { display: grid; gap: 8px; padding: 14px; border-radius: 28px; font-family: 'DM Sans Variable','DM Sans',system-ui,sans-serif; color: #3b1d0e; background: radial-gradient(closest-side at 80% 60%, rgb(255 130 53 / 0.5), rgb(255 196 154 / 0.25) 55%, transparent), #fdf6ee; } .ds-q { border-radius: 16px; background: rgb(255 255 255 / 0.45); transition: background-color .28s; } .ds-q[open] { background: rgb(255 241 230 / 0.8); } .ds-q summary { display: flex; justify-content: space-between; gap: 20px; padding: 24px 26px; font-size: 21px; line-height: 1.3; cursor: pointer; list-style: none; } .ds-q summary::-webkit-details-marker { display: none; } .ds-q summary span { color: #8c3a12; font-size: 22px; transition: rotate .28s; } .ds-q[open] summary span { rotate: 45deg; } .ds-q p { margin: 0; padding: 0 26px 24px; font-size: 17px; line-height: 1.6; } .ds-q summary:focus-visible { outline: 3px solid #ff8235; outline-offset: -3px; border-radius: 16px; }"
+    }
+  ],
+  "narrative": {
+    "northStar": "The Warm Sheet",
+    "overview": "SUNNA is a single warm sheet of cream paper (the \"lámina\") lit by one orange sun. Everything visual comes from the SUNNA Web reference canvas (1440px); the PDF brief supplies the words. The page reads as a calm editorial poster: large regular-weight DM Sans headlines on cream, small uppercase tracked labels at card corners, soft peach cards with 28px corners, and two moments of weight where the sheet turns dark: the Tinta Recovery band and the Naranja 900 founders band. A fine film grain sits over the whole page so the cream never reads as flat screen white.\n\nDepth comes from light rather than structure: radial orange halos (hero, FAQ, closing sun arc), frosted glass on the few floating surfaces (header pill, mobile bar, hero card, FAQ card, cursor), and warm-tinted shadows. Geometry comes from the circle and the arch: pill buttons, round glyph medallions, arch-topped \"portal\" photos, a sun arc rising behind the closing wordmark.\n\nContent that the brief has not yet supplied is shown honestly, in a small monospace `[PENDIENTE]` marker, never faked.",
+    "keyCharacteristics": [
+      "Cream ground (#fdf6ee) with a 3.5% multiply film grain over everything.",
+      "One orange voice (Naranja 500) for the CTA pill, sun halos, map pin, active arrows and badges.",
+      "Regular weight everywhere; size and tight tracking carry hierarchy, not boldness.",
+      "Uppercase 11px labels tracked +16% name places, groups, card titles and data.",
+      "Two dark bands (Tinta, Naranja 900) and one dark highlighted card (Premium) break the cream rhythm.",
+      "Glass only where something floats over imagery or light.",
+      "Arch portals, circle glyphs and a rising sun arc as the shape vocabulary."
+    ],
+    "rules": [
+      {
+        "name": "The Orange-Is-Not-Ink Rule",
+        "body": "Text is Tinta, Tinta 60, Crema (on dark) or Naranja 900. Naranja 500 and 700 never set text; text sitting on Naranja 500 is Tinta.",
+        "section": "colors"
+      },
+      {
+        "name": "The Two Dark Bands Rule",
+        "body": "Dark surfaces are deliberate and few: the Tinta Recovery band, the Naranja 900 founders band and footer, and the one highlighted membership card. Everything else stays on cream, tostado or peach.",
+        "section": "colors"
+      },
+      {
+        "name": "The Light-Not-Line Rule",
+        "body": "Emphasis and atmosphere come from radial orange light fading to cream, never from saturated flat blocks of Naranja 500 larger than a button or badge.",
+        "section": "colors"
+      },
+      {
+        "name": "The Regular Voice Rule",
+        "body": "Hierarchy is size and tracking. Nothing is bold; 500 is reserved for small action or badge text.",
+        "section": "typography"
+      },
+      {
+        "name": "The Tight-Top Rule",
+        "body": "Tracking tightens as size grows (−0.015em titles, −0.02em headlines, −0.025/−0.03em display and figures). Body text is never tracked; only labels are tracked open (+0.16em).",
+        "section": "typography"
+      },
+      {
+        "name": "The Corner Label Rule",
+        "body": "The 11px uppercase label names a place, group, card or datum (card names, FAQ group titles, footer column heads, photo captions, address, schedule phase, step counter \"01 — 04\"). It sits at the corner of the thing it names, in Tinta 60 (Crema at 62–70% on dark bands).",
+        "section": "typography"
+      },
+      {
+        "name": "The Glass-Over-Light Rule",
+        "body": "Glass appears only where a layer floats over imagery or a halo: header pill, mobile bottom bar, hero card, FAQ card over its halo, and the cursor halo. Content cards are opaque.",
+        "section": "elevation"
+      },
+      {
+        "name": "The Warm Shadow Rule",
+        "body": "Every shadow is tinted Tinta or orange. No grey or black shadows, no hard offsets.",
+        "section": "elevation"
+      },
+      {
+        "name": "The Sun-Shape Rule",
+        "body": "New geometry comes from the circle, the arch and the pill. No sharp-cornered rectangles, no diagonal cuts.",
+        "section": "shapes"
+      }
+    ],
+    "dos": [
+      "**Do** take every visual value from the SUNNA Web reference canvas and every word from the brief.",
+      "**Do** use the 11px uppercase +0.16em label to name the card, group, place or datum it sits on.",
+      "**Do** mark missing content with the 11px monospace `[PENDIENTE]` marker instead of inventing it.",
+      "**Do** keep all headlines at weight 400 with tightening tracking.",
+      "**Do** fuse the CTA pill with its oversized arrow disc; it is the one action shape.",
+      "**Do** use 28px corners on cards, 14/16px inside them, 999px on pills and 180px on arch photos.",
+      "**Do** keep the film grain and warm-tinted shadows on every surface.",
+      "**Do** respect reduced motion (halos stop breathing, scroll animations off) and reduced transparency (glass turns solid Naranja 50)."
+    ],
+    "donts": [
+      "**Don't** set text in Naranja 500 or 700.",
+      "**Don't** add dark surfaces beyond the Recovery band, the founders band, the footer and the Premium card.",
+      "**Don't** put glass on content cards; glass is only for layers floating over light or imagery.",
+      "**Don't** use bold weights or pictorial icon sets; glyphs are geometric outlines.",
+      "**Don't** use grey or black shadows or hard offset shadows.",
+      "**Don't** introduce colors outside the orange ramp, cream, tostado and Tinta."
+    ]
+  }
+}

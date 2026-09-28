@@ -1,0 +1,144 @@
+---
+import Logo from './Logo.astro';
+import { direccionCompleta, mapsUrl, whatsappUrl, type Ajustes, type Home } from '../lib/content';
+
+interface Props {
+  ajustes: Ajustes;
+  home: Home;
+}
+const { ajustes, home } = Astro.props;
+const wa = whatsappUrl(ajustes.contacto.whatsapp);
+const { contacto } = ajustes;
+const hayMedicion = Boolean(ajustes.medicion.googleAnalyticsId || ajustes.medicion.metaPixelId);
+const anio = new Date().getFullYear();
+---
+
+<footer class="pie">
+  <div class="envoltura">
+    <div class="pie__firma">
+      <Logo version="crema" label="SUNNA" />
+    </div>
+
+    <div class="pie__rejilla">
+      <div class="pie__col">
+        <h2 class="etiqueta pie__titulo">Estudio</h2>
+        <a href={mapsUrl(ajustes)} target="_blank" rel="noopener">{direccionCompleta(ajustes)}</a>
+      </div>
+
+      <div class="pie__col">
+        <h2 class="etiqueta pie__titulo">Contacto</h2>
+        {wa && <a href={wa} target="_blank" rel="noopener">WhatsApp</a>}
+        {contacto.instagram && <a href={contacto.instagram} target="_blank" rel="noopener">Instagram</a>}
+        {ajustes.reservas.appUrl && <a href={ajustes.reservas.appUrl} target="_blank" rel="noopener">{home.enlaces.app}</a>}
+        {contacto.telefonoAyuda && <a href={`tel:${contacto.telefonoAyuda.replace(/\s/g, '')}`}>{contacto.telefonoAyuda}</a>}
+        {contacto.email && <a href={`mailto:${contacto.email}`}>{contacto.email}</a>}
+      </div>
+
+      <div class="pie__col">
+        <h2 class="etiqueta pie__titulo">{home.pie.horarioTitulo}</h2>
+        {home.pie.horario.map((h) => <span>{h}</span>)}
+      </div>
+
+      <div class="pie__col">
+        <h2 class="etiqueta pie__titulo">Legal</h2>
+        {home.pie.legal.map((l) => <a href={l.url}>{l.texto}</a>)}
+        {
+          hayMedicion && (
+            <button type="button" class="pie__cookies" data-open-cookies>
+              {home.pie.cookies}
+            </button>
+          )
+        }
+      </div>
+    </div>
+
+    <div class="pie__base">
+      <span>© {anio} sunna pilates studio</span>
+      <span>{ajustes.direccion.ciudad}</span>
+    </div>
+  </div>
+</footer>
+
+<style>
+  .pie {
+    background: var(--n900);
+    color: var(--crema);
+    padding: clamp(3.5rem, 2rem + 4vw, 5rem) 0 calc(3.5rem + env(safe-area-inset-bottom));
+  }
+
+  @media (max-width: 56.25rem) {
+    .pie {
+      padding-bottom: calc(7rem + env(safe-area-inset-bottom));
+    }
+  }
+
+  .pie__firma {
+    margin-bottom: clamp(2.5rem, 1.5rem + 3vw, 4rem);
+  }
+
+  .pie__rejilla {
+    display: grid;
+    grid-template-columns: repeat(4, minmax(0, 1fr));
+    gap: 2rem;
+    padding-bottom: 2.75rem;
+    border-bottom: 1px solid rgb(253 246 238 / 0.25);
+  }
+
+  .pie__col {
+    display: flex;
+    flex-direction: column;
+    gap: 0.75rem;
+    font-size: 1rem;
+    line-height: 1.45;
+  }
+
+  .pie__titulo {
+    color: rgb(253 246 238 / 0.65);
+  }
+
+  .pie a {
+    color: var(--crema);
+    text-decoration: none;
+  }
+
+  .pie a:hover {
+    text-decoration: underline;
+    text-decoration-color: rgb(253 246 238 / 0.5);
+  }
+
+  .pie__cookies {
+    padding: 0;
+    border: 0;
+    background: none;
+    color: var(--crema);
+    font: inherit;
+    text-align: left;
+    cursor: pointer;
+  }
+
+  .pie__base {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: space-between;
+    gap: 0.5rem 2rem;
+    padding-top: 1.75rem;
+    font-size: 0.8125rem;
+    color: rgb(253 246 238 / 0.6);
+  }
+
+  .pie :focus-visible {
+    outline-color: var(--n200);
+  }
+
+  @media (max-width: 56.25rem) {
+    .pie__rejilla {
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+    }
+  }
+
+  @media (max-width: 30rem) {
+    .pie__rejilla {
+      grid-template-columns: 1fr;
+    }
+  }
+</style>

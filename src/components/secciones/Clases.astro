@@ -1,0 +1,97 @@
+---
+/* Las clases: tipografía y líneas finas, sin tarjetas. */
+import type { Home } from '../../lib/content';
+
+interface Props {
+  home: Home;
+}
+const { clases } = Astro.props.home;
+---
+
+<section id="clases" class="clases seccion" aria-labelledby="clases-titulo">
+  <div class="envoltura clases__rejilla">
+    <h2 id="clases-titulo" class="t-h2">{clases.titulo}</h2>
+
+    <div class="clases__cuerpo">
+      <dl class="duraciones">
+        {
+          clases.duraciones.map((d) => (
+            <div class="duracion">
+              <dt>{d.nombre}</dt>
+              <dd>{d.minutos} min</dd>
+            </div>
+          ))
+        }
+      </dl>
+
+      <p class="tipos">
+        {clases.tipos.join(' · ')}
+      </p>
+
+      <div class="notas">
+        <p><strong>{clases.idiomas.join(', ')}.</strong> {clases.idiomasTexto}</p>
+        <p>{clases.cascos}</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<style>
+  .clases__rejilla {
+    display: grid;
+    grid-template-columns: minmax(0, 0.8fr) minmax(0, 1.6fr);
+    gap: 2rem clamp(2rem, 1rem + 5vw, 6rem);
+    align-items: start;
+  }
+
+  .duraciones {
+    border-top: 1px solid var(--linea-fuerte);
+  }
+
+  .duracion {
+    display: flex;
+    align-items: baseline;
+    justify-content: space-between;
+    gap: 1rem;
+    padding-block: 1.25rem;
+    border-bottom: 1px solid var(--linea-fuerte);
+  }
+
+  .duracion dt {
+    font-size: clamp(1.5rem, 1.2rem + 1vw, 2rem);
+    letter-spacing: -0.02em;
+  }
+
+  .duracion dd {
+    font-size: clamp(1.5rem, 1.2rem + 1vw, 2rem);
+    letter-spacing: -0.02em;
+    color: var(--tinta-60);
+    white-space: nowrap;
+  }
+
+  .tipos {
+    margin-top: 2.25rem;
+    font-size: clamp(1.125rem, 1rem + 0.5vw, 1.375rem);
+    line-height: 1.6;
+  }
+
+  .notas {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 1.5rem 2.5rem;
+    margin-top: 2rem;
+    color: var(--tinta-60);
+  }
+
+  .notas strong {
+    font-weight: 500;
+    color: var(--tinta);
+  }
+
+  @media (max-width: 56.25rem) {
+    .clases__rejilla,
+    .notas {
+      grid-template-columns: 1fr;
+    }
+  }
+</style>

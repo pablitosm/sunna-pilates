@@ -1,0 +1,65 @@
+---
+/* ¿Y si…?: pregunta y respuesta en una línea, sin tarjetas. */
+import type { Home } from '../../lib/content';
+
+interface Props {
+  home: Home;
+}
+const { dudas } = Astro.props.home;
+---
+
+<section class="dudas seccion" aria-labelledby="dudas-titulo">
+  <div class="envoltura dudas__rejilla">
+    <h2 id="dudas-titulo" class="t-h2">{dudas.titulo}</h2>
+    <dl class="dudas__lista">
+      {
+        dudas.items.map((d) => (
+          <div class="duda">
+            <dt>{d.pregunta}</dt>
+            <dd>{d.respuesta}</dd>
+          </div>
+        ))
+      }
+    </dl>
+  </div>
+</section>
+
+<style>
+  .dudas__rejilla {
+    display: grid;
+    grid-template-columns: minmax(0, 0.8fr) minmax(0, 1.6fr);
+    gap: 2rem clamp(2rem, 1rem + 5vw, 6rem);
+    align-items: start;
+  }
+
+  .dudas__lista {
+    border-top: 1px solid var(--linea-fuerte);
+  }
+
+  .duda {
+    display: grid;
+    grid-template-columns: minmax(0, 1fr) minmax(0, 1.1fr);
+    gap: 0.5rem 2.5rem;
+    padding-block: 1.75rem;
+    border-bottom: 1px solid var(--linea-fuerte);
+  }
+
+  .duda dt {
+    font-size: clamp(1.25rem, 1.05rem + 0.8vw, 1.625rem);
+    line-height: 1.25;
+    letter-spacing: -0.015em;
+  }
+
+  .duda dd {
+    font-size: 1.0625rem;
+    line-height: 1.6;
+    color: var(--tinta-60);
+  }
+
+  @media (max-width: 56.25rem) {
+    .dudas__rejilla,
+    .duda {
+      grid-template-columns: 1fr;
+    }
+  }
+</style>

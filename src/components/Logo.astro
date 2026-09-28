@@ -1,0 +1,23 @@
+---
+/* Logotipo original de SUNNA (no redibujar ni cambiar proporciones). */
+import Tinta from '../assets/brand/sunna-tinta.svg';
+import Crema from '../assets/brand/sunna-crema.svg';
+
+interface Props {
+  version?: 'tinta' | 'crema';
+  class?: string;
+  label?: string;
+}
+const { version = 'tinta', class: className, label = 'SUNNA' } = Astro.props;
+const Svg = version === 'crema' ? Crema : Tinta;
+---
+
+<Svg class:list={['logo', className]} role="img" aria-label={label} />
+
+<style>
+  .logo {
+    display: block;
+    width: 100%;
+    height: auto;
+  }
+</style>

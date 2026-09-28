@@ -1,0 +1,85 @@
+---
+import { getCollection, render } from 'astro:content';
+import Base from '../layouts/Base.astro';
+
+export async function getStaticPaths() {
+  const paginas = await getCollection('legal', (p) => p.id.startsWith('es/'));
+  return paginas.map((pagina) => ({
+    params: { legal: pagina.id.replace('es/legal/', '') },
+    props: { pagina },
+  }));
+}
+
+const { pagina } = Astro.props;
+const { Content } = await render(pagina);
+---
+
+<Base titulo={pagina.data.titulo} descripcion={pagina.data.descripcion} inicio="/" indexar={false}>
+  <article class="legal envoltura">
+    <h1 class="t-h2">{pagina.data.titulo}</h1>
+    {pagina.data.actualizado && <p class="t-small t-secundario">Actualizado: {pagina.data.actualizado}</p>}
+    <div class="legal__cuerpo">
+      <Content />
+    </div>
+  </article>
+</Base>
+
+<style>
+  .legal {
+    padding-block: 9rem var(--seccion);
+    max-width: 46rem;
+  }
+
+  .legal__cuerpo {
+    margin-top: 2.5rem;
+  }
+
+  .legal__cuerpo :global(h2) {
+    margin: 2.5rem 0 0.75rem;
+    font-size: var(--t-h3);
+    line-height: 1.2;
+    letter-spacing: -0.015em;
+  }
+
+  .legal__cuerpo :global(p),
+  .legal__cuerpo :global(ul) {
+    margin-bottom: 1rem;
+    color: var(--tinta-60);
+  }
+
+  .legal__cuerpo :global(strong) {
+    color: var(--tinta);
+    font-weight: 500;
+  }
+
+  .legal__cuerpo :global(blockquote) {
+    margin: 0 0 2rem;
+    padding: 1rem 1.25rem;
+    border-radius: var(--r-s);
+    background: var(--n50);
+  }
+
+  .legal__cuerpo :global(blockquote p) {
+    margin: 0;
+    color: var(--tinta);
+  }
+
+  .legal__cuerpo :global(table) {
+    width: 100%;
+    margin-bottom: 1.5rem;
+    border-collapse: collapse;
+    font-size: var(--t-small);
+  }
+
+  .legal__cuerpo :global(th),
+  .legal__cuerpo :global(td) {
+    padding: 0.6rem 0.5rem;
+    border-bottom: 1px solid var(--linea);
+    text-align: left;
+    vertical-align: top;
+  }
+
+  .legal__cuerpo :global(th) {
+    font-weight: 500;
+  }
+</style>

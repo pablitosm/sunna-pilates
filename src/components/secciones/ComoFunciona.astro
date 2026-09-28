@@ -1,0 +1,250 @@
+---
+import Glifo from '../Glifo.astro';
+import type { Ajustes, Home } from '../../lib/content';
+
+interface Props {
+  ajustes: Ajustes;
+  home: Home;
+}
+const { ajustes, home } = Astro.props;
+const { comoFunciona: cf } = home;
+const { horariosUrl, appUrl } = ajustes.reservas;
+const total = String(cf.pasos.length).padStart(2, '0');
+---
+
+<section id="como-funciona" class="como seccion" aria-labelledby="como-titulo" data-como>
+  <!-- Escritorio: sección anclada, los cuatro pasos avanzan en horizontal al bajar -->
+  <div class="como__anclaje" data-anclaje>
+    <div class="como__fijo">
+      <div class="envoltura">
+        <div class="cabeza-seccion">
+          <h2 id="como-titulo" class="t-h2">{cf.titulo}</h2>
+          <span class="etiqueta" aria-hidden="true">01 — {total}</span>
+        </div>
+      </div>
+
+    <ol role="list" class="pasos con-trazado" data-trazar data-pista>
+      {
+        cf.pasos.map((paso, i) => (
+          <li class="paso" data-iman>
+            <Glifo forma={paso.icono as any} tamano={56} indice={i} />
+            <span class="paso__numero" aria-hidden="true">
+              {String(i + 1).padStart(2, '0')}
+            </span>
+            <h3 class="t-h3">
+              <span class="solo-lectores">Paso {i + 1}. </span>
+              {paso.titulo}
+            </h3>
+            <p class="paso__texto">{paso.texto}</p>
+          </li>
+        ))
+      }
+    </ol>
+      <div class="envoltura">
+        <p class="nota-final">{cf.notaFinal}</p>
+      </div>
+    </div>
+  </div>
+
+  <div class="envoltura">
+
+    <div class="notas">
+      <p>{cf.datos.reserva}</p>
+      <p>{cf.datos.cancelacion}</p>
+    </div>
+
+    <h3 class="horario__titulo">{cf.datos.horario.titulo}</h3>
+    <div class="horario">
+      {
+        cf.datos.horario.fases.map((f, i) => (
+          <div class:list={['fase', { 'fase--final': i > 0 }]}>
+            <p class="etiqueta fase__etiqueta">{f.etiqueta}</p>
+            {f.horas.map((h) => (
+              <p class="fase__horas">{h}</p>
+            ))}
+            <p class="fase__texto">{f.texto}</p>
+          </div>
+        ))
+      }
+    </div>
+    {
+      (horariosUrl || appUrl) && (
+        <p class="enlaces">
+          {horariosUrl && (
+            <a class="enlace-flecha" href={horariosUrl} target="_blank" rel="noopener">
+              {home.enlaces.horarios} →
+            </a>
+          )}
+          {appUrl && (
+            <a class="enlace-flecha" href={appUrl} target="_blank" rel="noopener">
+              {home.enlaces.app} →
+            </a>
+          )}
+        </p>
+      )
+    }
+  </div>
+</section>
+
+<style>
+  .como {
+    background: var(--tostado);
+  }
+
+  .pasos {
+    display: grid;
+    grid-template-columns: repeat(4, minmax(0, 1fr));
+    gap: 1.25rem;
+    width: min(100% - 2 * var(--gutter), var(--ancho));
+    margin-inline: auto;
+  }
+
+  /* Modo anclado (lo activa el script en escritorio) */
+  .como--anclado .como__anclaje {
+    height: var(--alto-anclaje, auto);
+  }
+
+  .como--anclado .como__fijo {
+    position: sticky;
+    top: 0;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    min-height: 100vh;
+    padding-top: 5rem;
+    overflow: hidden;
+  }
+
+  .como--anclado .pasos {
+    display: flex;
+    width: max-content;
+    margin-inline: 0;
+    padding-inline: calc((100vw - min(100vw - 2 * var(--gutter), var(--ancho))) / 2);
+    will-change: transform;
+  }
+
+  /* Tarjetas anchas: la fila supera la pantalla y el avance se lee paso a paso */
+  .como--anclado .pasos {
+    gap: 1.5rem;
+  }
+
+  .como--anclado .paso {
+    flex: none;
+    width: clamp(24rem, 38vw, 36rem);
+    min-height: 22rem;
+    padding: 2.5rem 2.25rem 2.75rem;
+  }
+
+  /* Tarjetas magnéticas: 4 px hacia el cursor */
+  .paso {
+    translate: var(--iman-x, 0) var(--iman-y, 0);
+    transition: translate 0.3s var(--ease);
+  }
+
+  .paso {
+    display: flex;
+    flex-direction: column;
+    gap: 1.125rem;
+    padding: 2rem 1.75rem 2.25rem;
+    border-radius: var(--r-l);
+    background: var(--n50);
+  }
+
+  .paso__numero {
+    font-size: 0.6875rem;
+    letter-spacing: 0.16em;
+    color: var(--tinta-60);
+  }
+
+  .paso__texto {
+    font-size: 1.0625rem;
+    line-height: 1.6;
+  }
+
+  .enlaces {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 1rem 2rem;
+    margin-top: 1.75rem;
+  }
+
+  .nota-final {
+    margin-top: 1.25rem;
+    font-size: 0.875rem;
+    color: var(--tinta-60);
+  }
+
+  .notas {
+    display: flex;
+    gap: 2.75rem;
+    margin-top: 3.25rem;
+    padding-top: 2.25rem;
+    border-top: 1px solid rgb(255 196 154 / 0.8);
+  }
+
+  .notas p {
+    flex: 1;
+    font-size: 1rem;
+    line-height: 1.6;
+  }
+
+  .horario__titulo {
+    margin: 3.25rem 0 1.25rem;
+    font-size: 1.5rem;
+    line-height: 1.2;
+  }
+
+  .horario {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 1.25rem;
+  }
+
+  .fase {
+    padding: 2.125rem 2.25rem 2.375rem;
+    border-radius: var(--r-l);
+    background: var(--n50);
+  }
+
+  .fase--final {
+    background: var(--crema);
+    border: 1px dashed var(--linea-fuerte);
+  }
+
+  .fase__etiqueta {
+    margin-bottom: 1.25rem;
+  }
+
+  .fase__horas {
+    font-size: clamp(1.75rem, 1.2rem + 1.8vw, 2.5rem);
+    line-height: 1.1;
+    letter-spacing: -0.02em;
+  }
+
+  .fase__horas + .fase__horas {
+    margin-top: 0.375rem;
+  }
+
+  .fase__texto {
+    margin-top: 0.875rem;
+    font-size: 0.9375rem;
+    color: var(--tinta-60);
+  }
+
+  @media (max-width: 64rem) {
+    .pasos {
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+    }
+  }
+
+  @media (max-width: 40rem) {
+    .pasos,
+    .horario {
+      grid-template-columns: 1fr;
+    }
+    .notas {
+      flex-direction: column;
+      gap: 1rem;
+    }
+  }
+</style>
