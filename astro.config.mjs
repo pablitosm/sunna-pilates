@@ -13,10 +13,10 @@ export default defineConfig({
   output: 'static',
   integrations: [vue(), ...(site ? [sitemap({ filter: (url) => !url.includes('/login') })] : [])],
   i18n: {
-    // Castellano en la apertura. Para añadir inglés: crea src/content/en/
-    // (copiando src/content/es/) y la página src/pages/en/index.astro.
+    // Castellano en la raíz (/); inglés, alemán y francés en /en/, /de/ y /fr/.
+    // Los textos de cada idioma viven en src/content/<idioma>/home.yaml.
     defaultLocale: 'es',
-    locales: ['es', 'en'],
+    locales: ['es', 'en', 'de', 'fr'],
     routing: { prefixDefaultLocale: false },
   },
 });

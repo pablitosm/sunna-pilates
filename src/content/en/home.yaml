@@ -1,0 +1,355 @@
+# ─────────────────────────────────────────────────────────────
+#  TEXTOS DE LA HOME DE SUNNA (inglés · /en/)
+#  Traducción de src/content/es/home.yaml. Si cambias algo en castellano,
+#  cámbialo también aquí. Edita solo lo que está entre comillas.
+#  Los ajustes (estado, dirección, enlaces, plazas…) son los de
+#  src/content/es/ajustes.yaml y valen para todos los idiomas.
+#  Las páginas legales solo existen en castellano.
+# ─────────────────────────────────────────────────────────────
+
+seo:
+  titulo: "SUNNA · Reformer Pilates in Santa Cruz de Tenerife"
+  descripcion: "Reformer Pilates in Santa Cruz de Tenerife. Train whenever you want, at your own pace, with a class guided on screen, and you never start alone: the first time, we show you everything."
+
+ui:
+  idioma: "Language"
+  saltar: "Skip to content"
+  irInicio: "SUNNA, go to home page"
+  navegacion: "Main"
+  abrirMenu: "Open menu"
+  menu: "Menu"
+  paso: "Step"
+  porMes: "/month"
+  mapaTitulo: "Map: SUNNA location"
+  pieEstudio: "Studio"
+  pieContacto: "Contact"
+  pieLegal: "Legal"
+
+menu:
+  - texto: "How it works"
+    ancla: "como-funciona"
+  - texto: "Prices"
+    ancla: "precios"
+  - texto: "FAQ"
+    ancla: "preguntas"
+
+botones:
+  principal:
+    preapertura: "Become a founding member"
+    abierto: "Book your free first session"
+  principalCorto:
+    preapertura: "Become a founding member"
+    abierto: "Free first session"
+  secundario: "How it works"
+
+enlaces:
+  horarios: "See the schedule"
+  membresias: "Buy a membership"
+  app: "Download the app"
+
+# 1 · PORTADA
+portada:
+  titular: "Reformer Pilates on your time."
+  subtitulo: "Your reformer, your class on screen and the studio to yourself. The first time, we show you everything."
+  abrimos: "opening on"
+
+# 2 · QUÉ ES SUNNA
+queEs:
+  titulo: "What SUNNA is"
+  ideas:
+    - icono: "anillo"
+      titulo: "You choose the time"
+      texto: "Book in the app, no fixed group timetable."
+    - icono: "pantalla"
+      titulo: "A guided class on your reformer"
+      texto: "An iPad on every machine with classes from 10 to 45 min."
+    - icono: "arco"
+      titulo: "You never start alone"
+      texto: "A 45-min first session with us."
+
+# 3 · CÓMO FUNCIONA
+comoFunciona:
+  titulo: "How it works"
+  pasos:
+    - icono: "arco"
+      titulo: "Come to your first session. It's free."
+      texto: "45 minutes with us: we show you the reformer, the app, how to get in and how to choose your class. It's required before you train on your own."
+    - icono: "anillo"
+      titulo: "Book your reformer in the app."
+      texto: "Pick a day and time. For that hour, the reformer is yours."
+    - icono: "pantalla"
+      titulo: "Get in with your phone."
+      texto: "The door opens with your booking. No keys, no reception."
+    - icono: "punto"
+      titulo: "Choose your class and press play."
+      texto: "On your reformer's iPad: full body, core, legs, mobility… from 10 to 45 minutes."
+  notaFinal: "When you finish, leave your reformer ready for the next person."
+  datos:
+    reserva: "Each booking is a 1-hour block: up to 50 min of class + time to come in, set up and leave."
+    cancelacion: "You book in advance and can cancel free of charge up to a set time before."
+    horario:
+      titulo: "Opening hours"
+      fases:
+        - etiqueta: "The first 2–3 weeks"
+          horas: ["08:00 — 14:00", "16:00 — 22:00"]
+          texto: "The studio only opens with someone from SUNNA inside."
+        - etiqueta: "After that"
+          horas: ["05:00 — 23:00"]
+          texto: "Self-service access."
+
+# 4 · LAS CLASES
+clases:
+  titulo: "The classes"
+  tiposTitulo: "Types"
+  tipos: ["Full Body", "Legs", "Arms", "Core", "Mobility", "Stretching"]
+  duraciones:
+    - nombre: "Long"
+      minutos: "40–45"
+    - nombre: "Short"
+      minutos: "15–25"
+    - nombre: "Mobility"
+      minutos: "10–15"
+  idiomas: ["Spanish", "English", "German", "French"]
+  idiomasTexto: "The largest catalogue is in English, and there are plenty of classes in Spanish too."
+  cascos: "Every reformer has bluetooth over-ear headphones. If you prefer, bring your own."
+
+# 5 · RECOVERY
+recovery:
+  etiqueta: "Recovery"
+  titulo: "Reformer, sauna and red light."
+  lineas:
+    - "Sauna and red light are there from opening day."
+    - "Included in your membership, depending on the plan."
+  membresiaTitulo: "In your membership"
+  apartados:
+    - tipo: "reformer"
+      titulo: "The reformer"
+      texto: "A Pilates machine with a carriage that slides on rails, springs and straps. The springs set the resistance, so it adapts to you, whether you're starting from zero or not."
+      puntos:
+        - "6 reformers, one person per machine."
+        - "An iPad with your class and bluetooth headphones on every reformer."
+        - "In your first session we show you how to use it safely."
+      membresia:
+        - plan: "Basic"
+          cantidad: "4 a month"
+        - plan: "Standard"
+          cantidad: "8 a month"
+        - plan: "Pro"
+          cantidad: "12 a month"
+        - plan: "Premium"
+          cantidad: "Unlimited"
+      pendiente: ""
+    - tipo: "sauna"
+      titulo: "The sauna"
+      texto: "An infrared sauna: instead of heating the air a lot, it warms you with infrared light, so it feels gentler than a traditional sauna."
+      puntos:
+        - "There from opening day."
+        - "Booked in the app, just like your reformer."
+        - "Included from the Standard membership up."
+      membresia:
+        - plan: "Basic"
+          cantidad: "Not included"
+        - plan: "Standard"
+          cantidad: "1 a month"
+        - plan: "Pro"
+          cantidad: "2 a month"
+        - plan: "Premium"
+          cantidad: "Unlimited"
+      pendiente: "[PENDIENTE] duración de cada sesión y qué llevar"
+    - tipo: "luz-roja"
+      titulo: "The red light room"
+      texto: "A room with red light panels. You sit or stand in front of them, relax and let the session run."
+      puntos:
+        - "There from opening day."
+        - "Booked in the app, just like your reformer."
+        - "Included in every membership."
+      membresia:
+        - plan: "Basic"
+          cantidad: "1 a month"
+        - plan: "Standard"
+          cantidad: "2 a month"
+        - plan: "Pro"
+          cantidad: "3 a month"
+        - plan: "Premium"
+          cantidad: "Unlimited"
+      pendiente: "[PENDIENTE] duración de cada sesión y qué llevar"
+
+# 6 · ¿Y SI…?
+dudas:
+  titulo: "What if…?"
+  items:
+    - pregunta: "Never done Pilates?"
+      respuesta: "That's what the first session is for."
+    - pregunta: "What if I get lost in the class?"
+      respuesta: "The video guides you step by step and you can pause it."
+    - pregunta: "Will I be alone in the studio?"
+      respuesta: "At first there will always be someone from SUNNA. After that, only people with a booking can get in, with cameras and a help phone."
+    - pregunta: "Always running late?"
+      respuesta: "There's no “late” here: your class starts when you press play."
+
+# 7 · PRECIOS
+precios:
+  titulo: "Prices"
+  subtitulo: "Four monthly memberships."
+  porSesion: "per session"
+  membresias:
+    - nombre: "Basic"
+      precio: 55
+      precioSesion: "€13.75"
+      pilates: "1 session/week (4/month)"
+      recovery: "1 red light"
+    - nombre: "Standard"
+      precio: 100
+      precioSesion: "€12.50"
+      pilates: "2 sessions/week (8/month)"
+      recovery: "2 red light + 1 sauna"
+    - nombre: "Pro"
+      precio: 140
+      precioSesion: "€11.67"
+      pilates: "3 sessions/week (12/month)"
+      recovery: "3 red light + 2 sauna"
+    - nombre: "Premium"
+      precio: 180
+      precioSesion: "from €3"
+      pilates: "Unlimited (subject to availability)"
+      recovery: "Unlimited recovery with booking"
+      extra: "Booking priority"
+      destacada: true
+      etiqueta: "Most popular"
+  fundadores:
+    etiqueta: "Only 40 places"
+    titulo: "Be one of SUNNA's 40 founding members."
+    ventajas:
+      - "Founder price protected forever, as long as you stay subscribed. If you cancel and come back, you rejoin at the current rate, no longer as a founder."
+      - "Booking priority at opening and an invitation to the private opening event."
+      - "Recognition as a founding member and early access to news, workshops and events."
+    pack:
+      titulo: "Welcome pack"
+      texto: "Socks, tote bag, stickers and a few more surprises."
+    plazas: "places left of"
+
+# 8 · EL ESTUDIO
+estudio:
+  titulo: "The studio"
+  espacios:
+    - icono: "rectangulo"
+      texto: "6 reformers, one person per machine"
+      tono: "claro"
+    - icono: "pantalla"
+      texto: "iPad and bluetooth headphones on every reformer"
+      tono: "medio"
+    - icono: "punto"
+      texto: "Red light"
+      tono: "rojo"
+    - icono: "arco"
+      texto: "Sauna"
+      tono: "tinta"
+  mapa:
+    direccion: "Address"
+    comoLlegar: "Getting here"
+    boton: "Show the map"
+    aviso: "The Google Maps map only loads if you ask for it."
+    abrir: "Open in maps"
+
+# 9 · PREGUNTAS FRECUENTES
+faq:
+  titulo: "Frequently asked questions"
+  grupos:
+    - titulo: "Getting started"
+      preguntas:
+        - pregunta: "Do I need to know Pilates?"
+          respuesta: "No. The first session, free and with us, is designed for complete beginners."
+        - pregunta: "What happens in the first session?"
+          respuesta: "45 minutes in which we show you the reformer, the app, how to get into the studio and how to choose a class. You can't train on your own without it."
+        - pregunta: "What if I forget something later?"
+          respuesta: "Come by when someone from the team is in and we'll go over it."
+    - titulo: "Booking and getting in"
+      preguntas:
+        - pregunta: "How do I book?"
+          respuesta: "In the SUNNA app (bsport). Pick a day, time and reformer."
+        - pregunta: "How do I get in?"
+          respuesta: "With your phone: the door only opens if you have a booking at that time."
+        - pregunta: "Can I cancel?"
+          respuesta: "Yes, free of charge if you let us know in advance."
+        - pregunta: "What are your opening hours?"
+          respuesta: "For the first few weeks, 08:00–14:00 and 16:00–22:00, always with someone from the team. After that we'll gradually extend to 05:00–23:00."
+    - titulo: "The classes"
+      preguntas:
+        - pregunta: "What is a class like?"
+          respuesta: "You choose on your reformer's iPad and follow the video. There are classes from 10 to 45 minutes: full body, core, legs, arms, mobility and stretching."
+        - pregunta: "In what language?"
+          respuesta: "In Spanish, English, German and French. The largest catalogue is in English, and there are plenty of classes in Spanish too."
+        - pregunta: "Do I need headphones?"
+          respuesta: "No. Every reformer has bluetooth over-ear headphones. If you prefer, bring your own."
+        - pregunta: "What should I bring?"
+          respuesta: ""
+    - titulo: "Safety and membership"
+      preguntas:
+        - pregunta: "Is it safe to train without an instructor?"
+          respuesta: "Before training on your own you do the introductory session. Only people with a booking can get in, there are cameras in the studio and you have a help phone to talk to us directly."
+        - pregunta: "Can I cancel my membership?"
+          respuesta: "Yes, with 10 days' notice."
+        - pregunta: "Is there a minimum age?"
+          respuesta: "18 to train alone. Minors from 16, accompanied by an adult."
+
+# 10 · CIERRE
+cierre:
+  titulo: "Your first session is free."
+  texto: "Book and we'll show you everything."
+
+# 11 · PIE (las páginas legales están en castellano)
+pie:
+  horarioTitulo: "Opening hours"
+  horario:
+    - "The first 2–3 weeks: 08:00–14:00 and 16:00–22:00"
+    - "After that: 05:00–23:00"
+  legal:
+    - texto: "Legal notice (ES)"
+      url: "/aviso-legal"
+    - texto: "Privacy (ES)"
+      url: "/privacidad"
+    - texto: "Cookies (ES)"
+      url: "/cookies"
+    - texto: "Membership terms (ES)"
+      url: "/condiciones-membresia"
+  cookies: "Cookie preferences"
+
+panel:
+  preapertura:
+    titulo: "Become a founding member"
+    texto: "Waiting list and founding members."
+    campos:
+      nombre: "Name"
+      email: "Email"
+      telefono: "Phone"
+    consentimiento: "I agree that SUNNA may use this data for the waiting list."
+    privacidad: "Privacy policy"
+    enviar: "Send"
+    enviando: "Sending…"
+    exitoTitulo: "You're on the list."
+    exitoTexto: "We'll write to you before opening."
+    error: "It couldn't be sent. Check your connection and try again."
+    sinConexion: "Message us on WhatsApp and we'll sign you up."
+    sinConexionSinContacto: "Message us on Instagram and we'll sign you up."
+    pie: ""
+  abierto:
+    titulo: "Book your free first session"
+    texto: "45 minutes with us: we show you the reformer, the app, how to get in and how to choose your class."
+    boton: "Book"
+    widget: ""
+  whatsapp: "WhatsApp"
+  cerrar: "Close"
+
+cookies:
+  titulo: "Cookies"
+  texto: "We only use analytics cookies and the Meta pixel if you accept them."
+  aceptar: "Accept"
+  rechazar: "Reject"
+  configurar: "Settings"
+  guardar: "Save"
+  analitica:
+    titulo: "Analytics"
+    texto: "Google Analytics."
+  marketing:
+    titulo: "Marketing"
+    texto: "Meta pixel."

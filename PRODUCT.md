@@ -67,7 +67,7 @@ Close, short, no ad-speak. Short sentences, numbered steps, icons; no long parag
 ## Technical constraints
 
 - Bookings, payments and access live in bsport and Kisi; no custom systems. bsport integration deferred for now (placeholders). Kisi is only explained, not integrated.
-- Spanish at launch; structure ready for English.
+- Four languages (added 2026-09-28): Spanish at `/`, English `/en/`, German `/de/`, French `/fr/`. Each has its own `src/content/<lang>/home.yaml`; settings (`es/ajustes.yaml`) are shared. Legal pages exist only in Spanish and are linked with an "(ES)" mark from the other languages. Visiting `/` redirects on the server (Caddy, `servidor/idioma.caddy`) by browser language (es/ca/gl/eu → Spanish, en/de/fr → theirs, anything else → English) unless the visitor picked a language in the switcher (cookie `sunna-idioma`); search engine bots are never redirected.
 - Local SEO for "pilates reformer Santa Cruz de Tenerife": title, copy, Google Business link, map, LocalBusiness structured data.
 - Legal: aviso legal, privacidad, cookies (real consent banner), condiciones de membresía.
 - Analytics and Meta pixel only after consent.

@@ -1,6 +1,20 @@
 import { getEntry, type CollectionEntry } from 'astro:content';
 
-export type Lang = 'es' | 'en';
+export const idiomas = ['es', 'en', 'de', 'fr'] as const;
+export type Lang = (typeof idiomas)[number];
+
+/** Nombre de cada idioma en su propia lengua (selector de idioma). */
+export const nombresIdioma: Record<Lang, string> = {
+  es: 'Castellano',
+  en: 'English',
+  de: 'Deutsch',
+  fr: 'Français',
+};
+
+/** Portada de cada idioma: castellano en la raíz, el resto en /en/, /de/, /fr/. */
+export const raizIdioma = (lang: Lang) => (lang === 'es' ? '/' : `/${lang}/`);
+
+export const localeOg: Record<Lang, string> = { es: 'es_ES', en: 'en_GB', de: 'de_DE', fr: 'fr_FR' };
 export type Ajustes = CollectionEntry<'ajustes'>['data'];
 export type Home = CollectionEntry<'home'>['data'];
 export type Estado = Ajustes['estado'];
@@ -8,11 +22,12 @@ export type Estado = Ajustes['estado'];
 let avisado = false;
 
 export async function getSite(lang: Lang = 'es') {
-  const ajustes = await getEntry('ajustes', `${lang}/ajustes`);
+  // Los ajustes (estado, dirección, enlaces…) son los mismos en todos los idiomas.
+  const ajustes = await getEntry('ajustes', 'es/ajustes');
   const home = await getEntry('home', `${lang}/home`);
   if (!ajustes || !home) {
     throw new Error(
-      `No se ha podido leer el contenido de "${lang}" (src/content/${lang}/ajustes.yaml y home.yaml). ` +
+      `No se ha podido leer el contenido de "${lang}" (src/content/es/ajustes.yaml y src/content/${lang}/home.yaml). ` +
         'Suele ser un campo que falta o mal escrito: el detalle aparece justo encima en la terminal. ' +
         'Si ya lo has corregido, reinicia el servidor (npx astro dev stop y npm run dev).',
     );

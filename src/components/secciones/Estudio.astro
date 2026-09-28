@@ -43,7 +43,7 @@ const d = ajustes.direccion;
           <span class="mapa__punto"></span>
         </div>
         <div class="mapa__accion">
-          <button type="button" class="mapa__boton" data-mapa-cargar data-src={mapsEmbedUrl(ajustes)}>
+          <button type="button" class="mapa__boton" data-mapa-cargar data-src={mapsEmbedUrl(ajustes)} data-titulo={home.ui.mapaTitulo}>
             {estudio.mapa.boton}
           </button>
           <p class="mapa__aviso">{estudio.mapa.aviso}</p>
@@ -83,7 +83,7 @@ const d = ajustes.direccion;
       if (!mapa || !boton.dataset.src) return;
       const iframe = document.createElement('iframe');
       iframe.src = boton.dataset.src;
-      iframe.title = 'Mapa: ubicación de SUNNA';
+      iframe.title = boton.dataset.titulo ?? '';
       iframe.loading = 'lazy';
       iframe.referrerPolicy = 'no-referrer-when-downgrade';
       iframe.className = 'mapa__iframe';
@@ -118,6 +118,11 @@ const d = ajustes.direccion;
 
   .portal__arco--sol {
     background: linear-gradient(180deg, var(--n100), var(--n200));
+  }
+
+  .portal__arco--rojo {
+    --glifo: var(--rojo-900);
+    background: linear-gradient(180deg, var(--rojo-100), var(--rojo-200));
   }
 
   .portal__arco--tinta {

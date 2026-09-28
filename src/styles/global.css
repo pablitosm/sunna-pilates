@@ -12,6 +12,15 @@
   --n700: #d95e1e; /* forma, nunca texto */
   --n900: #8c3a12; /* único naranja que puede ser texto */
   --tinta: #3b1d0e;
+  /* Rojo de la sala de luz roja: pariente cálido del naranja, nunca neón.
+     Solo vive en ese apartado (y su arco en El estudio). 900 puede ser texto. */
+  --rojo-50: #fff0ed;
+  --rojo-100: #ffdcd5;
+  --rojo-200: #ffb8aa;
+  --rojo-300: #ff8f7a;
+  --rojo-500: #ec4a32;
+  --rojo-700: #bf3320;
+  --rojo-900: #7d2114;
   --tinta-60: #7a5540;
 
   --linea: rgb(59 29 14 / 0.12);

@@ -1,4 +1,10 @@
 ---
+/*
+ * Recovery y los tres espacios: el reformer, la sauna y la sala de luz roja.
+ * Cada apartado es un arco (foto real o ilustración de línea) junto a su
+ * explicación y lo que incluye cada membresía. La luz roja lleva su propio
+ * rojo (--rojo-*); el resto vive en la escala naranja.
+ */
 import PhotoSlot from '../PhotoSlot.astro';
 import type { Home } from '../../lib/content';
 
@@ -6,54 +12,120 @@ interface Props {
   home: Home;
 }
 const { recovery } = Astro.props.home;
+
+// Rejilla de puntos de los paneles de luz roja (dos paneles de 4 × 11)
+const puntos = [74, 166].flatMap((x0) =>
+  Array.from({ length: 44 }, (_, i) => ({ x: x0 + 10 + (i % 4) * 13.3, y: 48 + Math.floor(i / 4) * 12.4 })),
+);
 ---
 
 <section id="recovery" class="recovery seccion" aria-labelledby="recovery-titulo">
-  <div class="envoltura recovery__rejilla">
-    <div>
-      <p class="etiqueta recovery__etiqueta">{recovery.etiqueta}</p>
-      <h2 id="recovery-titulo" class="t-h2 recovery__titulo">{recovery.titulo}</h2>
-      {recovery.lineas.map((l, i) => <p class:list={['recovery__linea', { 'recovery__linea--suave': i > 0 }]}>{l}</p>)}
-    </div>
-    <div class="recovery__lado">
+  <div class="envoltura">
+    <header class="recovery__cabeza">
+      <div>
+        <p class="etiqueta recovery__etiqueta">{recovery.etiqueta}</p>
+        <h2 id="recovery-titulo" class="t-h2">{recovery.titulo}</h2>
+      </div>
+      <div class="recovery__lineas">
+        {recovery.lineas.map((l, i) => <p class:list={['recovery__linea', { 'recovery__linea--suave': i > 0 }]}>{l}</p>)}
+      </div>
+    </header>
+
+    <ul role="list" class="apartados">
       {
-        recovery.foto ? (
-          <PhotoSlot foto={recovery.foto} class="recovery__foto" sizes="(min-width: 56rem) 520px, 100vw" />
-        ) : (
-          <div class="recovery__portales" aria-hidden="true">
-            <span class="recovery__portal recovery__portal--luz" />
-            <span class="recovery__portal recovery__portal--sauna" />
-          </div>
-        )
+        recovery.apartados.map((a) => (
+          <li class:list={['apartado', `apartado--${a.tipo}`]}>
+            <div class="apartado__visual">
+              {a.foto ? (
+                <PhotoSlot foto={a.foto} class="apartado__arco" sizes="(min-width: 56rem) 40vw, 100vw" />
+              ) : (
+                <div class:list={['apartado__arco', `apartado__arco--${a.tipo}`]} aria-hidden="true">
+                  {a.tipo === 'reformer' && (
+                    <svg class="dibujo con-trazado" data-trazar viewBox="0 0 320 200" fill="none">
+                      <rect class="traza" x="24" y="120" width="272" height="22" rx="11" pathLength="1" />
+                      <path class="traza" d="M48 142v24M272 142v24" pathLength="1" />
+                      <rect class="traza" x="122" y="102" width="94" height="18" rx="5" pathLength="1" />
+                      <path class="traza" d="M196 102V90a5 5 0 0 1 10 0v12" pathLength="1" />
+                      <path class="traza" d="M84 111l4-5 4 10 4-10 4 10 4-10 4 10 4-10 4 10 4-5" pathLength="1" />
+                      <path class="traza" d="M60 120V76a10 10 0 0 1 10-10h8" pathLength="1" />
+                      <path class="traza" d="M216 108l66-10M286 103v17" pathLength="1" />
+                      <circle class="traza" cx="286" cy="98" r="5" pathLength="1" />
+                    </svg>
+                  )}
+                  {a.tipo === 'sauna' && (
+                    <svg class="dibujo con-trazado" data-trazar viewBox="0 0 320 200" fill="none">
+                      <path class="traza traza--suave" d="M72 30v170M112 30v170M152 30v170M192 30v170M232 30v170" pathLength="1" />
+                      <path class="traza" d="M36 104h248M36 114h248" pathLength="1" />
+                      <path class="traza" d="M60 114v28M260 114v28" pathLength="1" />
+                      <path class="traza" d="M24 142h272M24 152h272" pathLength="1" />
+                      <path class="traza" d="M48 152v32M272 152v32" pathLength="1" />
+                    </svg>
+                  )}
+                  {a.tipo === 'luz-roja' && (
+                    <svg class="dibujo dibujo--paneles con-trazado" data-trazar viewBox="0 0 320 200" fill="none">
+                      <rect class="traza" x="74" y="34" width="72" height="148" rx="8" pathLength="1" />
+                      <rect class="traza" x="166" y="34" width="72" height="148" rx="8" pathLength="1" />
+                      {puntos.map((p) => (
+                        <circle class="led" cx={p.x + 8} cy={p.y + 4} r="2.2" />
+                      ))}
+                    </svg>
+                  )}
+                </div>
+              )}
+            </div>
+
+            <div class="apartado__texto">
+              <h3 class="apartado__titulo">{a.titulo}</h3>
+              <p class="apartado__intro">{a.texto}</p>
+
+              <ul role="list" class="apartado__puntos">
+                {a.puntos.map((p) => <li>{p}</li>)}
+              </ul>
+
+              <div class="apartado__plan">
+                <p class="etiqueta apartado__plan-titulo">{recovery.membresiaTitulo}</p>
+                <dl>
+                  {a.membresia.map((m) => (
+                    <div class:list={['plan', { 'plan--fuera': /^(no|not|nicht|non)\b/i.test(m.cantidad) }]}>
+                      <dt>{m.plan}</dt>
+                      <dd>{m.cantidad}</dd>
+                    </div>
+                  ))}
+                </dl>
+              </div>
+
+              {a.pendiente && <p class="pendiente apartado__pendiente">{a.pendiente}</p>}
+            </div>
+          </li>
+        ))
       }
-      {recovery.aviso && <p class="recovery__aviso">{recovery.aviso}</p>}
-    </div>
+    </ul>
+
+    {recovery.aviso && <p class="recovery__aviso">{recovery.aviso}</p>}
   </div>
 </section>
 
 <style>
   .recovery {
     background: var(--n50);
+    overflow-x: clip;
   }
 
-  .recovery__rejilla {
+  /* Cabecera: título a la izquierda, las dos líneas del brief a la derecha */
+  .recovery__cabeza {
     display: grid;
-    grid-template-columns: minmax(0, 1fr) minmax(0, 32.5rem);
-    gap: clamp(2.5rem, 1rem + 5vw, 5rem);
-    align-items: center;
+    grid-template-columns: minmax(0, 1fr) minmax(0, 28rem);
+    gap: 1.5rem clamp(2.5rem, 1rem + 5vw, 5rem);
+    align-items: end;
+    margin-bottom: clamp(3.5rem, 2rem + 5vw, 6.5rem);
   }
 
   .recovery__etiqueta {
     margin-bottom: 1.625rem;
   }
 
-  .recovery__titulo {
-    margin-bottom: 1.375rem;
-  }
-
   .recovery__linea {
-    max-width: 44ch;
-    margin-bottom: 1.125rem;
+    margin-bottom: 0.5rem;
     font-size: 1.1875rem;
     line-height: 1.6;
   }
@@ -63,39 +135,228 @@ const { recovery } = Astro.props.home;
     color: var(--tinta-60);
   }
 
-  .recovery__lado {
-    display: flex;
-    flex-direction: column;
-    gap: 0.75rem;
-  }
-
-  .recovery :global(.recovery__foto) {
-    height: 18rem;
-    border-radius: var(--r-l);
-  }
-
-  /* Dos portales: la luz roja y la sauna, separadas por cortina */
-  .recovery__portales {
+  /* ───────── Apartados ───────── */
+  .apartados {
     display: grid;
-    grid-template-columns: 1fr 1fr;
-    gap: 0.75rem;
+    gap: clamp(4.5rem, 3rem + 5vw, 8rem);
   }
 
-  .recovery__portal {
-    display: block;
-    height: clamp(14rem, 10rem + 10vw, 20rem);
-    border-radius: 999px 999px var(--r-s) var(--r-s);
+  .apartado {
+    --acento: var(--n700);
+    --texto-acento: var(--n900);
+    position: relative;
+    display: grid;
+    grid-template-columns: minmax(0, 5fr) minmax(0, 6fr);
+    gap: 2rem clamp(2.5rem, 1rem + 5vw, 6rem);
+    align-items: center;
   }
 
-  .recovery__portal--luz {
-    background: radial-gradient(90% 70% at 50% 45%, var(--n300) 0%, var(--n500) 45%, var(--n700) 80%, var(--n900) 100%);
+  /* Alterna el lado del arco */
+  .apartado:nth-child(even) .apartado__visual {
+    order: 2;
   }
 
-  .recovery__portal--sauna {
-    background: linear-gradient(180deg, var(--n100) 0%, var(--n200) 60%, var(--n300) 100%);
+  .apartado--luz-roja {
+    --acento: var(--rojo-500);
+    --texto-acento: var(--rojo-900);
+  }
+
+  /* Halo rojo detrás de la sala de luz roja: luz, no bloque */
+  .apartado--luz-roja::before {
+    content: '';
+    position: absolute;
+    inset: -18% -10% -18% -30%;
+    z-index: 0;
+    pointer-events: none;
+    background: radial-gradient(45% 55% at 30% 50%, rgb(236 74 50 / 0.2), rgb(236 74 50 / 0) 70%);
+  }
+
+  .apartado--luz-roja:nth-child(even)::before {
+    inset: -18% -30% -18% -10%;
+    background: radial-gradient(45% 55% at 70% 50%, rgb(236 74 50 / 0.2), rgb(236 74 50 / 0) 70%);
+  }
+
+  .apartado__visual,
+  .apartado__texto {
+    position: relative;
+    z-index: 1;
+  }
+
+  /* El arco: 180 px arriba, 28 px abajo */
+  .apartado :global(.apartado__arco) {
+    display: grid;
+    place-items: end center;
+    height: clamp(22rem, 14rem + 16vw, 32rem);
+    border-radius: 180px 180px var(--r-l) var(--r-l);
+    overflow: hidden;
+  }
+
+  .apartado__arco--reformer {
+    background:
+      radial-gradient(70% 45% at 50% 100%, rgb(255 167 107 / 0.35), rgb(255 167 107 / 0) 100%),
+      linear-gradient(180deg, var(--crema), var(--tostado) 55%, var(--n100));
+  }
+
+  .apartado__arco--sauna {
+    background:
+      radial-gradient(90% 55% at 50% 100%, rgb(255 130 53 / 0.45), rgb(255 130 53 / 0) 100%),
+      linear-gradient(180deg, var(--n50), var(--n100) 45%, var(--n200) 80%, var(--n300));
+  }
+
+  .apartado__arco--luz-roja {
+    background:
+      radial-gradient(60% 50% at 50% 55%, var(--rojo-200) 0%, var(--rojo-300) 20%, var(--rojo-500) 52%, var(--rojo-700) 78%, var(--rojo-900) 100%);
+  }
+
+  .dibujo {
+    width: 88%;
+    height: auto;
+    margin-bottom: 8%;
+    stroke: var(--n700);
+    stroke-width: 1.1;
+    stroke-linecap: round;
+    stroke-linejoin: round;
+    overflow: visible;
+  }
+
+  .dibujo--paneles {
+    margin-bottom: 12%;
+    stroke: var(--rojo-100);
+  }
+
+  .traza--suave {
+    stroke: var(--n300);
+    opacity: 0.55;
+  }
+
+  .led {
+    fill: var(--rojo-50);
+    opacity: 0.85;
+  }
+
+  /* Las líneas se trazan al entrar; los leds se encienden después */
+  .con-trazado .traza {
+    stroke-dasharray: 1;
+    stroke-dashoffset: 1;
+    transition: stroke-dashoffset 1.2s var(--ease);
+  }
+
+  .con-trazado .led {
+    opacity: 0;
+    transition: opacity 0.9s var(--ease) 0.7s;
+  }
+
+  .con-trazado.trazado .traza {
+    stroke-dashoffset: 0;
+  }
+
+  .con-trazado.trazado .led {
+    opacity: 0.85;
+  }
+
+  @supports (animation-timeline: view()) {
+    @media (prefers-reduced-motion: no-preference) {
+      .apartado :global(.apartado__arco) {
+        animation: apartado-crece linear both;
+        animation-timeline: view();
+        animation-range: entry 0% cover 35%;
+      }
+    }
+  }
+
+  @keyframes apartado-crece {
+    from {
+      clip-path: inset(40% 0 0 0 round 180px 180px 28px 28px);
+    }
+    to {
+      clip-path: inset(0 0 0 0 round 180px 180px 28px 28px);
+    }
+  }
+
+  /* ───────── Texto ───────── */
+  .apartado__titulo {
+    margin-bottom: 1.25rem;
+    font-size: clamp(2rem, 1.6rem + 1.8vw, 2.75rem);
+    line-height: 1.06;
+    letter-spacing: -0.025em;
+  }
+
+  .apartado__intro {
+    max-width: 42ch;
+    font-size: var(--t-lead);
+    line-height: 1.5;
+  }
+
+  .apartado__puntos {
+    display: grid;
+    gap: 0.625rem;
+    margin-top: 1.75rem;
+  }
+
+  .apartado__puntos li {
+    position: relative;
+    padding-left: 1.75rem;
+    color: var(--tinta-60);
+  }
+
+  .apartado__puntos li::before {
+    content: '';
+    position: absolute;
+    left: 0;
+    top: 0.8em;
+    width: 0.875rem;
+    height: 2px;
+    border-radius: 2px;
+    background: var(--acento);
+  }
+
+  /* Qué incluye cada membresía */
+  .apartado__plan {
+    margin-top: 2.25rem;
+  }
+
+  .apartado__plan-titulo {
+    margin-bottom: 0.875rem;
+    color: var(--texto-acento);
+  }
+
+  .apartado__plan dl {
+    display: grid;
+    grid-template-columns: repeat(4, minmax(0, 1fr));
+    border-top: 1px solid var(--linea-fuerte);
+  }
+
+  .plan {
+    padding: 0.875rem 0.75rem 0 0;
+  }
+
+  .plan + .plan {
+    padding-left: 0.875rem;
+    border-left: 1px solid var(--linea);
+  }
+
+  .plan dt {
+    font-size: 0.8125rem;
+    color: var(--tinta-60);
+  }
+
+  .plan dd {
+    margin-top: 0.25rem;
+    font-size: 1.125rem;
+    line-height: 1.3;
+    letter-spacing: -0.01em;
+  }
+
+  .plan--fuera dd {
+    color: var(--tinta-60);
+  }
+
+  .apartado__pendiente {
+    margin-top: 1.5rem;
   }
 
   .recovery__aviso {
+    margin-top: clamp(3rem, 2rem + 3vw, 5rem);
     padding: 1.25rem 1.5rem;
     border-radius: var(--r-s);
     border: 1px solid var(--linea-fuerte);
@@ -105,8 +366,40 @@ const { recovery } = Astro.props.home;
   }
 
   @media (max-width: 56.25rem) {
-    .recovery__rejilla {
+    .recovery__cabeza,
+    .apartado {
       grid-template-columns: 1fr;
+    }
+
+    .apartado:nth-child(even) .apartado__visual {
+      order: 0;
+    }
+
+    .apartado--luz-roja::before,
+    .apartado--luz-roja:nth-child(even)::before {
+      inset: -10% -20% 40% -20%;
+      background: radial-gradient(60% 50% at 50% 50%, rgb(236 74 50 / 0.18), rgb(236 74 50 / 0) 70%);
+    }
+
+    .apartado :global(.apartado__arco) {
+      height: clamp(17rem, 12rem + 20vw, 22rem);
+      border-radius: 120px 120px var(--r-s) var(--r-s);
+    }
+  }
+
+  @media (max-width: 36rem) {
+    .apartado__plan dl {
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+    }
+
+    .plan:nth-child(3) {
+      padding-left: 0;
+      border-left: 0;
+    }
+
+    .plan:nth-child(n + 3) {
+      margin-top: 0.875rem;
+      border-top: 1px solid var(--linea);
     }
   }
 </style>

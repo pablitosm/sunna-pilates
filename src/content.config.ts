@@ -11,6 +11,7 @@ import { z } from 'astro/zod';
 const texto = z.string();
 const opcional = z.string().optional().default('');
 
+// Ajustes comunes a todos los idiomas: solo existe src/content/es/ajustes.yaml.
 const ajustes = defineCollection({
   loader: glob({ pattern: '*/ajustes.yaml', base: './src/content' }),
   schema: z.object({
@@ -50,10 +51,6 @@ const ajustes = defineCollection({
       googleAnalyticsId: opcional,
       metaPixelId: opcional,
     }),
-    seo: z.object({
-      titulo: texto,
-      descripcion: texto,
-    }),
   }),
 });
 
@@ -65,6 +62,23 @@ const home = defineCollection({
     // Foto real opcional: si se añade, sustituye a la ilustración de ese bloque.
     const foto = z.object({ imagen: image(), alt: texto }).optional();
     return z.object({
+      // Título y descripción para Google y al compartir el enlace.
+      seo: z.object({ titulo: texto, descripcion: texto }),
+      // Textos pequeños de la interfaz (accesibilidad, pie, selector de idioma…).
+      ui: z.object({
+        idioma: texto,
+        saltar: texto,
+        irInicio: texto,
+        navegacion: texto,
+        abrirMenu: texto,
+        menu: texto,
+        paso: texto,
+        porMes: texto,
+        mapaTitulo: texto,
+        pieEstudio: texto,
+        pieContacto: texto,
+        pieLegal: texto,
+      }),
       menu: z.array(z.object({ texto, ancla: texto })),
       botones: z.object({
         principal: boton,
@@ -113,7 +127,18 @@ const home = defineCollection({
         titulo: texto,
         lineas: z.array(texto),
         aviso: opcional,
-        foto,
+        membresiaTitulo: texto,
+        apartados: z.array(
+          z.object({
+            tipo: z.enum(['reformer', 'sauna', 'luz-roja']),
+            titulo: texto,
+            texto,
+            puntos: z.array(texto),
+            membresia: z.array(z.object({ plan: texto, cantidad: texto })),
+            pendiente: opcional,
+            foto,
+          }),
+        ),
       }),
       dudas: z.object({
         titulo: texto,
@@ -145,7 +170,7 @@ const home = defineCollection({
       }),
       estudio: z.object({
         titulo: texto,
-        espacios: z.array(z.object({ icono: texto, texto, tono: z.enum(['claro', 'medio', 'sol', 'tinta']), foto })),
+        espacios: z.array(z.object({ icono: texto, texto, tono: z.enum(['claro', 'medio', 'sol', 'tinta', 'rojo']), foto })),
         mapa: z.object({
           direccion: texto,
           comoLlegar: texto,

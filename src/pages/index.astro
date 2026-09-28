@@ -1,29 +1,5 @@
 ---
-import Base from '../layouts/Base.astro';
-import Portada from '../components/secciones/Portada.astro';
-import QueEs from '../components/secciones/QueEs.astro';
-import ComoFunciona from '../components/secciones/ComoFunciona.astro';
-import Clases from '../components/secciones/Clases.astro';
-import Recovery from '../components/secciones/Recovery.astro';
-import Dudas from '../components/secciones/Dudas.astro';
-import Precios from '../components/secciones/Precios.astro';
-import Estudio from '../components/secciones/Estudio.astro';
-import Faq from '../components/secciones/Faq.astro';
-import Cierre from '../components/secciones/Cierre.astro';
-import { getSite } from '../lib/content';
-
-const { ajustes, home } = await getSite('es');
+import PaginaInicio from '../components/PaginaInicio.astro';
 ---
 
-<Base lang="es">
-  <Portada ajustes={ajustes} home={home} />
-  <QueEs home={home} />
-  <ComoFunciona ajustes={ajustes} home={home} />
-  <Clases home={home} />
-  <Recovery home={home} />
-  <Dudas home={home} />
-  <Precios ajustes={ajustes} home={home} />
-  <Estudio ajustes={ajustes} home={home} />
-  <Faq ajustes={ajustes} home={home} />
-  <Cierre ajustes={ajustes} home={home} />
-</Base>
+<PaginaInicio lang="es" />

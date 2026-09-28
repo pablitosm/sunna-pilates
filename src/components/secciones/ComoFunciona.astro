@@ -32,7 +32,7 @@ const total = String(cf.pasos.length).padStart(2, '0');
               {String(i + 1).padStart(2, '0')}
             </span>
             <h3 class="t-h3">
-              <span class="solo-lectores">Paso {i + 1}. </span>
+              <span class="solo-lectores">{home.ui.paso} {i + 1}. </span>
               {paso.titulo}
             </h3>
             <p class="paso__texto">{paso.texto}</p>
@@ -62,7 +62,7 @@ const total = String(cf.pasos.length).padStart(2, '0');
             {f.horas.map((h) => (
               <p class="fase__horas">{h}</p>
             ))}
-            <p class="fase__texto">{f.texto}</p>
+            <p class:list={['fase__texto', { 'fase__texto--destacado': i === 0 }]}>{f.texto}</p>
           </div>
         ))
       }
@@ -229,6 +229,30 @@ const total = String(cf.pasos.length).padStart(2, '0');
     margin-top: 0.875rem;
     font-size: 0.9375rem;
     color: var(--tinta-60);
+  }
+
+  /* Las primeras semanas siempre hay alguien de SUNNA: se lee de un vistazo */
+  .fase__texto--destacado {
+    display: flex;
+    align-items: center;
+    gap: 0.875rem;
+    margin-top: 1.5rem;
+    padding: 1rem 1.25rem;
+    border-radius: var(--r-s);
+    background: var(--n100);
+    font-size: 1.0625rem;
+    line-height: 1.4;
+    color: var(--tinta);
+  }
+
+  .fase__texto--destacado::before {
+    content: '';
+    flex: none;
+    width: 0.75rem;
+    height: 0.75rem;
+    border-radius: 999px;
+    background: var(--n500);
+    box-shadow: 0 0 0 5px rgb(255 130 53 / 0.22);
   }
 
   @media (max-width: 64rem) {

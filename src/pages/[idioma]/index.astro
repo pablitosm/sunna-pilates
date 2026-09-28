@@ -1,0 +1,13 @@
+---
+/* Home en inglés, alemán y francés (/en/, /de/, /fr/). */
+import PaginaInicio from '../../components/PaginaInicio.astro';
+import { idiomas, type Lang } from '../../lib/content';
+
+export function getStaticPaths() {
+  return idiomas.filter((l) => l !== 'es').map((idioma) => ({ params: { idioma } }));
+}
+
+const lang = Astro.params.idioma as Lang;
+---
+
+<PaginaInicio lang={lang} />

@@ -21,12 +21,12 @@ const anio = new Date().getFullYear();
 
     <div class="pie__rejilla">
       <div class="pie__col">
-        <h2 class="etiqueta pie__titulo">Estudio</h2>
+        <h2 class="etiqueta pie__titulo">{home.ui.pieEstudio}</h2>
         <a href={mapsUrl(ajustes)} target="_blank" rel="noopener">{direccionCompleta(ajustes)}</a>
       </div>
 
       <div class="pie__col">
-        <h2 class="etiqueta pie__titulo">Contacto</h2>
+        <h2 class="etiqueta pie__titulo">{home.ui.pieContacto}</h2>
         {wa && <a href={wa} target="_blank" rel="noopener">WhatsApp</a>}
         {contacto.instagram && <a href={contacto.instagram} target="_blank" rel="noopener">Instagram</a>}
         {ajustes.reservas.appUrl && <a href={ajustes.reservas.appUrl} target="_blank" rel="noopener">{home.enlaces.app}</a>}
@@ -40,7 +40,7 @@ const anio = new Date().getFullYear();
       </div>
 
       <div class="pie__col">
-        <h2 class="etiqueta pie__titulo">Legal</h2>
+        <h2 class="etiqueta pie__titulo">{home.ui.pieLegal}</h2>
         {home.pie.legal.map((l) => <a href={l.url}>{l.texto}</a>)}
         {
           hayMedicion && (

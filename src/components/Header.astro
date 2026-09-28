@@ -2,25 +2,32 @@
 import Logo from './Logo.astro';
 import CtaButton from './CtaButton.astro';
 import MobileMenu from './vue/MobileMenu.vue';
-import type { Ajustes, Home } from '../lib/content';
-import { whatsappUrl } from '../lib/content';
+import type { Ajustes, Home, Lang } from '../lib/content';
+import { idiomas, nombresIdioma, raizIdioma, whatsappUrl } from '../lib/content';
 
 interface Props {
   ajustes: Ajustes;
   home: Home;
   inicio?: string;
+  lang?: Lang;
 }
-const { ajustes, home, inicio = '' } = Astro.props;
+const { ajustes, home, inicio = '', lang = 'es' } = Astro.props;
 const links = home.menu.map((m) => ({ texto: m.texto, href: `${inicio}#${m.ancla}` }));
+const opcionesIdioma = idiomas.map((l) => ({
+  codigo: l,
+  nombre: nombresIdioma[l],
+  href: raizIdioma(l),
+  actual: l === lang,
+}));
 ---
 
 <header class="cabecera" data-cabecera>
   <div class="cabecera__pildora vidrio">
-    <a class="cabecera__logo" href={inicio || '/'} aria-label="SUNNA, ir al inicio">
+    <a class="cabecera__logo" href={raizIdioma(lang)} aria-label={home.ui.irInicio}>
       <Logo label="SUNNA" />
     </a>
 
-    <nav class="cabecera__nav" aria-label="Principal">
+    <nav class="cabecera__nav" aria-label={home.ui.navegacion}>
       <ul role="list">
         {
           links.map((l) => (
@@ -32,18 +39,74 @@ const links = home.menu.map((m) => ({ texto: m.texto, href: `${inicio}#${m.ancla
       </ul>
     </nav>
 
+    <details class="idiomas" data-idiomas>
+      <summary aria-label={home.ui.idioma}>
+        <span aria-hidden="true">{lang.toUpperCase()}</span>
+        <svg width="10" height="10" viewBox="0 0 10 10" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+          <path d="m2 3.75 3 3 3-3" />
+        </svg>
+      </summary>
+      <ul role="list" class="idiomas__lista">
+        {
+          opcionesIdioma.map((o) => (
+            <li>
+              <a
+                href={o.href}
+                hreflang={o.codigo}
+                lang={o.codigo}
+                aria-current={o.actual ? 'page' : undefined}
+                data-elegir-idioma={o.codigo}
+              >
+                <span class="idiomas__codigo" aria-hidden="true">{o.codigo.toUpperCase()}</span>
+                {o.nombre}
+              </a>
+            </li>
+          ))
+        }
+      </ul>
+    </details>
+
     <CtaButton ajustes={ajustes} home={home} corto tamano="compacto" class="cabecera__cta" />
 
     <MobileMenu
-      client:media="(max-width: 56.25rem)"
+      client:media="(max-width: 68rem)"
       links={links}
       whatsapp={whatsappUrl(ajustes.contacto.whatsapp)}
       whatsappTexto={home.panel.whatsapp}
       instagram={ajustes.contacto.instagram}
       cerrar={home.panel.cerrar}
+      abrirMenu={home.ui.abrirMenu}
+      menu={home.ui.menu}
+      navegacion={home.ui.navegacion}
+      idiomaTitulo={home.ui.idioma}
+      idiomas={opcionesIdioma}
     />
   </div>
 </header>
+
+<script>
+  // Al elegir idioma se guarda en una cookie: el servidor (servidor/idioma.caddy)
+  // la respeta y ya no redirige la portada según el idioma del navegador.
+  document.querySelectorAll<HTMLElement>('[data-elegir-idioma]').forEach((a) => {
+    a.addEventListener('click', () => {
+      document.cookie = `sunna-idioma=${a.dataset.elegirIdioma ?? 'es'}; path=/; max-age=31536000; samesite=lax`;
+    });
+  });
+
+  // El selector de idioma se cierra al pulsar fuera o con Escape.
+  const idiomas = document.querySelector<HTMLDetailsElement>('[data-idiomas]');
+  if (idiomas) {
+    document.addEventListener('click', (e) => {
+      if (idiomas.open && !idiomas.contains(e.target as Node)) idiomas.open = false;
+    });
+    idiomas.addEventListener('keydown', (e) => {
+      if (e.key === 'Escape' && idiomas.open) {
+        idiomas.open = false;
+        idiomas.querySelector('summary')?.focus();
+      }
+    });
+  }
+</script>
 
 <style>
   .cabecera {
@@ -86,6 +149,87 @@ const links = home.menu.map((m) => ({ texto: m.texto, href: `${inicio}#${m.ancla
     margin-inline: 0.875rem auto;
   }
 
+  /* Selector de idioma: el código actual; al pulsar, los cuatro idiomas */
+  .idiomas {
+    position: relative;
+    flex: none;
+  }
+
+  .idiomas summary {
+    display: flex;
+    align-items: center;
+    gap: 0.375rem;
+    height: 2.5rem;
+    padding: 0 0.875rem;
+    border-radius: var(--r-pill);
+    font-size: 0.8125rem;
+    letter-spacing: 0.08em;
+    color: var(--tinta);
+    list-style: none;
+    cursor: pointer;
+    transition: background-color 0.2s var(--ease);
+  }
+
+  .idiomas summary::-webkit-details-marker {
+    display: none;
+  }
+
+  .idiomas summary:hover,
+  .idiomas[open] summary {
+    background: rgb(255 255 255 / 0.7);
+  }
+
+  .idiomas summary svg {
+    transition: transform 0.25s var(--ease);
+  }
+
+  .idiomas[open] summary svg {
+    transform: rotate(180deg);
+  }
+
+  .idiomas__lista {
+    position: absolute;
+    top: calc(100% + 0.625rem);
+    right: 0;
+    min-width: 12rem;
+    padding: 0.375rem;
+    border-radius: var(--r-s);
+    background: var(--crema);
+    border: 1px solid var(--n100);
+    box-shadow: var(--sombra);
+  }
+
+  .idiomas__lista a {
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
+    padding: 0.625rem 0.75rem;
+    border-radius: calc(var(--r-s) - 0.375rem);
+    font-size: 0.9375rem;
+    color: var(--tinta);
+    text-decoration: none;
+  }
+
+  .idiomas__lista a:hover {
+    background: var(--n50);
+  }
+
+  .idiomas__lista a[aria-current='page'] {
+    background: var(--n100);
+  }
+
+  .idiomas__codigo {
+    width: 1.5rem;
+    font-size: 0.75rem;
+    letter-spacing: 0.08em;
+    color: var(--tinta-60);
+  }
+
+  .cabecera__nav a {
+    white-space: nowrap;
+  }
+
+
   .cabecera__nav ul {
     display: flex;
     gap: 1.625rem;
@@ -104,6 +248,28 @@ const links = home.menu.map((m) => ({ texto: m.texto, href: `${inicio}#${m.ancla
     border-bottom-color: var(--n500);
   }
 
+  @media (max-width: 75rem) {
+    .cabecera__pildora {
+      gap: 1rem;
+    }
+    .cabecera__nav {
+      margin-left: 0.25rem;
+    }
+    .cabecera__nav ul {
+      gap: 1.125rem;
+    }
+  }
+
+  /* Tableta: los enlaces pasan al menú; quedan idioma, botón y menú */
+  @media (max-width: 68rem) {
+    .cabecera__nav {
+      display: none;
+    }
+    .idiomas {
+      margin-left: auto;
+    }
+  }
+
   @media (max-width: 56.25rem) {
     .cabecera {
       padding: 0.75rem 0.75rem 0;
@@ -113,6 +279,7 @@ const links = home.menu.map((m) => ({ texto: m.texto, href: `${inicio}#${m.ancla
       justify-content: space-between;
     }
     .cabecera__nav,
+    .idiomas,
     .cabecera :global(.cabecera__cta) {
       display: none;
     }

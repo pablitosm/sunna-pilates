@@ -12,6 +12,14 @@ colors:
   naranja-700: "#d95e1e"
   naranja-900: "#8c3a12"
   tinta: "#3b1d0e"
+  rojo-50: "#fff0ed"
+  rojo-100: "#ffdcd5"
+  rojo-200: "#ffb8aa"
+  rojo-300: "#ff8f7a"
+  rojo-500: "#ec4a32"
+  rojo-700: "#bf3320"
+  rojo-900: "#7d2114"
+  rojo-halo: "rgb(236 74 50 / 0.2)"
   tinta-60: "#7a5540"
   linea: "rgb(59 29 14 / 0.12)"
   linea-fuerte: "rgb(59 29 14 / 0.22)"
@@ -261,6 +269,14 @@ A single warm orange ramp over cream, with a deep brown ink doing all dark work.
 ### Secondary
 - **Peach ramp / Naranja 50–300**: Naranja 50 is the default card surface; Naranja 100 the question cards and field hairlines; Naranja 200 hairline borders, selection, grid lines on the map and the hero tint; Naranja 300 hover state of the CTA and the accent (numbers, bullets, prices per session) on dark fields.
 
+### Red light (Rojo)
+A warm red ramp, a close relative of the orange, reserved for the red-light room (client decision, 2026-09-28). It lives only in the "La sala de luz roja" row of the Recovery section and on the "Luz roja" arch in El estudio.
+- **Rojo 500**: the core of the red-light arch glow and the em-dash bullets of that row. Never text.
+- **Rojo 200–300**: the bright centre of the arch glow; Rojo 100–200 the Estudio arch.
+- **Rojo 50 / 100**: the LED dots and panel outlines drawn over the glow.
+- **Rojo 700 / 900**: the edge of the arch glow; Rojo 900 is the only red that may carry text (the corner label of that row, the Estudio glyph).
+- **Rojo halo** (Rojo 500 at 18–20%): the soft radial light behind the red-light row, fading to nothing (The Light-Not-Line Rule applies).
+
 ### Neutral
 - **Crema**: page ground, chips, cards on dark bands, text on dark bands.
 - **Tostado**: alternate section ground (How it works), photo placeholders, map base.
@@ -364,6 +380,9 @@ White pills with a Naranja 100 hairline, a 40px Naranja 50 icon disc at left, a 
 ### Navigation
 Fixed glass pill header (max 85rem, 16px from the top), wordmark 26px tall scaling to 85% on scroll, 15px Tinta links with a 1.5px Naranja 500 underline on hover, compact CTA at right. Below 56.25rem: logo plus a round menu button; the menu opens as a Naranja 50 sheet with 36px links.
 
+### Language switcher
+In the header pill, between the links and the CTA: the current code (13px, +0.08em) with a small chevron in a pill that turns white 70% on hover/open. It opens a Crema card (14px corners, Naranja 100 hairline, Sombra) listing the four languages as code + native name; the current one sits on Naranja 100. From 68rem down the header links move into the menu (logo, language, CTA, menu button); in the menu sheet the languages are outline pills (Naranja 200), the current one filled Naranja 100.
+
 ### Glyphs (signature)
 Outline medallions: a 1.5px Naranja 700 circle (52–56px) holding one geometric form (arc, ring, screen, line, dot, leaf, rectangle). Never pictorial icons.
 
@@ -377,7 +396,7 @@ Tostado panel, a Naranja 50 arch shape, 96px Naranja 200 grid lines, a Naranja 1
 Title sticky at left; at right a glass card over a large orange halo. Groups under corner labels; rows are 16px-radius disclosures with a Naranja 900 plus that rotates 45° and a 280ms height push.
 
 ### Bands
-- **Recovery:** Tinta field, Crema text, a small 200px photo and a 14px-radius outline notice.
+- **Recovery:** Naranja 50 field. Title at left, the two brief lines at right, then three rows (El reformer, La sauna, La sala de luz roja) alternating an arch visual with its explanation: panel-title heading, lead intro, em-dash bullets, and an "En tu membresía" 4-column strip (plan / amount, hairline dividers; 2×2 under 36rem). Each arch is a real photo or a 1.1px line drawing that traces on entering view: the reformer on a cream-to-peach ground, sauna benches over a rising orange heat, two LED panels over the Rojo glow.
 - **Founders:** Naranja 900 field, 60px title, numbered benefits in Naranja 300, a Crema card holding the counter.
 - **Footer:** Naranja 900, giant Crema wordmark, 4-column uppercase-labelled link columns, 13px base line.
 
@@ -416,4 +435,4 @@ Enabled with `cursorPersonalizado: true` in `ajustes.yaml` (dev-only toggle bott
 - **Don't** put glass on content cards; glass is only for layers floating over light or imagery.
 - **Don't** use bold weights or pictorial icon sets; glyphs are geometric outlines.
 - **Don't** use grey or black shadows or hard offset shadows.
-- **Don't** introduce colors outside the orange ramp, cream, tostado and Tinta.
+- **Don't** introduce colors outside the orange ramp, cream, tostado and Tinta. The one exception is the Rojo ramp, and only in the red-light room.

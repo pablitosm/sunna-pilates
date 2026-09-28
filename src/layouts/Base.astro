@@ -7,7 +7,7 @@ import BookingPanel from '../components/vue/BookingPanel.vue';
 import CookieConsent from '../components/vue/CookieConsent.vue';
 import DevCursorToggle from '../components/DevCursorToggle.astro';
 import Logo from '../components/Logo.astro';
-import { getSite, mapsUrl, whatsappUrl, type Lang } from '../lib/content';
+import { getSite, idiomas, localeOg, mapsUrl, raizIdioma, whatsappUrl, type Lang } from '../lib/content';
 
 interface Props {
   titulo?: string;
@@ -15,12 +15,14 @@ interface Props {
   lang?: Lang;
   inicio?: string;
   indexar?: boolean;
+  /** Portada de un idioma: enlaza sus versiones en los otros idiomas (hreflang). */
+  alternos?: boolean;
 }
-const { titulo, descripcion, lang = 'es', inicio = '', indexar = true } = Astro.props;
+const { titulo, descripcion, lang = 'es', inicio = '', indexar = true, alternos = false } = Astro.props;
 const { ajustes, home } = await getSite(lang);
 
-const title = titulo ? `${titulo} · SUNNA` : ajustes.seo.titulo;
-const description = descripcion ?? ajustes.seo.descripcion;
+const title = titulo ? `${titulo} · SUNNA` : home.seo.titulo;
+const description = descripcion ?? home.seo.descripcion;
 const canonical = Astro.site ? new URL(Astro.url.pathname, Astro.site).href : undefined;
 const wa = whatsappUrl(ajustes.contacto.whatsapp);
 const hayMedicion = Boolean(ajustes.medicion.googleAnalyticsId || ajustes.medicion.metaPixelId);
@@ -30,7 +32,7 @@ const negocio = {
   '@context': 'https://schema.org',
   '@type': 'ExerciseGym',
   name: 'SUNNA Pilates',
-  description: ajustes.seo.descripcion,
+  description: home.seo.descripcion,
   ...(Astro.site ? { url: Astro.site.href } : {}),
   address: {
     '@type': 'PostalAddress',
@@ -77,10 +79,21 @@ const negocio = {
     <meta name="description" content={description} />
     {canonical && <link rel="canonical" href={canonical} />}
     {!indexar && <meta name="robots" content="noindex" />}
+    {
+      alternos &&
+        Astro.site &&
+        [...idiomas, 'x-default' as const].map((l) => (
+          <link
+            rel="alternate"
+            hreflang={l}
+            href={new URL(raizIdioma(l === 'x-default' ? 'es' : l), Astro.site).href}
+          />
+        ))
+    }
     <meta name="theme-color" content="#fdf6ee" />
     <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
     <meta property="og:type" content="website" />
-    <meta property="og:locale" content="es_ES" />
+    <meta property="og:locale" content={localeOg[lang]} />
     <meta property="og:site_name" content="SUNNA Pilates" />
     <meta property="og:title" content={title} />
     <meta property="og:description" content={description} />
@@ -94,8 +107,8 @@ const negocio = {
       <div class="carga__halo"></div>
       <div class="carga__logo"><Logo label="" /></div>
     </div>
-    <a class="saltar" href="#contenido">Saltar al contenido</a>
-    <Header ajustes={ajustes} home={home} inicio={inicio} />
+    <a class="saltar" href="#contenido">{home.ui.saltar}</a>
+    <Header ajustes={ajustes} home={home} inicio={inicio} lang={lang} />
     <main id="contenido">
       <slot />
     </main>

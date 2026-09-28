@@ -5,6 +5,26 @@
 #  Las líneas que empiezan por # son notas y no se ven en la web.
 # ─────────────────────────────────────────────────────────────
 
+# Título y descripción para Google y al compartir el enlace.
+seo:
+  titulo: "SUNNA · Pilates reformer en Santa Cruz de Tenerife"
+  descripcion: "Pilates reformer en Santa Cruz de Tenerife. Entrenas cuando quieres, a tu ritmo, con una clase guiada en pantalla, y nunca empiezas sola/o: la primera vez te lo enseñamos todo."
+
+# Textos pequeños de la interfaz (lectores de pantalla, pie, selector de idioma…).
+ui:
+  idioma: "Idioma"
+  saltar: "Saltar al contenido"
+  irInicio: "SUNNA, ir al inicio"
+  navegacion: "Principal"
+  abrirMenu: "Abrir menú"
+  menu: "Menú"
+  paso: "Paso"
+  porMes: "/mes"
+  mapaTitulo: "Mapa: ubicación de SUNNA"
+  pieEstudio: "Estudio"
+  pieContacto: "Contacto"
+  pieLegal: "Legal"
+
 # Menú: Cómo funciona · Precios · Preguntas + botón fijo.
 menu:
   - texto: "Cómo funciona"
@@ -87,7 +107,7 @@ comoFunciona:
           texto: "El estudio solo abre con alguien de SUNNA dentro."
         - etiqueta: "Después"
           horas: ["05:00 — 23:00"]
-          texto: "Acceso autónomo, con el objetivo de llegar a 05:00–23:00."
+          texto: "Acceso autónomo."
 
 # 4 · LAS CLASES
 clases:
@@ -105,17 +125,76 @@ clases:
   idiomasTexto: "El catálogo más grande es en inglés, pero hay clases de sobra en castellano."
   cascos: "Cada reformer tiene cascos de diadema bluetooth. Si lo prefieres, trae los tuyos."
 
-# 5 · RECOVERY (dos líneas y una foto; sin promesas de salud)
+# 5 · RECOVERY + LOS TRES ESPACIOS (reformer, sauna y sala de luz roja)
+# Sin promesas de salud: describe qué es y cómo se usa, nunca qué "cura" o "mejora".
 recovery:
   etiqueta: "Recovery"
-  titulo: "Luz roja y sauna."
+  titulo: "Reformer, sauna y luz roja."
   lineas:
-    - "Entran en la apertura."
+    - "Sauna y luz roja entran en la apertura."
     - "Incluidas en tu membresía, según el plan."
-  # Foto opcional de la luz roja y la sauna (quita las # para añadirla).
-  # foto:
-  #   imagen: "../../assets/fotos/recovery.jpg"
-  #   alt: "Luz roja y sauna de SUNNA"
+  # Título de la tablita de cada apartado (qué incluye cada membresía).
+  membresiaTitulo: "En tu membresía"
+  # BORRADOR: los textos de los tres apartados están pendientes de revisión por SUNNA.
+  # "pendiente" muestra un aviso [PENDIENTE] en la web; déjalo en "" para quitarlo.
+  # Para poner una foto real en un apartado, añade debajo de "pendiente":
+  #     foto:
+  #       imagen: "../../assets/fotos/sauna.jpg"
+  #       alt: "Descripción de la foto"
+  apartados:
+    - tipo: "reformer"
+      titulo: "El reformer"
+      texto: "Una máquina de Pilates con un carro que se desliza sobre raíles, muelles y correas. Los muelles marcan la resistencia, así que se ajusta a ti, tanto si empiezas de cero como si no."
+      puntos:
+        - "6 reformers, una persona por máquina."
+        - "iPad con tu clase y cascos bluetooth en cada reformer."
+        - "En tu primera sesión te enseñamos a usarlo con seguridad."
+      membresia:
+        - plan: "Basic"
+          cantidad: "4 al mes"
+        - plan: "Standard"
+          cantidad: "8 al mes"
+        - plan: "Pro"
+          cantidad: "12 al mes"
+        - plan: "Premium"
+          cantidad: "Ilimitado"
+      pendiente: ""
+    - tipo: "sauna"
+      titulo: "La sauna"
+      texto: "Una sauna de infrarrojos: en lugar de calentar mucho el aire, calienta con luz infrarroja, así que el ambiente es más suave que el de una sauna tradicional."
+      puntos:
+        - "Entra en la apertura."
+        - "Se reserva en la app, igual que tu reformer."
+        - "Incluida desde la membresía Standard."
+      membresia:
+        - plan: "Basic"
+          cantidad: "No incluida"
+        - plan: "Standard"
+          cantidad: "1 al mes"
+        - plan: "Pro"
+          cantidad: "2 al mes"
+        - plan: "Premium"
+          cantidad: "Ilimitada"
+      # PENDIENTE: duración de cada sesión y qué llevar.
+      pendiente: "[PENDIENTE] duración de cada sesión y qué llevar"
+    - tipo: "luz-roja"
+      titulo: "La sala de luz roja"
+      texto: "Una sala con paneles de luz roja. Te colocas frente a ellos, te relajas y dejas que pase la sesión."
+      puntos:
+        - "Entra en la apertura."
+        - "Se reserva en la app, igual que tu reformer."
+        - "Incluida en todas las membresías."
+      membresia:
+        - plan: "Basic"
+          cantidad: "1 al mes"
+        - plan: "Standard"
+          cantidad: "2 al mes"
+        - plan: "Pro"
+          cantidad: "3 al mes"
+        - plan: "Premium"
+          cantidad: "Ilimitada"
+      # PENDIENTE: duración de cada sesión y qué llevar.
+      pendiente: "[PENDIENTE] duración de cada sesión y qué llevar"
 
 # 6 · ¿Y SI…? — dudas en una línea
 dudas:
@@ -174,7 +253,7 @@ precios:
     plazas: "plazas libres de"
 
 # 8 · EL ESTUDIO
-# Cada arco muestra un dato del estudio. Tonos: claro, medio, sol, tinta.
+# Cada arco muestra un dato del estudio. Tonos: claro, medio, sol, tinta, rojo.
 # Iconos: arco, anillo, pantalla, linea, punto, hoja, rectangulo.
 # Para poner una foto real en un arco, añade debajo:
 #     foto:
@@ -191,7 +270,7 @@ estudio:
       tono: "medio"
     - icono: "punto"
       texto: "Luz roja"
-      tono: "sol"
+      tono: "rojo"
     - icono: "arco"
       texto: "Sauna"
       tono: "tinta"

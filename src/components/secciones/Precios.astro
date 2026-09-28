@@ -70,7 +70,7 @@ const euros = (n: number) => new Intl.NumberFormat('es-ES').format(n);
               <span class="membresia__cifra">
                 {euros(m.precio)} €
               </span>
-              <span class="membresia__mes">/mes</span>
+              <span class="membresia__mes">{home.ui.porMes}</span>
             </p>
             <p class="membresia__sesion">
               {m.precioSesion} {precios.porSesion}

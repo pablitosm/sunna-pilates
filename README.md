@@ -44,6 +44,11 @@ Sin sesión, cualquier página redirige al login. No hay base de datos: el servi
   `python3 /opt/sunnapilates-acceso/acceso.py hash`, escribe la nueva contraseña, copia el
   resultado en `ACCESO_HASH=` de `/etc/sunnapilates-acceso.env` y ejecuta
   `systemctl restart sunnapilates-acceso`.
+- **Idioma automático:** la portada (`/`) redirige a `/en/`, `/de/` o `/fr/` según el idioma
+  del navegador, salvo que la persona haya elegido idioma en el selector (cookie `sunna-idioma`).
+  Lo hace Caddy con `servidor/idioma.caddy`: cópialo a `/etc/caddy/idioma.caddy`, añade
+  `import /etc/caddy/idioma.caddy` dentro del bloque `http://:8082` del Caddyfile y ejecuta
+  `sudo caddy validate --config /etc/caddy/Caddyfile && sudo systemctl reload caddy`.
 - **Abrir la web al público:** en el bloque `http://:8082` del Caddyfile, quita la parte de
   `forward_auth` y la cabecera `X-Robots-Tag`. Después, `systemctl reload caddy`.
 

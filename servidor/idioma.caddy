@@ -1,0 +1,44 @@
+# ─────────────────────────────────────────────────────────────
+#  Idioma automático en la portada (/) de sunnapilates.es
+#
+#  Instalación (una vez):
+#    1. Copia este archivo al servidor:  /etc/caddy/idioma.caddy
+#    2. En /etc/caddy/Caddyfile, dentro del bloque  http://:8082 { … }
+#       añade esta línea (antes de forward_auth):
+#           import /etc/caddy/idioma.caddy
+#    3. sudo caddy validate --config /etc/caddy/Caddyfile && sudo systemctl reload caddy
+#
+#  Reglas, en este orden:
+#    1. Si la persona eligió idioma en el selector (cookie sunna-idioma), se respeta.
+#    2. Si no, el primer idioma del navegador (Accept-Language):
+#       es, ca, gl, eu → castellano (se queda en /) · en, de, fr → /en/, /de/, /fr/
+#    3. Si el primero es otro (italiano, neerlandés…): castellano si su lista incluye
+#       es/ca/gl/eu; si no, el primero de en/de/fr que aparezca; si ninguno, inglés.
+#    4. Sin cabecera de idioma → castellano.
+#  Los buscadores nunca se redirigen (así Google indexa la portada en castellano).
+# ─────────────────────────────────────────────────────────────
+
+map "{cookie.sunna-idioma}|{header.Accept-Language}" {idioma_destino} {
+	# 1. Elección guardada
+	~^(es|en|de|fr)\|                                  "${1}"
+	# 4. Sin cabecera de idioma
+	~^[^|]*\|\s*$                                      es
+	# 2. Primer idioma del navegador
+	~(?i)^[^|]*\|\s*(es|ca|gl|eu)(-|;|,|\s|$)          es
+	~(?i)^[^|]*\|\s*(en|de|fr)(-|;|,|\s|$)             "${1}"
+	# 3. Algún idioma nuestro más abajo en la lista
+	~(?i)^[^|]*\|.*?,\s*(es|ca|gl|eu)(-|;|,|\s|$)      es
+	~(?i)^[^|]*\|.*?,\s*(en|de|fr)(-|;|,|\s|$)         "${1}"
+	default                                            en
+}
+
+@idioma_redirigir {
+	path /
+	method GET HEAD
+	not header_regexp User-Agent (?i)(bot|crawl|spider|slurp|lighthouse|preview|facebookexternalhit|whatsapp)
+	vars {idioma_destino} en de fr
+}
+redir @idioma_redirigir /{idioma_destino}/{http.request.uri.prefixed_query} 302
+
+# La portada cambia según idioma y cookie: que ninguna caché la mezcle.
+header / Vary "Accept-Language, Cookie"

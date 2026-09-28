@@ -1,0 +1,34 @@
+---
+/* La home completa en un idioma. La usan / (castellano) y /en/, /de/, /fr/. */
+import Base from '../layouts/Base.astro';
+import Portada from './secciones/Portada.astro';
+import QueEs from './secciones/QueEs.astro';
+import ComoFunciona from './secciones/ComoFunciona.astro';
+import Clases from './secciones/Clases.astro';
+import Recovery from './secciones/Recovery.astro';
+import Dudas from './secciones/Dudas.astro';
+import Precios from './secciones/Precios.astro';
+import Estudio from './secciones/Estudio.astro';
+import Faq from './secciones/Faq.astro';
+import Cierre from './secciones/Cierre.astro';
+import { getSite, type Lang } from '../lib/content';
+
+interface Props {
+  lang: Lang;
+}
+const { lang } = Astro.props;
+const { ajustes, home } = await getSite(lang);
+---
+
+<Base lang={lang} alternos>
+  <Portada ajustes={ajustes} home={home} />
+  <QueEs home={home} />
+  <ComoFunciona ajustes={ajustes} home={home} />
+  <Clases home={home} />
+  <Recovery home={home} />
+  <Dudas home={home} />
+  <Precios ajustes={ajustes} home={home} />
+  <Estudio ajustes={ajustes} home={home} />
+  <Faq ajustes={ajustes} home={home} />
+  <Cierre ajustes={ajustes} home={home} />
+</Base>
