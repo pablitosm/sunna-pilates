@@ -27,9 +27,9 @@ direccion:
   comoLlegar: ""
 
 contacto:
-  # WhatsApp: de momento no se usa. Si se activa, número con prefijo y solo
-  # dígitos, p. ej. "34600111222". Mientras esté vacío no aparece en la web.
-  whatsapp: ""
+  # WhatsApp: botón flotante, pie, menú del móvil y panel de reserva.
+  # Número con prefijo; espacios y "+" dan igual. Vacío ("") = no aparece en la web.
+  whatsapp: "+34 675 04 94 60"
   # PENDIENTE: teléfono de ayuda, tal cual quieras que se vea, p. ej. "+34 600 111 222".
   telefonoAyuda: ""
   email: ""

@@ -6,10 +6,14 @@
 import '../styles/global.css';
 import Logo from '../components/Logo.astro';
 import Icon from '../components/Icon.astro';
+import { getSite } from '../lib/content';
+
+// El mismo cursor que la web (ajustes.yaml → cursorPersonalizado)
+const { ajustes } = await getSite('es');
 ---
 
 <!doctype html>
-<html lang="es">
+<html lang="es" data-cursor={ajustes.cursorPersonalizado ? 'on' : 'off'}>
   <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
@@ -62,6 +66,8 @@ import Icon from '../components/Icon.astro';
     </main>
 
     <script>
+      import '../scripts/cursor';
+
       const q = new URLSearchParams(location.search);
       const next = q.get('next');
       const campoNext = document.querySelector<HTMLInputElement>('[data-next]');

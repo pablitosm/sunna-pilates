@@ -13,6 +13,16 @@ const conFecha = ajustes.estado === 'preapertura' && ajustes.fechaApertura;
 const lugar = conFecha
   ? `${ajustes.direccion.ciudad} · ${portada.abrimos} ${ajustes.fechaApertura}`
   : ajustes.direccion.ciudad;
+
+// Antes de abrir, la oferta de fundadores asoma ya en la portada y lleva a su bloque
+const f = ajustes.fundadores;
+const libres = Math.min(f.plazasLibres, f.plazasTotales);
+const plazas =
+  ajustes.estado === 'preapertura' && f.mostrar
+    ? libres < f.plazasTotales
+      ? `${libres} ${home.precios.fundadores.plazas} ${f.plazasTotales}`
+      : home.precios.fundadores.etiqueta
+    : '';
 ---
 
 <section id="portada" class:list={['portada', { 'portada--foto': portada.foto }]} aria-labelledby="portada-titulo">
@@ -38,6 +48,12 @@ const lugar = conFecha
       <CtaButton ajustes={ajustes} home={home} />
       <a class="portada__secundario" href="#como-funciona">{home.botones.secundario}</a>
     </div>
+    {plazas && (
+      <a class="portada__plazas" href="#fundadores">
+        <span class="portada__plazas-punto" aria-hidden="true" />
+        {plazas}
+      </a>
+    )}
   </div>
 </section>
 
@@ -201,6 +217,28 @@ const lugar = conFecha
   .portada__secundario {
     font-size: 1rem;
     color: var(--n900);
+  }
+
+  .portada__plazas {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.625rem;
+    margin-top: 1.5rem;
+    font-size: var(--t-small);
+    color: var(--tinta-60);
+    text-decoration: none;
+  }
+
+  .portada__plazas:hover {
+    color: var(--tinta);
+  }
+
+  .portada__plazas-punto {
+    width: 0.5rem;
+    height: 0.5rem;
+    border-radius: 999px;
+    background: var(--n500);
+    box-shadow: 0 0 0 4px rgb(255 130 53 / 0.2);
   }
 
   @media (max-width: 56.25rem) {

@@ -9,6 +9,7 @@ interface Props {
 }
 const { ajustes, home } = Astro.props;
 const { cierre } = home;
+const texto = (ajustes.estado === 'preapertura' && cierre.textoPreapertura) || cierre.texto;
 ---
 
 <section id="cierre" class="cierre" aria-labelledby="cierre-titulo">
@@ -19,7 +20,7 @@ const { cierre } = home;
     </div>
     <div class="cierre__texto">
       <h2 id="cierre-titulo" class="t-h2">{cierre.titulo}</h2>
-      <p>{cierre.texto}</p>
+      <p>{texto}</p>
     </div>
     <CtaButton ajustes={ajustes} home={home} />
   </div>

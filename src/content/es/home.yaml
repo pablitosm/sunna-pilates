@@ -59,9 +59,9 @@ portada:
   abrimos: "abrimos el"
   # Foto opcional (foto real del estudio o de alguien en el reformer con luz natural).
   # Para añadirla: guárdala en src/assets/fotos/ y quita las # de estas líneas.
-  # foto:
-  #   imagen: "../../assets/fotos/portada.jpg"
-  #   alt: "El estudio de SUNNA con luz natural"
+  foto:
+    imagen: "../../assets/portada.png"
+    alt: "El estudio de SUNNA: reformers, cortinas y luz cálida"
 
 # 2 · QUÉ ES SUNNA (3 ideas en una fila)
 # Iconos disponibles: arco, anillo, pantalla, linea, punto, hoja, rectangulo
@@ -101,6 +101,7 @@ comoFunciona:
     cancelacion: "Se reserva con antelación y se cancela sin coste hasta cierto plazo antes."
     horario:
       titulo: "Horario"
+      intro: "Abrimos en dos tramos mientras validamos la operación autónoma. Cuando esté validada, el estudio pasa a 05:00–23:00."
       fases:
         - etiqueta: "Las 2–3 primeras semanas"
           horas: ["08:00 — 14:00", "16:00 — 22:00"]
@@ -108,6 +109,17 @@ comoFunciona:
         - etiqueta: "Después"
           horas: ["05:00 — 23:00"]
           texto: "Acceso autónomo."
+      # PENDIENTE (confirmar con SUNNA): franjas de demanda del diseño de referencia.
+      franjas:
+        titulo: "Cómo se llena el día"
+        items:
+        - horas: "07:00 — 09:00"
+          texto: "Franja más demandada. Antes del trabajo."
+        - horas: "12:00 — 15:00"
+          texto: "La franja tranquila. A mediodía el estudio es casi tuyo."
+          tranquila: true
+        - horas: "18:00 — 21:00"
+          texto: "Franja más demandada. Para cerrar el día."
 
 # 4 · LAS CLASES
 clases:
@@ -196,7 +208,7 @@ recovery:
       # PENDIENTE: duración de cada sesión y qué llevar.
       pendiente: "[PENDIENTE] duración de cada sesión y qué llevar"
 
-# 6 · ¿Y SI…? — dudas en una línea
+# 6 · ¿Y SI…? — dudas en una línea (va justo después de Cómo funciona)
 dudas:
   titulo: "¿Y si…?"
   items:
@@ -204,7 +216,7 @@ dudas:
       respuesta: "La primera sesión es para eso."
     - pregunta: "¿Y si me pierdo en la clase?"
       respuesta: "El vídeo te guía paso a paso y puedes pausar."
-    - pregunta: "¿Estaré sola en el estudio?"
+    - pregunta: "¿Estaré sola/o en el estudio?"
       respuesta: "Al principio siempre habrá alguien de SUNNA. Después, solo entra quien ha reservado, con cámaras y teléfono de ayuda."
     - pregunta: "¿Llegas tarde siempre?"
       respuesta: "Aquí no hay “tarde”: tu clase empieza cuando le das al play."
@@ -239,7 +251,6 @@ precios:
       recovery: "Recovery ilimitado con reserva"
       extra: "Prioridad en reservas"
       destacada: true
-      etiqueta: "Más popular"
   fundadores:
     etiqueta: "Solo 40 plazas"
     titulo: "Sé uno de los 40 socios fundadores de SUNNA."
@@ -293,7 +304,7 @@ faq:
         - pregunta: "¿Qué pasa en la primera sesión?"
           respuesta: "45 minutos en los que te enseñamos el reformer, la app, cómo entrar al estudio y cómo elegir clase. Sin ella no se puede entrenar por libre."
         - pregunta: "¿Y si después se me olvida algo?"
-          respuesta: "Ven cuando haya alguien del equipo y lo repasamos."
+          respuesta: "Escríbenos por WhatsApp o ven cuando haya alguien del equipo y lo repasamos."
     - titulo: "Reservar y entrar"
       preguntas:
         - pregunta: "¿Cómo reservo?"
@@ -319,7 +330,7 @@ faq:
     - titulo: "Seguridad y membresía"
       preguntas:
         - pregunta: "¿Es seguro entrenar sin monitor?"
-          respuesta: "Antes de entrenar por tu cuenta haces la sesión de iniciación. Solo entra quien ha reservado, hay cámaras en el estudio y tienes un teléfono de ayuda para hablar directamente con nosotros."
+          respuesta: "Antes de entrenar por tu cuenta haces la sesión de iniciación. Solo entra quien ha reservado, hay cámaras en el estudio y tienes un teléfono de ayuda y WhatsApp para hablar directamente con nosotros."
         # PENDIENTE: confirmar plazo de baja y si se puede pausar la membresía.
         - pregunta: "¿Puedo darme de baja?"
           respuesta: "Sí, avisando con 10 días de antelación."
@@ -331,6 +342,8 @@ faq:
 cierre:
   titulo: "Tu primera sesión es gratis."
   texto: "Reserva y te lo enseñamos todo."
+  # Mientras la web está en preapertura se muestra este texto en lugar del anterior.
+  textoPreapertura: "Apúntate a la lista de espera y te escribiremos antes de la apertura."
 
 # 11 · PIE
 pie:

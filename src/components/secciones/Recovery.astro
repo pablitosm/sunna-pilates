@@ -13,9 +13,17 @@ interface Props {
 }
 const { recovery } = Astro.props.home;
 
-// Rejilla de puntos de los paneles de luz roja (dos paneles de 4 × 11)
+// Rejilla de puntos de los paneles de luz roja (dos paneles de 72 × 148, 4 × 11 leds),
+// centrada en cada panel
+const panel = { y: 34, ancho: 72, alto: 148 };
+const columnas = 4;
+const filas = 11;
+const paso = { x: 14, y: 12.4 };
 const puntos = [74, 166].flatMap((x0) =>
-  Array.from({ length: 44 }, (_, i) => ({ x: x0 + 10 + (i % 4) * 13.3, y: 48 + Math.floor(i / 4) * 12.4 })),
+  Array.from({ length: columnas * filas }, (_, i) => ({
+    x: x0 + (panel.ancho - (columnas - 1) * paso.x) / 2 + (i % columnas) * paso.x,
+    y: panel.y + (panel.alto - (filas - 1) * paso.y) / 2 + Math.floor(i / columnas) * paso.y,
+  })),
 );
 ---
 
@@ -54,7 +62,7 @@ const puntos = [74, 166].flatMap((x0) =>
                   )}
                   {a.tipo === 'sauna' && (
                     <svg class="dibujo con-trazado" data-trazar viewBox="0 0 320 200" fill="none">
-                      <path class="traza traza--suave" d="M72 30v170M112 30v170M152 30v170M192 30v170M232 30v170" pathLength="1" />
+                      <path class="traza traza--suave" d="M80 30v170M120 30v170M160 30v170M200 30v170M240 30v170" pathLength="1" />
                       <path class="traza" d="M36 104h248M36 114h248" pathLength="1" />
                       <path class="traza" d="M60 114v28M260 114v28" pathLength="1" />
                       <path class="traza" d="M24 142h272M24 152h272" pathLength="1" />
@@ -63,10 +71,10 @@ const puntos = [74, 166].flatMap((x0) =>
                   )}
                   {a.tipo === 'luz-roja' && (
                     <svg class="dibujo dibujo--paneles con-trazado" data-trazar viewBox="0 0 320 200" fill="none">
-                      <rect class="traza" x="74" y="34" width="72" height="148" rx="8" pathLength="1" />
-                      <rect class="traza" x="166" y="34" width="72" height="148" rx="8" pathLength="1" />
+                      <rect class="traza" x="74" y={panel.y} width={panel.ancho} height={panel.alto} rx="8" pathLength="1" />
+                      <rect class="traza" x="166" y={panel.y} width={panel.ancho} height={panel.alto} rx="8" pathLength="1" />
                       {puntos.map((p) => (
-                        <circle class="led" cx={p.x + 8} cy={p.y + 4} r="2.2" />
+                        <circle class="led" cx={p.x} cy={p.y} r="2.2" />
                       ))}
                     </svg>
                   )}

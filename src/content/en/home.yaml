@@ -52,6 +52,9 @@ portada:
   titular: "Reformer Pilates on your time."
   subtitulo: "Your reformer, your class on screen and the studio to yourself. The first time, we show you everything."
   abrimos: "opening on"
+  foto:
+    imagen: "../../assets/portada.png"
+    alt: "The SUNNA studio: reformers, curtains and warm light"
 
 # 2 · QUÉ ES SUNNA
 queEs:
@@ -89,6 +92,7 @@ comoFunciona:
     cancelacion: "You book in advance and can cancel free of charge up to a set time before."
     horario:
       titulo: "Opening hours"
+      intro: "We open in two blocks while we validate the self-service model. Once it's validated, the studio moves to 05:00–23:00."
       fases:
         - etiqueta: "The first 2–3 weeks"
           horas: ["08:00 — 14:00", "16:00 — 22:00"]
@@ -96,6 +100,16 @@ comoFunciona:
         - etiqueta: "After that"
           horas: ["05:00 — 23:00"]
           texto: "Self-service access."
+      franjas:
+        titulo: "How the day fills up"
+        items:
+        - horas: "07:00 — 09:00"
+          texto: "Busiest slot. Before work."
+        - horas: "12:00 — 15:00"
+          texto: "The quiet slot. At midday the studio is almost yours."
+          tranquila: true
+        - horas: "18:00 — 21:00"
+          texto: "Busiest slot. To round off the day."
 
 # 4 · LAS CLASES
 clases:
@@ -215,7 +229,6 @@ precios:
       recovery: "Unlimited recovery with booking"
       extra: "Booking priority"
       destacada: true
-      etiqueta: "Most popular"
   fundadores:
     etiqueta: "Only 40 places"
     titulo: "Be one of SUNNA's 40 founding members."
@@ -262,7 +275,7 @@ faq:
         - pregunta: "What happens in the first session?"
           respuesta: "45 minutes in which we show you the reformer, the app, how to get into the studio and how to choose a class. You can't train on your own without it."
         - pregunta: "What if I forget something later?"
-          respuesta: "Come by when someone from the team is in and we'll go over it."
+          respuesta: "Message us on WhatsApp or come by when someone from the team is in and we'll go over it."
     - titulo: "Booking and getting in"
       preguntas:
         - pregunta: "How do I book?"
@@ -286,7 +299,7 @@ faq:
     - titulo: "Safety and membership"
       preguntas:
         - pregunta: "Is it safe to train without an instructor?"
-          respuesta: "Before training on your own you do the introductory session. Only people with a booking can get in, there are cameras in the studio and you have a help phone to talk to us directly."
+          respuesta: "Before training on your own you do the introductory session. Only people with a booking can get in, there are cameras in the studio and you have a help phone and WhatsApp to talk to us directly."
         - pregunta: "Can I cancel my membership?"
           respuesta: "Yes, with 10 days' notice."
         - pregunta: "Is there a minimum age?"
@@ -296,6 +309,8 @@ faq:
 cierre:
   titulo: "Your first session is free."
   texto: "Book and we'll show you everything."
+  # Mientras la web está en preapertura se muestra este texto en lugar del anterior.
+  textoPreapertura: "Join the waiting list and we'll write to you before opening."
 
 # 11 · PIE (las páginas legales están en castellano)
 pie:

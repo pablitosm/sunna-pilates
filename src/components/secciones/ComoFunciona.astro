@@ -54,6 +54,7 @@ const total = String(cf.pasos.length).padStart(2, '0');
     </div>
 
     <h3 class="horario__titulo">{cf.datos.horario.titulo}</h3>
+    {cf.datos.horario.intro && <p class="horario__intro">{cf.datos.horario.intro}</p>}
     <div class="horario">
       {
         cf.datos.horario.fases.map((f, i) => (
@@ -67,6 +68,21 @@ const total = String(cf.pasos.length).padStart(2, '0');
         ))
       }
     </div>
+    {
+      cf.datos.horario.franjas && (
+        <div class="franjas">
+          <p class="etiqueta franjas__titulo">{cf.datos.horario.franjas.titulo}</p>
+          <ul role="list" class="franjas__lista">
+            {cf.datos.horario.franjas.items.map((f) => (
+              <li class:list={['franja', { 'franja--tranquila': f.tranquila }]}>
+                <p class="franja__horas">{f.horas}</p>
+                <p class="franja__texto">{f.texto}</p>
+              </li>
+            ))}
+          </ul>
+        </div>
+      )
+    }
     {
       (horariosUrl || appUrl) && (
         <p class="enlaces">
@@ -194,6 +210,60 @@ const total = String(cf.pasos.length).padStart(2, '0');
     line-height: 1.2;
   }
 
+  .horario__intro {
+    max-width: 56ch;
+    margin: -0.25rem 0 2rem;
+    font-size: 1.0625rem;
+    line-height: 1.6;
+    color: var(--tinta-60);
+  }
+
+  /* Cómo se llena el día: tres franjas, la tranquila en oliva */
+  .franjas {
+    margin-top: 1.25rem;
+    padding: 2.375rem 2.25rem 2.5rem;
+    border-radius: var(--r-l);
+    background: var(--tostado);
+  }
+
+  .franjas__titulo {
+    margin-bottom: 1.625rem;
+  }
+
+  .franjas__lista {
+    display: grid;
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+    gap: 1rem;
+  }
+
+  .franja {
+    padding: 1.5rem 1.625rem 1.625rem;
+    border-radius: 14px;
+    background: var(--n50);
+  }
+
+  .franja__horas {
+    font-size: 1.625rem;
+    line-height: 1.1;
+    letter-spacing: -0.01em;
+  }
+
+  .franja__texto {
+    margin-top: 0.75rem;
+    font-size: 0.9375rem;
+    line-height: 1.55;
+    color: var(--tinta-60);
+  }
+
+  .franja--tranquila {
+    background: var(--oliva);
+  }
+
+  .franja--tranquila .franja__horas,
+  .franja--tranquila .franja__texto {
+    color: var(--oliva-tinta);
+  }
+
   .horario {
     display: grid;
     grid-template-columns: 1fr 1fr;
@@ -253,6 +323,20 @@ const total = String(cf.pasos.length).padStart(2, '0');
     border-radius: 999px;
     background: var(--n500);
     box-shadow: 0 0 0 5px rgb(255 130 53 / 0.22);
+    animation: fase-respira 4.5s ease-in-out infinite;
+  }
+
+  /* Respira despacio, como alguien presente en la sala */
+  @keyframes fase-respira {
+    0%,
+    100% {
+      transform: scale(1);
+      box-shadow: 0 0 0 4px rgb(255 130 53 / 0.24);
+    }
+    50% {
+      transform: scale(1.12);
+      box-shadow: 0 0 0 9px rgb(255 130 53 / 0.08);
+    }
   }
 
   @media (max-width: 64rem) {
@@ -263,8 +347,12 @@ const total = String(cf.pasos.length).padStart(2, '0');
 
   @media (max-width: 40rem) {
     .pasos,
-    .horario {
+    .horario,
+    .franjas__lista {
       grid-template-columns: 1fr;
+    }
+    .franjas {
+      padding: 1.75rem 1.25rem 1.5rem;
     }
     .notas {
       flex-direction: column;

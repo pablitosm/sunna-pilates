@@ -52,6 +52,9 @@ portada:
   titular: "Reformer Pilates, wann es dir passt."
   subtitulo: "Dein Reformer, deine Klasse auf dem Bildschirm und das Studio für dich. Beim ersten Mal zeigen wir dir alles."
   abrimos: "Eröffnung am"
+  foto:
+    imagen: "../../assets/portada.png"
+    alt: "Das SUNNA-Studio: Reformer, Vorhänge und warmes Licht"
 
 # 2 · QUÉ ES SUNNA
 queEs:
@@ -89,6 +92,7 @@ comoFunciona:
     cancelacion: "Du buchst im Voraus und kannst bis zu einer bestimmten Frist vorher kostenlos stornieren."
     horario:
       titulo: "Öffnungszeiten"
+      intro: "Wir öffnen in zwei Zeitfenstern, während wir den autonomen Betrieb erproben. Sobald er sich bewährt hat, ist das Studio von 05:00 bis 23:00 geöffnet."
       fases:
         - etiqueta: "Die ersten 2–3 Wochen"
           horas: ["08:00 — 14:00", "16:00 — 22:00"]
@@ -96,6 +100,16 @@ comoFunciona:
         - etiqueta: "Danach"
           horas: ["05:00 — 23:00"]
           texto: "Selbstständiger Zugang."
+      franjas:
+        titulo: "Wie sich der Tag füllt"
+        items:
+        - horas: "07:00 — 09:00"
+          texto: "Die gefragteste Zeit. Vor der Arbeit."
+        - horas: "12:00 — 15:00"
+          texto: "Die ruhige Zeit. Mittags hast du das Studio fast für dich."
+          tranquila: true
+        - horas: "18:00 — 21:00"
+          texto: "Die gefragteste Zeit. Zum Abschluss des Tages."
 
 # 4 · LAS CLASES
 clases:
@@ -215,7 +229,6 @@ precios:
       recovery: "Unbegrenztes Recovery mit Buchung"
       extra: "Vorrang beim Buchen"
       destacada: true
-      etiqueta: "Am beliebtesten"
   fundadores:
     etiqueta: "Nur 40 Plätze"
     titulo: "Werde eines der 40 Gründungsmitglieder von SUNNA."
@@ -262,7 +275,7 @@ faq:
         - pregunta: "Was passiert in der ersten Session?"
           respuesta: "45 Minuten, in denen wir dir den Reformer, die App, den Zugang zum Studio und die Auswahl der Klasse zeigen. Ohne sie kannst du nicht allein trainieren."
         - pregunta: "Und wenn ich später etwas vergesse?"
-          respuesta: "Komm vorbei, wenn jemand vom Team da ist, und wir gehen es noch einmal durch."
+          respuesta: "Schreib uns auf WhatsApp oder komm vorbei, wenn jemand vom Team da ist, und wir gehen es noch einmal durch."
     - titulo: "Buchen und reinkommen"
       preguntas:
         - pregunta: "Wie buche ich?"
@@ -286,7 +299,7 @@ faq:
     - titulo: "Sicherheit und Mitgliedschaft"
       preguntas:
         - pregunta: "Ist es sicher, ohne Trainer:in zu trainieren?"
-          respuesta: "Bevor du allein trainierst, machst du die Einführungssession. Nur wer gebucht hat, kommt rein, im Studio gibt es Kameras, und du hast ein Hilfetelefon, um direkt mit uns zu sprechen."
+          respuesta: "Bevor du allein trainierst, machst du die Einführungssession. Nur wer gebucht hat, kommt rein, im Studio gibt es Kameras, und du hast ein Hilfetelefon und WhatsApp, um direkt mit uns zu sprechen."
         - pregunta: "Kann ich kündigen?"
           respuesta: "Ja, mit 10 Tagen Vorlauf."
         - pregunta: "Gibt es ein Mindestalter?"
@@ -296,6 +309,8 @@ faq:
 cierre:
   titulo: "Deine erste Session ist gratis."
   texto: "Buche und wir zeigen dir alles."
+  # Mientras la web está en preapertura se muestra este texto en lugar del anterior.
+  textoPreapertura: "Trag dich in die Warteliste ein – wir schreiben dir vor der Eröffnung."
 
 # 11 · PIE (las páginas legales están en castellano)
 pie:

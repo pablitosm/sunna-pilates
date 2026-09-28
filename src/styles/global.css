@@ -4,6 +4,9 @@
 :root {
   --crema: #fdf6ee;
   --tostado: #f8ede0;
+  /* Oliva: detalle del diseño de referencia (la franja tranquila del horario) */
+  --oliva: #9daf7c;
+  --oliva-tinta: #26350f;
   --n50: #fff1e6;
   --n100: #ffe0c9;
   --n200: #ffc49a;

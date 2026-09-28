@@ -66,7 +66,26 @@ const wa = whatsappUrl(ajustes.contacto.whatsapp);
 
   .barra__pildora :global(.barra__cta) {
     flex: 1;
+    min-width: 0;
     justify-content: space-between;
+  }
+
+  /* Con WhatsApp al lado, el botón se compacta para que el texto quepa en una línea */
+  .barra__pildora:has(.barra__wa) :global(.barra__cta) {
+    --alto: 3.25rem;
+    --circulo: 3.25rem;
+    padding-left: 1.25rem;
+    font-size: 0.9375rem;
+    white-space: nowrap;
+  }
+
+  /* Móviles muy estrechos: mejor dos líneas equilibradas que cortar el texto */
+  @media (max-width: 23rem) {
+    .barra__pildora:has(.barra__wa) :global(.barra__cta) {
+      white-space: normal;
+      line-height: 1.15;
+      text-wrap: balance;
+    }
   }
 
   .barra__wa,
@@ -81,8 +100,8 @@ const wa = whatsappUrl(ajustes.contacto.whatsapp);
   }
 
   .barra__wa {
-    width: 3.5rem;
-    height: 3.5rem;
+    width: 3.25rem;
+    height: 3.25rem;
   }
 
   .wa-flotante {

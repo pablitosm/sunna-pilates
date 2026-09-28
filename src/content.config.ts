@@ -109,7 +109,15 @@ const home = defineCollection({
           cancelacion: texto,
           horario: z.object({
             titulo: texto,
+            intro: opcional,
             fases: z.array(z.object({ etiqueta: texto, horas: z.array(texto), texto })),
+            // Cómo se llena el día: franjas de más y menos demanda (tranquila = verde oliva).
+            franjas: z
+              .object({
+                titulo: texto,
+                items: z.array(z.object({ horas: texto, texto, tranquila: z.boolean().default(false) })),
+              })
+              .optional(),
           }),
         }),
       }),
@@ -188,7 +196,8 @@ const home = defineCollection({
           }),
         ),
       }),
-      cierre: z.object({ titulo: texto, texto }),
+      // textoPreapertura sustituye a texto mientras la web está en preapertura.
+      cierre: z.object({ titulo: texto, texto, textoPreapertura: opcional }),
       pie: z.object({
         horarioTitulo: texto,
         horario: z.array(texto),

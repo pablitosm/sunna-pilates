@@ -52,6 +52,9 @@ portada:
   titular: "Le Pilates Reformer à ton heure."
   subtitulo: "Ton reformer, ton cours à l'écran et le studio pour toi. La première fois, on te montre tout."
   abrimos: "ouverture le"
+  foto:
+    imagen: "../../assets/portada.png"
+    alt: "Le studio SUNNA : reformers, rideaux et lumière chaude"
 
 # 2 · QUÉ ES SUNNA
 queEs:
@@ -89,6 +92,7 @@ comoFunciona:
     cancelacion: "Tu réserves à l'avance et tu peux annuler sans frais jusqu'à un certain délai avant."
     horario:
       titulo: "Horaires"
+      intro: "Nous ouvrons en deux créneaux le temps de valider le fonctionnement en autonomie. Une fois validé, le studio passe à 05:00–23:00."
       fases:
         - etiqueta: "Les 2–3 premières semaines"
           horas: ["08:00 — 14:00", "16:00 — 22:00"]
@@ -96,6 +100,16 @@ comoFunciona:
         - etiqueta: "Ensuite"
           horas: ["05:00 — 23:00"]
           texto: "Accès en autonomie."
+      franjas:
+        titulo: "Comment se remplit la journée"
+        items:
+        - horas: "07:00 — 09:00"
+          texto: "Créneau le plus demandé. Avant le travail."
+        - horas: "12:00 — 15:00"
+          texto: "Le créneau calme. À midi, le studio est presque à toi."
+          tranquila: true
+        - horas: "18:00 — 21:00"
+          texto: "Créneau le plus demandé. Pour finir la journée."
 
 # 4 · LAS CLASES
 clases:
@@ -215,7 +229,6 @@ precios:
       recovery: "Recovery illimité sur réservation"
       extra: "Priorité de réservation"
       destacada: true
-      etiqueta: "Le plus populaire"
   fundadores:
     etiqueta: "Seulement 40 places"
     titulo: "Deviens l'un des 40 membres fondateurs de SUNNA."
@@ -262,7 +275,7 @@ faq:
         - pregunta: "Que se passe-t-il lors de la première séance ?"
           respuesta: "45 minutes pendant lesquelles on te montre le reformer, l'app, comment entrer au studio et comment choisir ton cours. Sans elle, impossible de s'entraîner en autonomie."
         - pregunta: "Et si j'oublie quelque chose ensuite ?"
-          respuesta: "Passe quand quelqu'un de l'équipe est là et on revoit ça ensemble."
+          respuesta: "Écris-nous sur WhatsApp ou passe quand quelqu'un de l'équipe est là et on revoit ça ensemble."
     - titulo: "Réserver et entrer"
       preguntas:
         - pregunta: "Comment je réserve ?"
@@ -286,7 +299,7 @@ faq:
     - titulo: "Sécurité et abonnement"
       preguntas:
         - pregunta: "Est-ce sûr de s'entraîner sans coach ?"
-          respuesta: "Avant de t'entraîner en autonomie, tu fais la séance d'initiation. Seules les personnes qui ont réservé peuvent entrer, il y a des caméras dans le studio et tu as un téléphone d'assistance pour nous parler directement."
+          respuesta: "Avant de t'entraîner en autonomie, tu fais la séance d'initiation. Seules les personnes qui ont réservé peuvent entrer, il y a des caméras dans le studio et tu as un téléphone d'assistance et WhatsApp pour nous parler directement."
         - pregunta: "Puis-je résilier mon abonnement ?"
           respuesta: "Oui, avec un préavis de 10 jours."
         - pregunta: "Y a-t-il un âge minimum ?"
@@ -296,6 +309,8 @@ faq:
 cierre:
   titulo: "Ta première séance est gratuite."
   texto: "Réserve et on te montre tout."
+  # Mientras la web está en preapertura se muestra este texto en lugar del anterior.
+  textoPreapertura: "Inscris-toi sur la liste d'attente, on t'écrira avant l'ouverture."
 
 # 11 · PIE (las páginas legales están en castellano)
 pie:
