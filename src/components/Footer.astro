@@ -1,13 +1,18 @@
 ---
 import Logo from './Logo.astro';
-import { direccionCompleta, mapsUrl, whatsappUrl, type Ajustes, type Home } from '../lib/content';
+import { direccionCompleta, idiomaDe, mapsUrl, urlPagina, whatsappUrl, type Ajustes, type Home } from '../lib/content';
 
 interface Props {
   ajustes: Ajustes;
   home: Home;
 }
 const { ajustes, home } = Astro.props;
-const wa = whatsappUrl(ajustes.contacto.whatsapp);
+const lang = idiomaDe(Astro.currentLocale);
+const wa = whatsappUrl(ajustes.contacto.whatsapp, home.ui.whatsappMensaje);
+// Las páginas propias del menú (cada espacio y los precios)
+const paginas = home.menu
+  .flatMap((m) => [...(m.submenu ?? []), ...(m.pagina ? [{ texto: m.texto, pagina: m.pagina }] : [])])
+  .map((m) => ({ texto: m.texto, href: urlPagina(lang, m.pagina) }));
 const { contacto } = ajustes;
 const hayMedicion = Boolean(ajustes.medicion.googleAnalyticsId || ajustes.medicion.metaPixelId);
 const anio = new Date().getFullYear();
@@ -25,13 +30,23 @@ const anio = new Date().getFullYear();
         <a href={mapsUrl(ajustes)} target="_blank" rel="noopener">{direccionCompleta(ajustes)}</a>
       </div>
 
+      {
+        paginas.length > 0 && home.ui.pieEspacios && (
+          <div class="pie__col">
+            <h2 class="etiqueta pie__titulo">{home.ui.pieEspacios}</h2>
+            {paginas.map((p) => (
+              <a href={p.href}>{p.texto}</a>
+            ))}
+          </div>
+        )
+      }
+
       <div class="pie__col">
         <h2 class="etiqueta pie__titulo">{home.ui.pieContacto}</h2>
         {wa && <a href={wa} target="_blank" rel="noopener">WhatsApp</a>}
         {contacto.instagram && <a href={contacto.instagram} target="_blank" rel="noopener">Instagram</a>}
         {ajustes.reservas.appUrl && <a href={ajustes.reservas.appUrl} target="_blank" rel="noopener">{home.enlaces.app}</a>}
         {contacto.telefonoAyuda && <a href={`tel:${contacto.telefonoAyuda.replace(/\s/g, '')}`}>{contacto.telefonoAyuda}</a>}
-        {contacto.email && <a href={`mailto:${contacto.email}`}>{contacto.email}</a>}
       </div>
 
       <div class="pie__col">
@@ -78,7 +93,7 @@ const anio = new Date().getFullYear();
 
   .pie__rejilla {
     display: grid;
-    grid-template-columns: repeat(4, minmax(0, 1fr));
+    grid-template-columns: repeat(auto-fit, minmax(10.5rem, 1fr));
     gap: 2rem;
     padding-bottom: 2.75rem;
     border-bottom: 1px solid rgb(253 246 238 / 0.25);

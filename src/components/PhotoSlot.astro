@@ -12,7 +12,7 @@ interface Props {
 const { foto, sizes = '(min-width: 64rem) 40vw, 100vw', loading = 'lazy', class: className } = Astro.props;
 ---
 
-<figure class:list={['foto', className]} data-cur="photo">
+<figure class:list={['foto', className]}>
   <Picture
     src={foto.imagen}
     alt={foto.alt}

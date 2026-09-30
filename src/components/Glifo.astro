@@ -1,17 +1,14 @@
 ---
 /*
  * Iconos del sistema: formas geométricas de trazo 1,5 px dentro de un círculo
- * (arco, anillo, pantalla, línea, punto, hoja, rectángulo). En SVG para que
- * puedan «trazar su línea» al entrar en pantalla (.con-trazado → .trazado en un
- * ancestro). --i: posición en su grupo, para el desfase de 60 ms.
+ * (arco, anillo, pantalla, línea, punto, hoja, rectángulo). Estáticos.
  */
 interface Props {
   forma: 'arco' | 'anillo' | 'pantalla' | 'linea' | 'punto' | 'hoja' | 'rectangulo';
   tamano?: number;
-  indice?: number;
   class?: string;
 }
-const { forma, tamano = 56, indice = 0, class: className } = Astro.props;
+const { forma, tamano = 56, class: className } = Astro.props;
 ---
 
 <svg
@@ -24,18 +21,17 @@ const { forma, tamano = 56, indice = 0, class: className } = Astro.props;
   stroke-width={1.5 * (56 / tamano)}
   stroke-linecap="round"
   stroke-linejoin="round"
-  style={`--i:${indice}`}
   aria-hidden="true"
   focusable="false"
 >
-  <circle class="glifo__trazo" cx="28" cy="28" r="27" pathLength="1"></circle>
-  {forma === 'anillo' && <circle class="glifo__trazo" cx="28" cy="28" r="11" pathLength="1" />}
-  {forma === 'arco' && <path class="glifo__trazo" d="M15 36.5V35a13 13 0 0 1 26 0v1.5" pathLength="1" />}
-  {forma === 'pantalla' && <rect class="glifo__trazo" x="18" y="15" width="20" height="26" rx="4" pathLength="1" />}
-  {forma === 'linea' && <path class="glifo__trazo" d="M15 28h26" pathLength="1" />}
+  <circle class="glifo__trazo" cx="28" cy="28" r="27"></circle>
+  {forma === 'anillo' && <circle class="glifo__trazo" cx="28" cy="28" r="11" />}
+  {forma === 'arco' && <path class="glifo__trazo" d="M15 36.5V35a13 13 0 0 1 26 0v1.5" />}
+  {forma === 'pantalla' && <rect class="glifo__trazo" x="18" y="15" width="20" height="26" rx="4" />}
+  {forma === 'linea' && <path class="glifo__trazo" d="M15 28h26" />}
   {forma === 'punto' && <circle class="glifo__punto" cx="28" cy="28" r="9.5" fill="currentColor" stroke="none" />}
-  {forma === 'hoja' && <path class="glifo__trazo" d="M15 41V26a11 11 0 0 1 11-11h15v15a11 11 0 0 1-11 11z" pathLength="1" />}
-  {forma === 'rectangulo' && <rect class="glifo__trazo" x="15" y="22.5" width="26" height="11" rx="2" pathLength="1" />}
+  {forma === 'hoja' && <path class="glifo__trazo" d="M15 41V26a11 11 0 0 1 11-11h15v15a11 11 0 0 1-11 11z" />}
+  {forma === 'rectangulo' && <rect class="glifo__trazo" x="15" y="22.5" width="26" height="11" rx="2" />}
 </svg>
 
 <style>
@@ -46,24 +42,4 @@ const { forma, tamano = 56, indice = 0, class: className } = Astro.props;
     overflow: visible;
   }
 
-  /* Trazado al entrar: 60 ms de desfase entre iconos, sin rebote */
-  :global(.con-trazado) .glifo__trazo {
-    stroke-dasharray: 1;
-    stroke-dashoffset: 1;
-    transition: stroke-dashoffset 0.9s var(--ease) calc(var(--i, 0) * 60ms);
-  }
-
-  :global(.con-trazado) .glifo__punto {
-    transform: scale(0);
-    transform-origin: 28px 28px;
-    transition: transform 0.6s var(--ease) calc(var(--i, 0) * 60ms + 300ms);
-  }
-
-  :global(.con-trazado.trazado) .glifo__trazo {
-    stroke-dashoffset: 0;
-  }
-
-  :global(.con-trazado.trazado) .glifo__punto {
-    transform: scale(1);
-  }
 </style>

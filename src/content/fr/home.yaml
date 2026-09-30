@@ -24,14 +24,23 @@ ui:
   pieEstudio: "Studio"
   pieContacto: "Contact"
   pieLegal: "Mentions"
+  whatsappMensaje: "Bonjour, j'ai une question sur SUNNA Pilates : "
+  pieEspacios: "Découvrir"
 
 menu:
   - texto: "Comment ça marche"
     ancla: "como-funciona"
+  - texto: "Espaces"
+    ancla: "descubre"
+    submenu:
+      - texto: "Reformer"
+        pagina: "reformer"
+      - texto: "Lumière rouge"
+        pagina: "luz-roja"
+      - texto: "Sauna"
+        pagina: "sauna"
   - texto: "Tarifs"
-    ancla: "precios"
-  - texto: "Questions"
-    ancla: "preguntas"
+    pagina: "precios"
 
 botones:
   principal:
@@ -41,6 +50,7 @@ botones:
     preapertura: "Devenir membre fondateur"
     abierto: "Première séance gratuite"
   secundario: "Comment ça marche"
+  precios: "Voir les tarifs"
 
 enlaces:
   horarios: "Voir les horaires"
@@ -55,6 +65,49 @@ portada:
   foto:
     imagen: "../../assets/portada.png"
     alt: "Le studio SUNNA : reformers, rideaux et lumière chaude"
+
+porQue:
+  titulo: "Pourquoi SUNNA"
+  intro: "Entraîne-toi quand tu veux, à ton rythme, avec un cours guidé à l'écran. Et tu ne commences jamais seul·e : la première fois, on te montre tout."
+  razones:
+    - titulo: "Ouvert de 05:00 à 23:00"
+      texto: "Sans accueil ni horaires de groupe, le studio peut ouvrir bien plus longtemps. Les 2–3 premières semaines, de 08:00 à 14:00 et de 16:00 à 22:00, toujours avec quelqu'un de SUNNA."
+    - titulo: "Tout est autonome"
+      texto: "Tu réserves ton reformer dans l'app et la porte s'ouvre avec ta réservation. Pas de clés, pas d'accueil, pas d'attente."
+    - titulo: "Ton cours, à ton rythme"
+      texto: "Un iPad et un casque sur chaque reformer : choisis un cours de 10 à 45 min et appuie sur play. Pendant cette heure, le reformer est à toi."
+  app:
+    titulo: "Tout commence dans l'app"
+    texto: "Réservations, paiements et accès au studio, depuis ton téléphone."
+    pasos:
+      - "Télécharge l'app SUNNA."
+      - "Réserve ta première séance gratuite."
+      - "Viens au studio et entre avec ton téléphone."
+    proximamente: "Bientôt disponible"
+    appStore: "App Store"
+    googlePlay: "Google Play"
+
+explora:
+  titulo: "Découvrir SUNNA"
+  ver: "Voir"
+  precios:
+    titulo: "Tarifs"
+    texto: "Quatre abonnements mensuels, à partir de 55 € par mois."
+
+primeraSesion:
+  titulo: "Ta première séance est gratuite."
+  texto: "45 minutes avec nous avant de t'entraîner en autonomie. Elle est obligatoire, et gratuite."
+  incluyeTitulo: "Ce qu'on fait pendant ces 45 minutes"
+  incluye:
+    - "On te montre le reformer et comment l'utiliser en toute sécurité."
+    - "On configure l'app avec toi : réserver et annuler."
+    - "On t'explique comment entrer au studio avec ton téléphone."
+    - "On te montre comment choisir ton cours sur l'iPad et appuyer sur play."
+  reservarTitulo: "Réserve-la"
+  reservarTexto: "Dans l'app, sur le web ou en nous écrivant sur WhatsApp : c'est toi qui choisis."
+  web: "Réserver sur le web"
+  whatsapp: "Réserver sur WhatsApp"
+  whatsappMensaje: "Bonjour, je voudrais réserver ma première séance gratuite chez SUNNA Pilates."
 
 # 2 · QUÉ ES SUNNA
 queEs:
@@ -206,25 +259,42 @@ precios:
   titulo: "Tarifs"
   subtitulo: "Quatre abonnements mensuels."
   porSesion: "par séance"
+  graficos:
+    recovery: "Recovery par mois"
+    luzRoja: "Lumière rouge"
+    sauna: "Sauna"
+    ilimitado: "Illimité"
+    noIncluida: "Non inclus"
+  contacto:
+    titulo: "Des questions sur les formules ?"
+    texto: "Écris-nous, on t'aide à choisir."
   membresias:
     - nombre: "Basic"
       precio: 55
+      luzRoja: 1
+      sauna: 0
       precioSesion: "13,75 €"
       pilates: "1 séance/semaine (4/mois)"
       recovery: "1 lumière rouge"
     - nombre: "Standard"
       precio: 100
+      luzRoja: 2
+      sauna: 1
       precioSesion: "12,50 €"
       pilates: "2 séances/semaine (8/mois)"
       recovery: "2 lumière rouge + 1 sauna"
     - nombre: "Pro"
       precio: 140
+      luzRoja: 3
+      sauna: 2
       precioSesion: "11,67 €"
       pilates: "3 séances/semaine (12/mois)"
       recovery: "3 lumière rouge + 2 sauna"
     - nombre: "Premium"
       precio: 180
-      precioSesion: "dès 3 €"
+      luzRoja: -1
+      sauna: -1
+      precioSesion: "3 €"
       pilates: "Illimité (selon disponibilité)"
       recovery: "Recovery illimité sur réservation"
       extra: "Priorité de réservation"
@@ -267,6 +337,9 @@ estudio:
 # 9 · PREGUNTAS FRECUENTES
 faq:
   titulo: "Questions fréquentes"
+  contacto:
+    titulo: "Encore des questions ?"
+    texto: "Écris-nous, on te répond avec plaisir."
   grupos:
     - titulo: "Commencer"
       preguntas:

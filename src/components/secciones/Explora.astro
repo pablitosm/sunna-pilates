@@ -1,0 +1,152 @@
+---
+/*
+ * Accesos rápidos: una imagen por espacio (reformer, luz roja, sauna),
+ * cada una lleva a su página. En la portada van todos;
+ * en la página de un espacio, los demás (excluir).
+ */
+import ArcoEspacio from '../ArcoEspacio.astro';
+import Icon from '../Icon.astro';
+import { idiomaDe, urlPagina, type Home, type Pagina } from '../../lib/content';
+
+interface Props {
+  home: Home;
+  excluir?: Pagina;
+}
+const { home, excluir } = Astro.props;
+const ex = home.explora;
+const lang = idiomaDe(Astro.currentLocale);
+
+const orden = ['reformer', 'luz-roja', 'sauna'] as const;
+const espacios = orden
+  .filter((t) => t !== excluir)
+  .map((t) => home.recovery.apartados.find((a) => a.tipo === t))
+  .filter((a) => a !== undefined)
+  .map((a) => ({ tipo: a.tipo, titulo: a.titulo, href: urlPagina(lang, a.tipo) }));
+---
+
+{
+  ex && (
+    <section id={excluir ? undefined : 'descubre'} class="explora seccion" aria-labelledby="explora-titulo">
+      <div class="envoltura">
+        <h2 id="explora-titulo" class="t-h2 explora__titulo">{ex.titulo}</h2>
+      </div>
+      <ul role="list" class="explora__lista">
+        {espacios.map((e) => (
+          <li>
+            <a class:list={['acceso', `acceso--${e.tipo}`]} href={e.href}>
+              <ArcoEspacio tipo={e.tipo} class="acceso__arco" />
+              <span class="acceso__pie">
+                <span class="acceso__titulo">{e.titulo}</span>
+                <span class="acceso__ver">
+                  {ex.ver}
+                  <Icon name="flecha" size={18} />
+                </span>
+              </span>
+            </a>
+          </li>
+        ))}
+      </ul>
+    </section>
+  )
+}
+
+<style>
+  .explora__titulo {
+    margin-bottom: var(--titulo-contenido);
+  }
+
+  .explora__lista {
+    display: grid;
+    grid-auto-flow: column;
+    grid-auto-columns: minmax(0, 1fr);
+    gap: 1.25rem;
+    width: min(100% - 2 * var(--gutter), var(--ancho));
+    margin-inline: auto;
+  }
+
+  .acceso {
+    display: grid;
+    gap: 1.125rem;
+    color: var(--tinta);
+    text-decoration: none;
+  }
+
+  .acceso :global(.acceso__arco) {
+    aspect-ratio: 4 / 3;
+    border-radius: 14px;
+    overflow: hidden;
+    transition:
+      transform 0.5s var(--ease),
+      box-shadow 0.5s var(--ease);
+  }
+
+  .acceso:hover :global(.acceso__arco),
+  .acceso:focus-visible :global(.acceso__arco) {
+    transform: translateY(-6px);
+    box-shadow: 0 22px 40px -26px rgb(140 58 18 / 0.55);
+  }
+
+  .acceso:focus-visible {
+    outline: none;
+  }
+
+  .acceso:focus-visible .acceso__titulo {
+    text-decoration: underline;
+    text-decoration-color: var(--n500);
+    text-underline-offset: 0.2em;
+  }
+
+  .acceso__pie {
+    display: grid;
+    gap: 0.375rem;
+    padding-inline: 0.25rem;
+  }
+
+  .acceso__titulo {
+    font-size: 1.5rem;
+    line-height: 1.15;
+    letter-spacing: -0.015em;
+  }
+
+  .acceso__ver {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.375rem;
+    margin-top: 0.25rem;
+    font-size: 0.9375rem;
+    color: var(--n900);
+  }
+
+  .acceso__ver :global(svg) {
+    transition: transform 0.3s var(--ease);
+  }
+
+  .acceso:hover .acceso__ver :global(svg) {
+    transform: translateX(4px);
+  }
+
+  /* Móvil: fila deslizante, un arco y medio a la vista */
+  @media (max-width: 56.25rem) {
+    .explora__lista {
+      grid-auto-columns: min(72%, 18rem);
+      width: 100%;
+      padding-inline: var(--gutter);
+      overflow-x: auto;
+      scroll-snap-type: x mandatory;
+      scroll-padding-inline: var(--gutter);
+      scrollbar-width: none;
+    }
+
+    .explora__lista::-webkit-scrollbar {
+      display: none;
+    }
+
+    .explora__lista > li {
+      scroll-snap-align: start;
+    }
+
+    .acceso :global(.acceso__arco) {
+      height: auto;
+    }
+  }
+</style>

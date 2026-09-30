@@ -1,0 +1,100 @@
+---
+/*
+ * Insignias de la app de SUNNA en App Store y Google Play. Sin enlace
+ * (ajustes.yaml → reservas.appStoreUrl / googlePlayUrl) salen apagadas
+ * con «Próximamente».
+ */
+import type { Ajustes, Home } from '../lib/content';
+
+interface Props {
+  ajustes: Ajustes;
+  textos: NonNullable<Home['porQue']>['app'];
+  class?: string;
+}
+const { ajustes, textos, class: className } = Astro.props;
+const tiendas = [
+  {
+    nombre: textos.appStore,
+    url: ajustes.reservas.appStoreUrl,
+    icono:
+      '<path d="M16.37 12.64c-.02-2.2 1.8-3.26 1.88-3.31-1.03-1.5-2.62-1.7-3.19-1.73-1.36-.14-2.65.8-3.34.8-.69 0-1.75-.78-2.88-.76-1.48.02-2.85.86-3.61 2.19-1.54 2.67-.39 6.62 1.11 8.79.73 1.06 1.6 2.25 2.75 2.21 1.1-.04 1.52-.71 2.85-.71 1.33 0 1.71.71 2.87.69 1.19-.02 1.94-1.08 2.66-2.15.84-1.23 1.19-2.42 1.21-2.48-.03-.01-2.32-.89-2.35-3.54ZM14.18 6.18c.61-.74 1.02-1.76.91-2.78-.88.04-1.94.59-2.57 1.32-.56.65-1.06 1.69-.93 2.69.98.08 1.98-.5 2.59-1.23Z"/>',
+  },
+  {
+    nombre: textos.googlePlay,
+    url: ajustes.reservas.googlePlayUrl,
+    icono: '<path d="M5.25 3.9v16.2c0 .55.6.9 1.08.62l14.03-8.1a.72.72 0 0 0 0-1.24L6.33 3.28a.72.72 0 0 0-1.08.62Z"/>',
+  },
+];
+const alguna = tiendas.some((t) => t.url);
+---
+
+<div class:list={['tiendas', className]}>
+  <ul role="list" class="tiendas__lista">
+    {
+      tiendas.map((t) =>
+        t.url ? (
+          <li>
+            <a class="tienda" href={t.url} target="_blank" rel="noopener">
+              <svg class="tienda__icono" viewBox="0 0 24 24" width="20" height="20" fill="currentColor" aria-hidden="true" set:html={t.icono} />
+              {t.nombre}
+            </a>
+          </li>
+        ) : (
+          <li>
+            <span class="tienda tienda--apagada">
+              <svg class="tienda__icono" viewBox="0 0 24 24" width="20" height="20" fill="currentColor" aria-hidden="true" set:html={t.icono} />
+              {t.nombre}
+            </span>
+          </li>
+        ),
+      )
+    }
+  </ul>
+  {!alguna && <p class="tiendas__nota">{textos.proximamente}</p>}
+</div>
+
+<style>
+  .tiendas__lista {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.5rem;
+  }
+
+  .tienda {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.5rem;
+    min-height: 3rem;
+    padding: 0 1.125rem 0 0.9375rem;
+    border-radius: var(--r-pill);
+    background: var(--tinta);
+    color: var(--crema);
+    font-size: 0.9375rem;
+    text-decoration: none;
+    box-shadow: 0 6px 18px -10px rgb(59 29 14 / 0.6);
+    transition:
+      transform 0.3s var(--ease),
+      box-shadow 0.3s var(--ease);
+  }
+
+  a.tienda:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 12px 24px -12px rgb(59 29 14 / 0.6);
+  }
+
+  .tienda--apagada {
+    background: transparent;
+    color: var(--tinta-60);
+    box-shadow: inset 0 0 0 1px var(--linea-fuerte);
+  }
+
+  .tienda__icono {
+    flex: none;
+  }
+
+  .tiendas__nota {
+    margin-top: 0.625rem;
+    font-size: var(--t-small);
+    color: var(--tinta-60);
+  }
+</style>

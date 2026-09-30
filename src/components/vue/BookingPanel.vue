@@ -291,9 +291,7 @@ onBeforeUnmount(() => document.removeEventListener('click', alPulsarDocumento));
 }
 
 .panel::backdrop {
-  background: rgb(253 246 238 / 0.4);
-  -webkit-backdrop-filter: blur(3px);
-  backdrop-filter: blur(3px);
+  background: rgb(59 29 14 / 0.28);
 }
 
 .panel__hoja {

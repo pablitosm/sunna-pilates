@@ -1,0 +1,287 @@
+---
+/*
+ * Página de la primera sesión gratis (a ella lleva el botón principal).
+ * Explica la sesión y da tres caminos para reservarla: la web de bsport
+ * (cuando haya enlace), WhatsApp con un mensaje ya escrito y la app.
+ * Debajo, qué se hace en esos 45 minutos y las dudas en una línea.
+ */
+import Base from '../layouts/Base.astro';
+import Glifo from './Glifo.astro';
+import Icon from './Icon.astro';
+import PhotoSlot from './PhotoSlot.astro';
+import Seguir from './Seguir.astro';
+import TiendasApp from './TiendasApp.astro';
+import Dudas from './secciones/Dudas.astro';
+import { getSite, whatsappUrl, type Lang } from '../lib/content';
+
+interface Props {
+  lang: Lang;
+}
+const { lang } = Astro.props;
+const { ajustes, home } = await getSite(lang);
+const ps = home.primeraSesion!;
+const web = ajustes.reservas.primeraSesionUrl;
+const wa = whatsappUrl(ajustes.contacto.whatsapp, ps.whatsappMensaje);
+const glifos = ['arco', 'anillo', 'pantalla', 'punto'] as const;
+---
+
+<Base lang={lang} titulo={home.botones.principalCorto.abierto} descripcion={ps.texto} pagina="primera-sesion" alternos sinBarraMovil>
+  <section class:list={['prueba', { 'prueba--foto': home.portada.foto }]} aria-labelledby="prueba-titulo">
+    <!-- La foto del estudio fundida con el crema, igual que en la portada -->
+    {
+      home.portada.foto && (
+        <div class="prueba__foto">
+          <PhotoSlot foto={home.portada.foto} loading="eager" sizes="(min-width: 56.25rem) 65vw, 100vw" class="prueba__imagen" />
+        </div>
+      )
+    }
+    <div class="envoltura prueba__rejilla">
+      <div class="prueba__texto">
+        <h1 id="prueba-titulo" class="t-display prueba__titulo">{ps.titulo}</h1>
+        <p class="t-lead prueba__intro">{ps.texto}</p>
+
+        <div class="reservar" aria-labelledby="reservar-titulo">
+          <h2 id="reservar-titulo" class="reservar__titulo">{ps.reservarTitulo}</h2>
+          {ps.reservarTexto && <p class="reservar__texto">{ps.reservarTexto}</p>}
+          <div class="reservar__botones">
+            {
+              web && (
+                <a class="boton boton--principal" href={web} target="_blank" rel="noopener">
+                  {ps.web}
+                  <Icon name="flecha" size={20} />
+                </a>
+              )
+            }
+            {
+              wa && (
+                <a class:list={['boton', web ? 'boton--secundario' : 'boton--principal']} href={wa} target="_blank" rel="noopener">
+                  <Icon name="whatsapp" size={20} />
+                  {ps.whatsapp}
+                </a>
+              )
+            }
+          </div>
+          {home.porQue && <TiendasApp ajustes={ajustes} textos={home.porQue.app} class="reservar__tiendas" />}
+        </div>
+      </div>
+
+    </div>
+
+    <!-- Invita a bajar: lleva a lo que se hace en la sesión -->
+    <div class="envoltura">
+      <Seguir href="#incluye" texto={ps.incluyeTitulo} class="prueba__seguir" />
+    </div>
+  </section>
+
+  <section id="incluye" class="incluye seccion" aria-labelledby="incluye-titulo">
+    <div class="envoltura">
+      <h2 id="incluye-titulo" class="t-h2 incluye__titulo">{ps.incluyeTitulo}</h2>
+      <ol role="list" class="incluye__lista">
+        {
+          ps.incluye.map((x, i) => (
+            <li class="incluye__item">
+              <Glifo forma={glifos[i % glifos.length]} tamano={56} />
+              <p>{x}</p>
+            </li>
+          ))
+        }
+      </ol>
+    </div>
+  </section>
+
+  <Dudas home={home} />
+</Base>
+
+<style>
+  .prueba {
+    position: relative;
+    isolation: isolate;
+    overflow: hidden;
+    padding: var(--pagina-arriba) 0 var(--seccion);
+    background: var(--crema);
+  }
+
+  /* Escritorio: la foto ocupa la derecha hasta el borde y se desvanece hacia el texto */
+  .prueba__foto {
+    position: absolute;
+    z-index: -1;
+    inset: 0 0 0 38%;
+    -webkit-mask-image: linear-gradient(90deg, transparent 0%, rgb(0 0 0 / 0.5) 26%, #000 52%);
+    mask-image: linear-gradient(90deg, transparent 0%, rgb(0 0 0 / 0.5) 26%, #000 52%);
+  }
+
+  .prueba__foto :global(.prueba__imagen) {
+    position: absolute;
+    inset: 0;
+  }
+
+  .prueba--foto::after {
+    content: '';
+    position: absolute;
+    z-index: -1;
+    inset: auto 0 0;
+    height: 18%;
+    background: linear-gradient(180deg, rgb(253 246 238 / 0), var(--crema));
+    pointer-events: none;
+  }
+
+  .prueba :global(.prueba__seguir) {
+    margin-top: clamp(2rem, 1rem + 2.5vw, 3.5rem);
+  }
+
+  .prueba__rejilla {
+    display: block;
+  }
+
+  .prueba__texto {
+    max-width: min(36rem, 46%);
+  }
+
+  .prueba__titulo {
+    max-width: 11ch;
+    text-wrap: balance;
+  }
+
+  .prueba__intro {
+    max-width: 36ch;
+    margin-top: 1.5rem;
+    color: var(--tinta-60);
+  }
+
+  .reservar {
+    margin-top: clamp(2.25rem, 1.5rem + 2vw, 3rem);
+    padding-top: 2rem;
+    border-top: 1px solid var(--linea-fuerte);
+  }
+
+  .reservar__titulo {
+    font-size: 1.5rem;
+    line-height: 1.2;
+    letter-spacing: -0.015em;
+  }
+
+  .reservar__texto {
+    margin-top: 0.5rem;
+    color: var(--tinta-60);
+  }
+
+  .reservar__botones {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.75rem;
+    margin-top: 1.5rem;
+  }
+
+  .boton {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.625rem;
+    min-height: 3.5rem;
+    padding: 0 1.625rem;
+    border-radius: var(--r-pill);
+    font-size: 1.0625rem;
+    text-decoration: none;
+    transition:
+      background-color 0.3s var(--ease),
+      transform 0.3s var(--ease);
+  }
+
+  .boton--principal {
+    background: var(--n500);
+    color: var(--tinta);
+    box-shadow: var(--sombra-boton);
+  }
+
+  .boton--principal:hover {
+    background: var(--n300);
+  }
+
+  .boton--secundario {
+    background: var(--crema);
+    color: var(--tinta);
+    box-shadow: inset 0 0 0 1px var(--n200);
+  }
+
+  .boton--secundario:hover {
+    background: var(--n50);
+  }
+
+  .boton:active {
+    transform: translateY(1px);
+  }
+
+  .boton:focus-visible {
+    outline: 3px solid var(--n500);
+    outline-offset: 4px;
+  }
+
+  .reservar :global(.reservar__tiendas) {
+    margin-top: 1.25rem;
+  }
+
+  /* Qué hacemos en los 45 minutos */
+  .incluye__titulo {
+    max-width: 18ch;
+    margin-bottom: var(--titulo-contenido);
+  }
+
+  .incluye__lista {
+    display: grid;
+    grid-template-columns: repeat(4, minmax(0, 1fr));
+    gap: 2rem 1.75rem;
+  }
+
+  .incluye__item {
+    display: grid;
+    align-content: start;
+    gap: 1.25rem;
+    padding-top: 1.5rem;
+    border-top: 1px solid var(--linea-fuerte);
+    color: var(--n700);
+  }
+
+  .incluye__item p {
+    font-size: 1.0625rem;
+    line-height: 1.55;
+    color: var(--tinta);
+  }
+
+  @media (max-width: 64rem) {
+    .incluye__lista {
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+    }
+  }
+
+  /* Móvil: la foto arriba, de borde a borde, fundida en crema por abajo (como la portada) */
+  @media (max-width: 56.25rem) {
+    .prueba--foto {
+      padding-top: min(40svh, 22rem);
+    }
+
+    .prueba__foto {
+      inset: 0 0 auto;
+      height: min(54svh, 30rem);
+      -webkit-mask-image: linear-gradient(180deg, #000 45%, rgb(0 0 0 / 0.5) 72%, transparent 100%);
+      mask-image: linear-gradient(180deg, #000 45%, rgb(0 0 0 / 0.5) 72%, transparent 100%);
+    }
+
+    .prueba--foto::after {
+      display: none;
+    }
+
+    .prueba__texto {
+      max-width: none;
+    }
+  }
+
+  @media (max-width: 36rem) {
+    .incluye__lista {
+      grid-template-columns: 1fr;
+    }
+
+    .boton {
+      flex: 1 1 100%;
+      justify-content: center;
+    }
+  }
+</style>

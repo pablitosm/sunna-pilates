@@ -1,6 +1,6 @@
 ---
 name: SUNNA
-description: Semi-autonomous Pilates Reformer studio in Santa Cruz de Tenerife; cream paper, one orange sun, glass and a dark ink band, drawn from the SUNNA Web reference canvas.
+description: Semi-autonomous Pilates Reformer studio in Santa Cruz de Tenerife; cream paper, one orange sun, solid surfaces and hairlines, drawn from the SUNNA Web reference canvas.
 colors:
   crema: "#fdf6ee"
   tostado: "#f8ede0"
@@ -244,7 +244,7 @@ components:
 
 SUNNA is a single warm sheet of cream paper (the "lámina") lit by one orange sun. Everything visual comes from the SUNNA Web reference canvas (1440px); the PDF brief supplies the words. The page reads as a calm editorial poster: large regular-weight DM Sans headlines on cream, small uppercase tracked labels at card corners, soft peach cards with 28px corners, and two moments of weight where the sheet turns dark: the Tinta Recovery band and the Naranja 900 founders band. A fine film grain sits over the whole page so the cream never reads as flat screen white.
 
-Depth comes from light rather than structure: radial orange halos (hero, FAQ, closing sun arc), frosted glass on the few floating surfaces (header pill, mobile bar, hero card, FAQ card, cursor), and warm-tinted shadows. Geometry comes from the circle and the arch: pill buttons, round glyph medallions, arch-topped "portal" photos, a sun arc rising behind the closing wordmark.
+Depth comes from light rather than structure: radial orange halos (closing sun arc, the glow behind the app drawing), warm-tinted shadows, and fine hairlines between content. No glass or blur on any surface.
 
 Content that the brief has not yet supplied is shown honestly, in a small monospace `[PENDIENTE]` marker, never faked.
 
@@ -254,7 +254,7 @@ Content that the brief has not yet supplied is shown honestly, in a small monosp
 - Regular weight everywhere; size and tight tracking carry hierarchy, not boldness.
 - Uppercase 11px labels tracked +16% name places, groups, card titles and data.
 - Two dark bands (Tinta, Naranja 900) and one dark highlighted card (Premium) break the cream rhythm.
-- Glass only where something floats over imagery or light.
+- Solid surfaces only: no glass, translucency or backdrop blur.
 - Arch portals, circle glyphs and a rising sun arc as the shape vocabulary.
 
 ## Colors
@@ -262,7 +262,7 @@ Content that the brief has not yet supplied is shown honestly, in a small monosp
 A single warm orange ramp over cream, with a deep brown ink doing all dark work.
 
 ### Primary
-- **Sun Orange / Naranja 500**: the signature. Fills the CTA pill and its arrow disc, membership badge, FAQ-card arrow discs, the map pin, cursor dot, focus ring, and the cores of every halo and the closing sun. Text on it is always Tinta.
+- **Sun Orange / Naranja 500**: the signature. Fills the CTA pill and its arrow disc, membership badge, FAQ-card arrow discs, the map pin, focus ring, and the cores of every halo and the closing sun. Text on it is always Tinta.
 - **Ember / Naranja 700**: forms, never text blocks. Glyph strokes, the em-dash bullets on membership lists, the founders counter figure, the late-shift hours in the schedule, dashed borders.
 - **Burnt Sienna / Naranja 900**: the only orange that carries running text (secondary links, address link, WhatsApp icon, FAQ plus sign) and the field of the founders band and footer.
 
@@ -329,24 +329,24 @@ Weights: 400 everywhere; 500 only on the membership badge, the booking submit bu
 - **Section head:** title left, small datum (label or pending marker) right, baseline-aligned, 40→60px above content.
 - **Grids:** 4-column for steps, question cards, memberships, portals and footer; 3-column for classes and ideas; asymmetric 1fr + fixed column (520–620px) for Recovery and founders bands. Gaps 16px (memberships), 20px (cards), 24px (questions), 28px (portals, map row).
 - **Breakpoints:** 64rem (4 → 2 columns), 56.25rem (header collapses to logo + menu, mobile CTA bar appears, bands stack), 40rem (single column, CTAs go full width), 36rem/30rem (memberships and footer single column).
-- **Mobile:** hero content drops to the bottom of the viewport; a glass bottom bar carries the CTA and WhatsApp; footer pads 112px for it.
+- **Mobile:** the hero photo fills the top and fades into Crema under the headline; a solid Crema bottom bar with a hairline carries the CTA and WhatsApp.
 
 ## Elevation & Depth
 
-A hybrid of light and glass. Surfaces are flat at rest; depth is conveyed by radial halos behind content, frosted glass on floating layers, and warm shadows tinted with Tinta or orange.
+Light, not glass. Surfaces are solid and flat at rest; depth comes from radial halos behind content, hairlines between rows, and warm shadows on the few raised elements.
 
 ### Shadow Vocabulary
-- **Sombra** (`0 24px 60px rgb(59 29 14 / 0.1), 0 2px 6px rgb(59 29 14 / 0.04)`): glass surfaces, booking panel, mobile menu, cookie card.
+- **Sombra** (`0 24px 60px rgb(59 29 14 / 0.1), 0 2px 6px rgb(59 29 14 / 0.04)`): booking panel, mobile menu, cookie card.
 - **Sombra S** (`0 10px 28px rgb(59 29 14 / 0.08), 0 1px 3px rgb(59 29 14 / 0.05)`): floating WhatsApp button.
 - **Card lift** (`0 18px 40px rgb(59 29 14 / 0.08–0.1)` with translateY −4px): hover on step and question cards.
 - **Premium** (`0 24px 60px rgb(59 29 14 / 0.22)`): the highlighted membership card.
 - **Button shadow** (`--sombra-boton`: `0 1px 2px rgb(59 29 14 / 0.1), 0 6px 14px -6px rgb(59 29 14 / 0.22)`): short, neutral lift on every button. No orange glow — it read as neon.
 
-### Glass (Vidrio)
-135° white-to-peach gradient over 20% cream, `backdrop-filter: blur(24px) saturate(180%)`, 1px white 65% border, inner top highlight and a faint orange inner bottom edge. Falls back to solid Naranja 50 under reduced transparency.
+### No glass (client decision, 2026-09-30)
+
+Translucency and blur read as generic; the site uses none. Every surface is solid: the header is a full-width Crema bar with a hairline underneath, the mobile bottom bar is a solid Crema bar with a hairline on top, the FAQ is a plain list between hairlines, overlays behind the menu and booking panel are a flat Tinta veil at 28 %, and the login card is solid Crema with a Naranja 100 border. The only blur left is the custom cursor's small halo.
 
 ### Named Rules
-**The Glass-Over-Light Rule.** Glass appears only where a layer floats over imagery or a halo: header pill, mobile bottom bar, hero card, FAQ card over its halo, and the cursor halo. Content cards are opaque.
 
 **The Warm Shadow Rule.** Every shadow is tinted Tinta or orange. No grey or black shadows, no hard offsets.
 
@@ -378,7 +378,7 @@ Crema pills on peach cards, 13px (8px 14px padding) or large 19px (12px 22px). S
 White pills with a Naranja 100 hairline, a 40px Naranja 50 icon disc at left, a 12px label above the 16px value. Focus: Naranja 300 hairline plus 3px Naranja 500 ring. Invalid: Naranja 900 hairline.
 
 ### Navigation
-Fixed glass pill header (max 85rem, 16px from the top), wordmark 26px tall scaling to 85% on scroll, 15px Tinta links with a 1.5px Naranja 500 underline on hover, compact CTA at right. Below 56.25rem: logo plus a round menu button; the menu opens as a Naranja 50 sheet with 36px links.
+Full-width fixed header bar: solid Crema, 1px hairline underneath, content aligned to the page width (.envoltura), never shrinks on scroll; 15px Tinta links with a 1.5px Naranja 500 underline on hover and on the current page.
 
 ### Language switcher
 In the header pill, between the links and the CTA: the current code (13px, +0.08em) with a small chevron in a pill that turns white 70% on hover/open. It opens a Crema card (14px corners, Naranja 100 hairline, Sombra) listing the four languages as code + native name; the current one sits on Naranja 100. From 68rem down the header links move into the menu (logo, language, CTA, menu button); in the menu sheet the languages are outline pills (Naranja 200), the current one filled Naranja 100.
@@ -393,29 +393,26 @@ Arch-topped photos (180px top radius) in a 4-up gallery, each with an uppercase 
 Tostado panel, a Naranja 50 arch shape, 96px Naranja 200 grid lines, a Naranja 100 base strip, an orange halo and an 18px Naranja 500 pin that pulses once. Beside it, a Naranja 50 address card.
 
 ### FAQ
-Title sticky at left; at right a glass card over a large orange halo. Groups under corner labels; rows are 16px-radius disclosures with a Naranja 900 plus that rotates 45° and a 280ms height push.
+Title at left; at right, one tab per FAQ group (pills, active in Naranja 500) and the active group's questions as a plain list between hairlines; all closed by default.
 
 ### Bands
 - **Recovery:** Naranja 50 field. Title at left, the two brief lines at right, then three rows (El reformer, La sauna, La sala de luz roja) alternating an arch visual with its explanation: panel-title heading, lead intro, em-dash bullets, and an "En tu membresía" 4-column strip (plan / amount, hairline dividers; 2×2 under 36rem). Each arch is a real photo or a 1.1px line drawing that traces on entering view: the reformer on a cream-to-peach ground, sauna benches over a rising orange heat, two LED panels over the Rojo glow.
 - **Founders:** Naranja 900 field, 60px title, numbered benefits in Naranja 300, a Crema card holding the counter.
 - **Footer:** Naranja 900, giant Crema wordmark, 4-column uppercase-labelled link columns, 13px base line.
 
-### Cursor
-Enabled with `cursorPersonalizado: true` in `ajustes.yaml` (dev-only toggle bottom-left in `npm run dev`). With a fine pointer: an 8px Naranja 500 dot and a 32px glass halo that closes 22% of the gap each frame. Links grow the halo to 56px tinted 15% orange; photos to 96px with "ver"; CTAs to a 132×52px pill with "reservar"; over running text the system cursor returns. Inside an open `<dialog>` the cursor moves into the dialog so it stays on top.
-
 ### Motion (from the reference motion notes)
-- **Load:** wordmark centred on crema with a halo opening behind it; gone by 900ms; only on the first visit of the session.
-- **Hero:** title rises line by line behind a mask (40ms stagger); halo breathes 14s; the portal drifts up to 8% with scroll. Header compacts into a narrower pill on scroll; the logo keeps its size (client decision).
+- **Load:** no loading screen; the page shows immediately (client decision, 2026-09-30: no generic "AI" effects).
+- **Hero:** static. No masked line reveal, no blur-in, no parallax; the headline and photo are there from the first paint. Header never shrinks.
 - **Cómo funciona:** on desktop the section pins and the four step cards travel horizontally with scroll; cards lean up to 4px toward the pointer. Mobile and reduced motion: plain stack.
 - **Glyphs:** trace their line on entering view, 60ms stagger, no bounce.
 - **Estudio:** each arch grows from the bottom as it enters; its contents drift 8%.
 - **Booking panel:** stretches out of the button that opened it (320ms, corner rounding on the way) and shrinks back to it on close.
-- **FAQ:** glass card over a halo; open row pushes the rest down (280ms); the + turns 45°.
+- **FAQ:** tabs per group; open row pushes the rest down (280ms); the + turns 45°.
 - **Map:** the dot pulses once on entering view.
 - **Closing sun:** rises 60px with scroll.
 - **Pages:** crema cross-fade between pages (400ms, view transitions).
 - **Not animated (client decisions):** prices do not count up.
-- `prefers-reduced-motion` removes every displacement; `prefers-reduced-transparency` turns glass into solid Naranja 50 with a Naranja 200 hairline.
+- `prefers-reduced-motion` removes every displacement.
 
 ## Do's and Don'ts
 
@@ -427,12 +424,12 @@ Enabled with `cursorPersonalizado: true` in `ajustes.yaml` (dev-only toggle bott
 - **Do** fuse the CTA pill with its oversized arrow disc; it is the one action shape.
 - **Do** use 28px corners on cards, 14/16px inside them, 999px on pills and 180px on arch photos.
 - **Do** keep the film grain and warm-tinted shadows on every surface.
-- **Do** respect reduced motion (halos stop breathing, scroll animations off) and reduced transparency (glass turns solid Naranja 50).
+- **Do** respect reduced motion (halos stop breathing, scroll animations off).
 
 ### Don't:
 - **Don't** set text in Naranja 500 or 700.
 - **Don't** add dark surfaces beyond the Recovery band, the founders band, the footer and the Premium card.
-- **Don't** put glass on content cards; glass is only for layers floating over light or imagery.
+- **Don't** use glass, translucency or backdrop blur on any surface.
 - **Don't** use bold weights or pictorial icon sets; glyphs are geometric outlines.
 - **Don't** use grey or black shadows or hard offset shadows.
 - **Don't** introduce colors outside the orange ramp, cream, tostado and Tinta. The one exception is the Rojo ramp, and only in the red-light room.

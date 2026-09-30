@@ -2,27 +2,36 @@
 import Logo from './Logo.astro';
 import CtaButton from './CtaButton.astro';
 import MobileMenu from './vue/MobileMenu.vue';
-import type { Ajustes, Home, Lang } from '../lib/content';
-import { idiomas, nombresIdioma, raizIdioma, whatsappUrl } from '../lib/content';
+import type { Ajustes, Home, Lang, Pagina } from '../lib/content';
+import { idiomas, nombresIdioma, raizIdioma, urlPagina, whatsappUrl } from '../lib/content';
 
 interface Props {
   ajustes: Ajustes;
   home: Home;
-  inicio?: string;
   lang?: Lang;
+  /** Página actual: el selector de idioma lleva a la misma página en otro idioma. */
+  pagina?: Pagina;
 }
-const { ajustes, home, inicio = '', lang = 'es' } = Astro.props;
-const links = home.menu.map((m) => ({ texto: m.texto, href: `${inicio}#${m.ancla}` }));
+const { ajustes, home, lang = 'es', pagina } = Astro.props;
+const actual = Astro.url.pathname;
+const links = home.menu.map((m) => {
+  const href = m.pagina ? urlPagina(lang, m.pagina) : `${raizIdioma(lang)}#${m.ancla}`;
+  const hijos = (m.submenu ?? []).map((h) => {
+    const hrefHijo = urlPagina(lang, h.pagina);
+    return { texto: h.texto, href: hrefHijo, actual: hrefHijo === actual };
+  });
+  return { texto: m.texto, href, actual: href === actual || hijos.some((h) => h.actual), hijos };
+});
 const opcionesIdioma = idiomas.map((l) => ({
   codigo: l,
   nombre: nombresIdioma[l],
-  href: raizIdioma(l),
+  href: urlPagina(l, pagina),
   actual: l === lang,
 }));
 ---
 
 <header class="cabecera" data-cabecera>
-  <div class="cabecera__pildora vidrio">
+  <div class="cabecera__pildora">
     <a class="cabecera__logo" href={raizIdioma(lang)} aria-label={home.ui.irInicio}>
       <Logo label="SUNNA" />
     </a>
@@ -30,11 +39,35 @@ const opcionesIdioma = idiomas.map((l) => ({
     <nav class="cabecera__nav" aria-label={home.ui.navegacion}>
       <ul role="list">
         {
-          links.map((l) => (
-            <li>
-              <a href={l.href}>{l.texto}</a>
-            </li>
-          ))
+          links.map((l) =>
+            l.hijos.length ? (
+              <li>
+                <details class="submenu" data-submenu>
+                  <summary class:list={{ 'es-actual': l.actual }}>
+                    {l.texto}
+                    <svg width="10" height="10" viewBox="0 0 10 10" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+                      <path d="m2 3.75 3 3 3-3" />
+                    </svg>
+                  </summary>
+                  <ul role="list" class="submenu__lista">
+                    {l.hijos.map((h) => (
+                      <li>
+                        <a href={h.href} aria-current={h.actual ? 'page' : undefined}>
+                          {h.texto}
+                        </a>
+                      </li>
+                    ))}
+                  </ul>
+                </details>
+              </li>
+            ) : (
+              <li>
+                <a href={l.href} aria-current={l.actual ? 'page' : undefined}>
+                  {l.texto}
+                </a>
+              </li>
+            ),
+          )
         }
       </ul>
     </nav>
@@ -71,7 +104,7 @@ const opcionesIdioma = idiomas.map((l) => ({
     <MobileMenu
       client:media="(max-width: 68rem)"
       links={links}
-      whatsapp={whatsappUrl(ajustes.contacto.whatsapp)}
+      whatsapp={whatsappUrl(ajustes.contacto.whatsapp, home.ui.whatsappMensaje)}
       whatsappTexto={home.panel.whatsapp}
       instagram={ajustes.contacto.instagram}
       cerrar={home.panel.cerrar}
@@ -93,45 +126,38 @@ const opcionesIdioma = idiomas.map((l) => ({
     });
   });
 
-  // El selector de idioma se cierra al pulsar fuera o con Escape.
-  const idiomas = document.querySelector<HTMLDetailsElement>('[data-idiomas]');
-  if (idiomas) {
+  // Los desplegables (idioma y espacios) se cierran al pulsar fuera o con Escape.
+  document.querySelectorAll<HTMLDetailsElement>('[data-idiomas], [data-submenu]').forEach((d) => {
     document.addEventListener('click', (e) => {
-      if (idiomas.open && !idiomas.contains(e.target as Node)) idiomas.open = false;
+      if (d.open && !d.contains(e.target as Node)) d.open = false;
     });
-    idiomas.addEventListener('keydown', (e) => {
-      if (e.key === 'Escape' && idiomas.open) {
-        idiomas.open = false;
-        idiomas.querySelector('summary')?.focus();
+    d.addEventListener('keydown', (e) => {
+      if (e.key === 'Escape' && d.open) {
+        d.open = false;
+        d.querySelector('summary')?.focus();
       }
     });
-  }
+  });
 </script>
 
 <style>
+  /* Barra de lado a lado, fija arriba: crema sólida y una línea fina debajo */
   .cabecera {
     position: fixed;
     inset: 0 0 auto;
     z-index: 40;
-    padding: 1rem var(--gutter-cabecera, 2.5rem) 0;
-    pointer-events: none;
+    background: var(--crema);
+    border-bottom: 1px solid var(--linea);
   }
 
+  /* El contenido, con el mismo ancho que el resto de la página (.envoltura) */
   .cabecera__pildora {
-    pointer-events: auto;
     display: flex;
     align-items: center;
     gap: 2rem;
-    width: min(100%, 85rem);
+    width: min(100% - 2 * var(--gutter), var(--ancho));
     margin-inline: auto;
-    padding: 0.75rem 0.875rem 0.75rem 1.625rem;
-    border-radius: var(--r-pill);
-    transition: width 0.5s var(--ease);
-  }
-
-  /* Al bajar se compacta la píldora; el logo mantiene su tamaño */
-  .es-compacta .cabecera__pildora {
-    width: min(100%, 64rem);
+    padding: 0.875rem 0;
   }
 
   .cabecera__logo {
@@ -232,7 +258,19 @@ const opcionesIdioma = idiomas.map((l) => ({
 
   .cabecera__nav ul {
     display: flex;
+    align-items: center;
     gap: 1.625rem;
+  }
+
+  /* Enlaces y «Espacios» con la misma caja: quedan a la misma altura */
+  .cabecera__nav > ul > li > a,
+  .submenu summary {
+    display: flex;
+    align-items: center;
+    height: 1.75rem;
+    line-height: 1;
+    /* Compensa el subrayado de abajo para que el texto quede centrado con el logo y el botón */
+    padding-top: 3.5px;
   }
 
   .cabecera__nav a {
@@ -244,8 +282,74 @@ const opcionesIdioma = idiomas.map((l) => ({
     transition: border-color 0.22s var(--ease);
   }
 
-  .cabecera__nav a:hover {
+  .cabecera__nav a:hover,
+  .cabecera__nav a[aria-current='page'] {
     border-bottom-color: var(--n500);
+  }
+
+  /* Espacios: desplegable con reformer, luz roja y sauna */
+  .submenu {
+    position: relative;
+  }
+
+  .submenu summary {
+    display: flex;
+    align-items: center;
+    gap: 0.375rem;
+    padding-bottom: 2px;
+    border-bottom: 1.5px solid transparent;
+    font-size: 0.9375rem;
+    color: var(--tinta);
+    white-space: nowrap;
+    list-style: none;
+    cursor: pointer;
+    transition: border-color 0.22s var(--ease);
+  }
+
+  .submenu summary::-webkit-details-marker {
+    display: none;
+  }
+
+  .submenu summary:hover,
+  .submenu summary.es-actual {
+    border-bottom-color: var(--n500);
+  }
+
+  .submenu summary svg {
+    transition: transform 0.25s var(--ease);
+  }
+
+  .submenu[open] summary svg {
+    transform: rotate(180deg);
+  }
+
+  .cabecera__nav .submenu__lista {
+    display: grid;
+    gap: 0;
+  }
+
+  .submenu__lista {
+    position: absolute;
+    top: calc(100% + 1.25rem);
+    left: -1rem;
+    min-width: 12rem;
+    padding: 0.375rem;
+    border-radius: var(--r-s);
+    background: var(--crema);
+    border: 1px solid var(--n100);
+    box-shadow: var(--sombra);
+  }
+
+  .cabecera__nav .submenu__lista a {
+    display: block;
+    padding: 0.625rem 0.875rem;
+    border: 0;
+    border-radius: 10px;
+  }
+
+  .cabecera__nav .submenu__lista a:hover,
+  .cabecera__nav .submenu__lista a[aria-current='page'] {
+    background: var(--n50);
   }
 
   @media (max-width: 75rem) {
@@ -271,11 +375,8 @@ const opcionesIdioma = idiomas.map((l) => ({
   }
 
   @media (max-width: 56.25rem) {
-    .cabecera {
-      padding: 0.75rem 0.75rem 0;
-    }
     .cabecera__pildora {
-      padding: 0.375rem 0.375rem 0.375rem 1.25rem;
+      padding: 0.625rem 0;
       justify-content: space-between;
     }
     .cabecera__nav,

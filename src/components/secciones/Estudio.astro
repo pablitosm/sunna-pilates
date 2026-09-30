@@ -1,6 +1,4 @@
 ---
-import PhotoSlot from '../PhotoSlot.astro';
-import Glifo from '../Glifo.astro';
 import { mapsEmbedUrl, mapsUrl, type Ajustes, type Home } from '../../lib/content';
 
 interface Props {
@@ -17,23 +15,6 @@ const d = ajustes.direccion;
     <div class="cabeza-seccion">
       <h2 id="estudio-titulo" class="t-h2">{estudio.titulo}</h2>
     </div>
-
-    <ul role="list" class="galeria con-trazado" data-trazar>
-      {
-        estudio.espacios.map((e, i) => (
-          <li class="portal">
-            {e.foto ? (
-              <PhotoSlot foto={e.foto} class="portal__arco" sizes="(min-width: 56rem) 25vw, 50vw" />
-            ) : (
-              <div class:list={['portal__arco', `portal__arco--${e.tono}`]} aria-hidden="true">
-                <Glifo forma={e.icono as any} tamano={76} indice={i} />
-              </div>
-            )}
-            <p class="portal__pie">{e.texto}</p>
-          </li>
-        ))
-      }
-    </ul>
 
     <div class="lugar">
       <div class="mapa" data-mapa data-pulso>
@@ -93,88 +74,11 @@ const d = ajustes.direccion;
 </script>
 
 <style>
-  /* Galería de portales */
-  .galeria {
-    display: grid;
-    grid-template-columns: repeat(4, minmax(0, 1fr));
-    gap: 1.75rem;
-  }
-
-  .portal :global(.portal__arco) {
-    display: grid;
-    place-items: center;
-    height: clamp(20rem, 14rem + 16vw, 27.5rem);
-    border-radius: 180px 180px var(--r-l) var(--r-l);
-    overflow: hidden;
-  }
-
-  .portal__arco--claro {
-    background: linear-gradient(180deg, var(--n50), var(--tostado));
-  }
-
-  .portal__arco--medio {
-    background: linear-gradient(180deg, var(--n100), var(--n200));
-  }
-
-  .portal__arco--sol {
-    background: linear-gradient(180deg, var(--n100), var(--n200));
-  }
-
-  .portal__arco--rojo {
-    --glifo: var(--rojo-900);
-    background: linear-gradient(180deg, var(--rojo-100), var(--rojo-200));
-  }
-
-  .portal__arco--tinta {
-    background: linear-gradient(180deg, var(--tostado), var(--n100));
-  }
-
-  /* El arco crece de abajo arriba al entrar; el contenido entra con parallax 8 % */
-  @supports (animation-timeline: view()) {
-    @media (prefers-reduced-motion: no-preference) {
-      .portal :global(.portal__arco) {
-        animation: portal-crece linear both;
-        animation-timeline: view();
-        animation-range: entry 0% cover 40%;
-      }
-      .portal :global(.portal__arco > *) {
-        animation: portal-parallax linear both;
-        animation-timeline: view();
-        animation-range: entry 0% exit 100%;
-      }
-    }
-  }
-
-  @keyframes portal-crece {
-    from {
-      clip-path: inset(45% 0 0 0 round 180px 180px 28px 28px);
-    }
-    to {
-      clip-path: inset(0 0 0 0 round 180px 180px 28px 28px);
-    }
-  }
-
-  @keyframes portal-parallax {
-    from {
-      transform: translateY(8%);
-    }
-    to {
-      transform: translateY(-8%);
-    }
-  }
-
-  .portal__pie {
-    margin-top: 1.125rem;
-    font-size: 1rem;
-    line-height: 1.45;
-  }
-
   /* Mapa en tonos de paleta + dirección */
   .lugar {
     display: flex;
     gap: 1.75rem;
     align-items: stretch;
-    margin-top: clamp(4rem, 3rem + 3vw, 7.5rem);
   }
 
   .mapa {
@@ -301,14 +205,6 @@ const d = ajustes.direccion;
   }
 
   @media (max-width: 56.25rem) {
-    .galeria {
-      grid-template-columns: repeat(2, minmax(0, 1fr));
-      gap: 1.75rem 1rem;
-    }
-    .portal :global(.portal__arco) {
-      height: 16rem;
-      border-radius: 120px 120px var(--r-s) var(--r-s);
-    }
     .lugar {
       flex-direction: column;
     }

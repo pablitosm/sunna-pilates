@@ -33,7 +33,8 @@ const texto = (ajustes.estado === 'preapertura' && cierre.textoPreapertura) || c
     --sol: clamp(40rem, 82vw, 90rem);
     position: relative;
     isolation: isolate;
-    height: max(38rem, calc(var(--sol) * 0.64 + 6rem));
+    /* El canto del sol empieza a la misma distancia que cualquier sección */
+    height: max(38rem, calc(var(--sol) * 0.64 + var(--seccion)));
     overflow: hidden;
     padding-inline: var(--gutter);
   }

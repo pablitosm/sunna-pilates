@@ -26,10 +26,14 @@ Book the first session: a free 45-minute onboarding with the SUNNA team. It is t
 
 You train when you want, at your own pace, with a class guided on screen — and you never start alone: the first time, we show you everything.
 
+## Structure (client decision, 2026-09-29: follow L'Audace, not the brief's single long page)
+
+Short home: hero (free trial + "Ver precios") → Por qué SUNNA (long hours, everything autonomous) beside the app block (3 steps + store badges) → Cómo funciona + horario → Descubre SUNNA (an arch per space + pricing, each a link) → El estudio → FAQ → closing. Separate pages, in all four languages: primera sesión gratis, precios (memberships, then founders), reformer (+ classes), luz roja, sauna. Routes per language live in `src/lib/content.ts → rutas`.
+
 ## Two states
 
-- **Pre-opening:** primary action becomes "Quiero ser socio/a fundador/a" (waitlist / founders form: name, email, phone, consent). Opening date shown once confirmed.
-- **Open:** primary action returns to "Reserva tu primera sesión gratis", connected to bsport.
+- **Open (current):** primary action "Reserva tu primera sesión gratis" goes to the free-trial page, which explains the 45 minutes and offers bsport (when its link exists), WhatsApp with a prefilled booking message, and the app badges ("Próximamente" until the store links exist).
+- **Pre-opening:** primary action becomes "Quiero ser socio/a fundador/a" and opens the waitlist form.
 Switchable with one setting in the content files (no code change).
 
 ## Facts to preserve
@@ -71,5 +75,5 @@ Close, short, no ad-speak. Short sentences, numbered steps, icons; no long parag
 - Local SEO for "pilates reformer Santa Cruz de Tenerife": title, copy, Google Business link, map, LocalBusiness structured data.
 - Legal: aviso legal, privacidad, cookies (real consent banner), condiciones de membresía.
 - Analytics and Meta pixel only after consent.
-- Floating WhatsApp button and Instagram link.
+- Floating WhatsApp button and Instagram link. WhatsApp opens with a prefilled message ("Hola, tengo una duda sobre SUNNA Pilates: ", per language).
 - Optimised photos, fast on mobile. Client must be able to edit texts, prices and photos without developers.

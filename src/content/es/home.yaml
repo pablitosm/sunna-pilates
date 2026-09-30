@@ -24,17 +24,25 @@ ui:
   pieEstudio: "Estudio"
   pieContacto: "Contacto"
   pieLegal: "Legal"
+  whatsappMensaje: "Hola, tengo una duda sobre SUNNA Pilates: "
+  pieEspacios: "Descubre"
 
-# Menú: Cómo funciona · Precios · Preguntas + botón fijo.
+# Menú: cada entrada lleva a una página (pagina) o a una sección de la portada (ancla).
 menu:
   - texto: "Cómo funciona"
     ancla: "como-funciona"
+  - texto: "Espacios"
+    ancla: "descubre"
+    submenu:
+      - texto: "Reformer"
+        pagina: "reformer"
+      - texto: "Luz roja"
+        pagina: "luz-roja"
+      - texto: "Sauna"
+        pagina: "sauna"
   - texto: "Precios"
-    ancla: "precios"
-  - texto: "Preguntas"
-    ancla: "preguntas"
+    pagina: "precios"
 
-# El botón principal cambia según el "estado" de ajustes.yaml.
 botones:
   principal:
     preapertura: "Quiero ser socio/a fundador/a"
@@ -44,6 +52,7 @@ botones:
     preapertura: "Quiero ser socio/a fundador/a"
     abierto: "Primera sesión gratis"
   secundario: "Cómo funciona"
+  precios: "Ver precios"
 
 # Enlaces a bsport (se muestran solo si el enlace está en ajustes.yaml → reservas).
 enlaces:
@@ -62,6 +71,52 @@ portada:
   foto:
     imagen: "../../assets/portada.png"
     alt: "El estudio de SUNNA: reformers, cortinas y luz cálida"
+
+# POR QUÉ SUNNA + LA APP (portada, justo después de la portada)
+porQue:
+  titulo: "Por qué SUNNA"
+  intro: "Entrenas cuando quieres, a tu ritmo, con una clase guiada en pantalla. Y nunca empiezas sola/o: la primera vez te lo enseñamos todo."
+  razones:
+    - titulo: "Abierto de 05:00 a 23:00"
+      texto: "Sin recepción ni horarios de grupo, el estudio puede abrir muchas más horas. Las 2–3 primeras semanas, de 08:00 a 14:00 y de 16:00 a 22:00, siempre con alguien de SUNNA."
+    - titulo: "Todo es autónomo"
+      texto: "Reservas tu reformer en la app y la puerta se abre con tu reserva. Sin llaves, sin recepción, sin esperas."
+    - titulo: "Tu clase, a tu ritmo"
+      texto: "iPad y cascos en cada reformer: eliges clase de 10 a 45 min y le das al play. Esa hora el reformer es tuyo."
+  app:
+    titulo: "Todo empieza en la app"
+    texto: "Reservas, pagos y acceso al estudio, desde el móvil."
+    pasos:
+      - "Descarga la app de SUNNA."
+      - "Reserva tu primera sesión gratis."
+      - "Ven al estudio y entra con el móvil."
+    proximamente: "Próximamente"
+    appStore: "App Store"
+    googlePlay: "Google Play"
+
+# ACCESOS A CADA ESPACIO Y A LOS PRECIOS (portada)
+explora:
+  titulo: "Descubre SUNNA"
+  ver: "Ver"
+  precios:
+    titulo: "Precios"
+    texto: "Cuatro membresías mensuales, desde 55 € al mes."
+
+# PÁGINA DE LA PRIMERA SESIÓN GRATIS (a ella lleva el botón principal)
+primeraSesion:
+  titulo: "Tu primera sesión es gratis."
+  texto: "45 minutos con nosotros antes de entrenar por tu cuenta. Es obligatoria, y es gratis."
+  incluyeTitulo: "Qué hacemos en esos 45 minutos"
+  incluye:
+    - "Te enseñamos el reformer y cómo usarlo con seguridad."
+    - "Configuramos contigo la app: reservar y cancelar."
+    - "Te explicamos cómo entrar al estudio con el móvil."
+    - "Te enseñamos a elegir tu clase en el iPad y a darle al play."
+  reservarTitulo: "Resérvala"
+  reservarTexto: "Desde la app, en la web o escribiéndonos por WhatsApp: tú eliges."
+  web: "Reservar en la web"
+  whatsapp: "Reservar por WhatsApp"
+  whatsappMensaje: "Hola, quiero reservar mi primera sesión gratis en SUNNA Pilates."
 
 # 2 · QUÉ ES SUNNA (3 ideas en una fila)
 # Iconos disponibles: arco, anillo, pantalla, linea, punto, hoja, rectangulo
@@ -227,26 +282,43 @@ precios:
   titulo: "Precios"
   subtitulo: "Cuatro membresías mensuales."
   porSesion: "por sesión"
+  graficos:
+    recovery: "Recovery al mes"
+    luzRoja: "Luz roja"
+    sauna: "Sauna"
+    ilimitado: "Ilimitado"
+    noIncluida: "No incluida"
+  contacto:
+    titulo: "¿Dudas con los planes?"
+    texto: "Escríbenos y te ayudamos a elegir."
   membresias:
     - nombre: "Basic"
       precio: 55
+      luzRoja: 1
+      sauna: 0
       precioSesion: "13,75 €"
       pilates: "1 sesión/semana (4/mes)"
       recovery: "1 luz roja"
     - nombre: "Standard"
       precio: 100
+      luzRoja: 2
+      sauna: 1
       precioSesion: "12,50 €"
       pilates: "2 sesiones/semana (8/mes)"
       recovery: "2 luz roja + 1 sauna"
     - nombre: "Pro"
       precio: 140
+      luzRoja: 3
+      sauna: 2
       precioSesion: "11,67 €"
       pilates: "3 sesiones/semana (12/mes)"
       recovery: "3 luz roja + 2 sauna"
     - nombre: "Premium"
       precio: 180
+      luzRoja: -1
+      sauna: -1
       # 180 € entre 60 sesiones al mes, el máximo reservable.
-      precioSesion: "desde 3 €"
+      precioSesion: "3 €"
       pilates: "Ilimitado (según disponibilidad)"
       recovery: "Recovery ilimitado con reserva"
       extra: "Prioridad en reservas"
@@ -296,6 +368,9 @@ estudio:
 # Una pregunta con la respuesta vacía ("") no se muestra en la web.
 faq:
   titulo: "Preguntas frecuentes"
+  contacto:
+    titulo: "¿Aún tienes preguntas?"
+    texto: "Escríbenos y te respondemos encantados."
   grupos:
     - titulo: "Empezar"
       preguntas:

@@ -12,12 +12,12 @@ interface Props {
   home: Home;
 }
 const { ajustes, home } = Astro.props;
-const wa = whatsappUrl(ajustes.contacto.whatsapp);
+const wa = whatsappUrl(ajustes.contacto.whatsapp, home.ui.whatsappMensaje);
 ---
 
 <div class="barra" data-barra-movil>
-  <div class="barra__pildora vidrio">
-    <CtaButton ajustes={ajustes} home={home} class="barra__cta" />
+  <div class="barra__pildora">
+    <CtaButton ajustes={ajustes} home={home} corto class="barra__cta" />
     {
       wa && (
         <a class="barra__wa" href={wa} target="_blank" rel="noopener" aria-label={home.panel.whatsapp}>
@@ -48,7 +48,9 @@ const wa = whatsappUrl(ajustes.contacto.whatsapp);
       position: fixed;
       inset: auto 0 0;
       z-index: 35;
-      padding: 0 0.75rem calc(0.75rem + env(safe-area-inset-bottom));
+      padding: 0.625rem var(--gutter) calc(0.625rem + env(safe-area-inset-bottom));
+      background: var(--crema);
+      border-top: 1px solid var(--linea);
       transition: transform 0.4s var(--ease);
     }
     :global(body.panel-abierto) .barra {
@@ -60,8 +62,6 @@ const wa = whatsappUrl(ajustes.contacto.whatsapp);
     display: flex;
     align-items: center;
     gap: 0.5rem;
-    padding: 0.375rem;
-    border-radius: var(--r-pill);
   }
 
   .barra__pildora :global(.barra__cta) {

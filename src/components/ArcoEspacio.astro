@@ -1,0 +1,123 @@
+---
+/*
+ * El arco de cada espacio (reformer, sauna, luz roja): fondo propio y un
+ * dibujo de línea que se traza al entrar en pantalla. Con foto real, la foto.
+ * Lo usan la página de cada espacio y los accesos de la home. El tamaño y
+ * el radio los pone quien lo usa (clase).
+ */
+import PhotoSlot from './PhotoSlot.astro';
+import type { ImageMetadata } from 'astro';
+
+interface Props {
+  tipo: 'reformer' | 'sauna' | 'luz-roja';
+  foto?: { imagen: ImageMetadata; alt: string };
+  sizes?: string;
+  class?: string;
+}
+const { tipo, foto, sizes = '(min-width: 56rem) 40vw, 100vw', class: className } = Astro.props;
+
+// Rejilla de puntos de los paneles de luz roja (dos paneles de 72 × 148, 4 × 11 leds),
+// centrada en cada panel
+const panel = { y: 34, ancho: 72, alto: 148 };
+const columnas = 4;
+const filas = 11;
+const paso = { x: 14, y: 12.4 };
+const puntos = [74, 166].flatMap((x0) =>
+  Array.from({ length: columnas * filas }, (_, i) => ({
+    x: x0 + (panel.ancho - (columnas - 1) * paso.x) / 2 + (i % columnas) * paso.x,
+    y: panel.y + (panel.alto - (filas - 1) * paso.y) / 2 + Math.floor(i / columnas) * paso.y,
+  })),
+);
+---
+
+{
+  foto ? (
+    <PhotoSlot foto={foto} class={className} sizes={sizes} />
+  ) : (
+    <div class:list={['arco', `arco--${tipo}`, className]} aria-hidden="true">
+      {tipo === 'reformer' && (
+        <svg class="dibujo" viewBox="0 0 320 200" fill="none">
+          <rect class="traza" x="24" y="120" width="272" height="22" rx="11" />
+          <path class="traza" d="M48 142v24M272 142v24" />
+          <rect class="traza" x="122" y="102" width="94" height="18" rx="5" />
+          <path class="traza" d="M196 102V90a5 5 0 0 1 10 0v12" />
+          <path class="traza" d="M84 111l4-5 4 10 4-10 4 10 4-10 4 10 4-10 4 10 4-5" />
+          <path class="traza" d="M60 120V76a10 10 0 0 1 10-10h8" />
+          <path class="traza" d="M216 108l66-10M286 103v17" />
+          <circle class="traza" cx="286" cy="98" r="5" />
+        </svg>
+      )}
+      {tipo === 'sauna' && (
+        <svg class="dibujo" viewBox="0 0 320 200" fill="none">
+          <path class="traza traza--suave" d="M80 30v170M120 30v170M160 30v170M200 30v170M240 30v170" />
+          <path class="traza" d="M36 104h248M36 114h248" />
+          <path class="traza" d="M60 114v28M260 114v28" />
+          <path class="traza" d="M24 142h272M24 152h272" />
+          <path class="traza" d="M48 152v32M272 152v32" />
+        </svg>
+      )}
+      {tipo === 'luz-roja' && (
+        <svg class="dibujo dibujo--paneles" viewBox="0 0 320 200" fill="none">
+          <rect class="traza" x="74" y={panel.y} width={panel.ancho} height={panel.alto} rx="8" />
+          <rect class="traza" x="166" y={panel.y} width={panel.ancho} height={panel.alto} rx="8" />
+          {puntos.map((p) => (
+            <circle class="led" cx={p.x} cy={p.y} r="2.2" />
+          ))}
+        </svg>
+      )}
+    </div>
+  )
+}
+
+<style>
+  .arco {
+    display: grid;
+    place-items: end center;
+    overflow: hidden;
+    box-shadow: inset 0 0 0 1px var(--linea);
+  }
+
+  .arco--reformer {
+    background:
+      radial-gradient(70% 45% at 50% 100%, rgb(255 167 107 / 0.35), rgb(255 167 107 / 0) 100%),
+      linear-gradient(180deg, var(--crema), var(--tostado) 55%, var(--n100));
+  }
+
+  .arco--sauna {
+    background:
+      radial-gradient(90% 55% at 50% 100%, rgb(255 130 53 / 0.45), rgb(255 130 53 / 0) 100%),
+      linear-gradient(180deg, var(--n50), var(--n100) 45%, var(--n200) 80%, var(--n300));
+  }
+
+  .arco--luz-roja {
+    background:
+      radial-gradient(60% 50% at 50% 55%, var(--rojo-200) 0%, var(--rojo-300) 20%, var(--rojo-500) 52%, var(--rojo-700) 78%, var(--rojo-900) 100%);
+  }
+
+  .dibujo {
+    width: 88%;
+    height: auto;
+    margin-bottom: 8%;
+    stroke: var(--n700);
+    stroke-width: 1.1;
+    stroke-linecap: round;
+    stroke-linejoin: round;
+    overflow: visible;
+  }
+
+  .dibujo--paneles {
+    margin-bottom: 12%;
+    stroke: var(--rojo-100);
+  }
+
+  .traza--suave {
+    stroke: var(--n300);
+    opacity: 0.55;
+  }
+
+  .led {
+    fill: var(--rojo-50);
+    opacity: 0.85;
+  }
+
+</style>

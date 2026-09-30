@@ -9,8 +9,9 @@
 #   preapertura → el botón principal dice "Quiero ser socio/a fundador/a"
 #                 y abre el formulario de lista de espera.
 #   abierto     → el botón principal dice "Reserva tu primera sesión gratis"
-#                 y lleva a la reserva de bsport.
-estado: preapertura
+#                 y lleva a la página de la primera sesión, que explica la
+#                 sesión y enlaza a la app, a bsport y a WhatsApp.
+estado: abierto
 
 # Fecha de apertura en texto libre, p. ej. "15 de noviembre".
 # Mientras esté vacía (""), la web no muestra ninguna fecha.
@@ -32,7 +33,7 @@ contacto:
   whatsapp: "+34 675 04 94 60"
   # PENDIENTE: teléfono de ayuda, tal cual quieras que se vea, p. ej. "+34 600 111 222".
   telefonoAyuda: ""
-  email: ""
+  email: "hello@sunnapilates.es"
   instagram: "https://www.instagram.com/sunnapilates/"
   # PENDIENTE: enlace a la ficha de Google Business.
   googleBusiness: ""
@@ -47,6 +48,9 @@ reservas:
   membresiasUrl: ""
   # Descargar la app de SUNNA (aparece junto al horario y en el pie).
   appUrl: ""
+  # PENDIENTE: la app de SUNNA en cada tienda. Vacías = insignias «Próximamente».
+  appStoreUrl: ""
+  googlePlayUrl: ""
 
 formulario:
   # Dirección a la que se envían los datos del formulario de preapertura
@@ -61,10 +65,6 @@ fundadores:
   plazasTotales: 40
   # Actualiza este número a mano cuando se ocupen plazas.
   plazasLibres: 40
-
-# Cursor personalizado (punto naranja + círculo de vidrio que lo sigue).
-# true = activado en la web publicada. En desarrollo hay un interruptor para probarlo.
-cursorPersonalizado: true
 
 medicion:
   # Solo se cargan si la persona acepta las cookies.

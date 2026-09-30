@@ -14,11 +14,11 @@ const { queEs } = Astro.props.home;
       <h2 id="que-es-titulo" class="t-h2">{queEs.titulo}</h2>
     </div>
 
-    <ul role="list" class="ideas con-trazado" data-trazar>
+    <ul role="list" class="ideas">
       {
         queEs.ideas.map((idea, i) => (
           <li class="idea">
-            <Glifo forma={idea.icono as any} tamano={52} indice={i} />
+            <Glifo forma={idea.icono as any} tamano={52} />
             <h3 class="idea__titulo">{idea.titulo}</h3>
             <p class="idea__texto">{idea.texto}</p>
           </li>

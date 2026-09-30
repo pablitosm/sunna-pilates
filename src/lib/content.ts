@@ -14,6 +14,26 @@ export const nombresIdioma: Record<Lang, string> = {
 /** Portada de cada idioma: castellano en la raíz, el resto en /en/, /de/, /fr/. */
 export const raizIdioma = (lang: Lang) => (lang === 'es' ? '/' : `/${lang}/`);
 
+/** Páginas propias además de la portada: la primera sesión, los precios y cada espacio. */
+export const paginas = ['primera-sesion', 'precios', 'reformer', 'luz-roja', 'sauna'] as const;
+export type Pagina = (typeof paginas)[number];
+
+/** Dirección de cada página en cada idioma (sin el prefijo del idioma). */
+export const rutas: Record<Lang, Record<Pagina, string>> = {
+  es: { 'primera-sesion': 'primera-sesion', precios: 'precios', reformer: 'reformer', 'luz-roja': 'luz-roja', sauna: 'sauna' },
+  en: { 'primera-sesion': 'first-session', precios: 'pricing', reformer: 'reformer', 'luz-roja': 'red-light', sauna: 'sauna' },
+  de: { 'primera-sesion': 'erste-session', precios: 'preise', reformer: 'reformer', 'luz-roja': 'rotlicht', sauna: 'sauna' },
+  fr: { 'primera-sesion': 'premiere-seance', precios: 'tarifs', reformer: 'reformer', 'luz-roja': 'lumiere-rouge', sauna: 'sauna' },
+};
+
+/** Enlace a una página en un idioma; sin página, la portada de ese idioma. */
+export const urlPagina = (lang: Lang, pagina?: Pagina) =>
+  pagina ? `${raizIdioma(lang)}${rutas[lang][pagina]}/` : raizIdioma(lang);
+
+/** Idioma de la página que se está generando (Astro.currentLocale). */
+export const idiomaDe = (locale: string | undefined): Lang =>
+  (idiomas as readonly string[]).includes(locale ?? '') ? (locale as Lang) : 'es';
+
 export const localeOg: Record<Lang, string> = { es: 'es_ES', en: 'en_GB', de: 'de_DE', fr: 'fr_FR' };
 export type Ajustes = CollectionEntry<'ajustes'>['data'];
 export type Home = CollectionEntry<'home'>['data'];
@@ -63,8 +83,12 @@ export function mapsEmbedUrl(a: Ajustes) {
   return `https://www.google.com/maps?q=${encodeURIComponent(direccionCompleta(a))}&output=embed`;
 }
 
-/** Destino del botón principal cuando no hay JavaScript o el panel no se abre. */
-export function ctaHref(a: Ajustes) {
-  if (a.estado === 'abierto' && a.reservas.primeraSesionUrl) return a.reservas.primeraSesionUrl;
-  return a.estado === 'preapertura' && a.fundadores.mostrar ? '#fundadores' : '#cierre';
+/**
+ * Destino del botón principal. Abierto: la página de la primera sesión gratis,
+ * que explica la sesión y lleva a la app, a bsport o a WhatsApp. Preapertura:
+ * abre el panel de lista de espera (sin JavaScript, el bloque de fundadores).
+ */
+export function ctaHref(a: Ajustes, lang: Lang = 'es') {
+  if (a.estado === 'abierto') return urlPagina(lang, 'primera-sesion');
+  return a.fundadores.mostrar ? `${urlPagina(lang, 'precios')}#fundadores` : '#cierre';
 }

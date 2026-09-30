@@ -1,0 +1,230 @@
+---
+/*
+ * Por qué SUNNA frente a otros estudios (horario amplio y todo autónomo),
+ * junto al acceso a la app: tres pasos y las tiendas. Va justo después de
+ * la portada para que se entienda el modelo sin bajar mucho.
+ */
+import Glifo from '../Glifo.astro';
+import TiendasApp from '../TiendasApp.astro';
+import { idiomaDe, urlPagina, type Ajustes, type Home } from '../../lib/content';
+
+interface Props {
+  ajustes: Ajustes;
+  home: Home;
+}
+const { ajustes, home } = Astro.props;
+const pq = home.porQue;
+const glifos = ['anillo', 'pantalla', 'punto'] as const;
+const primeraSesion = urlPagina(idiomaDe(Astro.currentLocale), 'primera-sesion');
+---
+
+{
+  pq && (
+    <section id="por-que" class="porque seccion" aria-labelledby="porque-titulo">
+      <div class="envoltura porque__rejilla">
+        <div class="porque__razones">
+          <h2 id="porque-titulo" class="t-h2">{pq.titulo}</h2>
+          <p class="t-lead porque__intro">{pq.intro}</p>
+
+          <ul role="list" class="razones">
+            {pq.razones.map((r, i) => (
+              <li class="razon">
+                <Glifo forma={glifos[i % glifos.length]} tamano={44} class="razon__glifo" />
+                <h3 class="razon__titulo">{r.titulo}</h3>
+                <p class="razon__texto">{r.texto}</p>
+              </li>
+            ))}
+          </ul>
+        </div>
+
+        <aside class="app" aria-labelledby="app-titulo">
+          <div class="app__cabeza">
+            <!-- El móvil dibujado en línea, como los espacios: sol, puerta y lista de clases -->
+            <svg class="app__movil" viewBox="0 0 100 180" fill="none" aria-hidden="true">
+              <rect class="traza" x="8" y="4" width="84" height="172" rx="16" />
+              <path class="traza" d="M38 18h24" />
+              <circle class="app__sol" cx="50" cy="58" r="16" />
+              <path class="traza" d="M32 128v-24a18 18 0 0 1 36 0v24" />
+              <path class="traza traza--suave" d="M28 146h44M28 158h30" />
+            </svg>
+            <div>
+              <h3 id="app-titulo" class="app__titulo">{pq.app.titulo}</h3>
+              {pq.app.texto && <p class="app__texto">{pq.app.texto}</p>}
+            </div>
+          </div>
+          <ol role="list" class="app__pasos">
+            {pq.app.pasos.map((p, i) => (
+              <li class="app__paso">
+                <span class="app__numero" aria-hidden="true">{String(i + 1).padStart(2, '0')}</span>
+                {i === 1 ? <a href={primeraSesion}>{p}</a> : <span>{p}</span>}
+              </li>
+            ))}
+          </ol>
+          <TiendasApp ajustes={ajustes} textos={pq.app} class="app__tiendas" />
+        </aside>
+      </div>
+    </section>
+  )
+}
+
+<style>
+  .porque__rejilla {
+    display: grid;
+    grid-template-columns: minmax(0, 1fr) minmax(0, 27rem);
+    gap: clamp(2.5rem, 1rem + 5vw, 6rem);
+    align-items: start;
+  }
+
+  .porque__intro {
+    max-width: 38ch;
+    margin-top: 1.25rem;
+    color: var(--tinta-60);
+  }
+
+  /* Tres razones, en filas con línea fina: icono, título y una frase */
+  .razones {
+    margin-top: clamp(2.25rem, 1.5rem + 2vw, 3.25rem);
+    border-top: 1px solid var(--linea-fuerte);
+  }
+
+  .razon {
+    display: grid;
+    grid-template-columns: auto minmax(0, 15rem) minmax(0, 1fr);
+    gap: 0.5rem 1.5rem;
+    align-items: baseline;
+    padding: 1.625rem 0;
+    border-bottom: 1px solid var(--linea);
+  }
+
+  .razon :global(.razon__glifo) {
+    align-self: center;
+    color: var(--n700);
+  }
+
+  .razon__titulo {
+    font-size: 1.375rem;
+    line-height: 1.2;
+    letter-spacing: -0.015em;
+    text-wrap: balance;
+  }
+
+  .razon__texto {
+    color: var(--tinta-60);
+    line-height: 1.6;
+  }
+
+  /* La app: un arco con el móvil dibujado en línea y, debajo, tres pasos */
+  /* Cabecera de la app: el móvil dibujado junto al título, sobre un resplandor sin borde */
+  .app__cabeza {
+    position: relative;
+    display: grid;
+    grid-template-columns: 5.5rem minmax(0, 1fr);
+    gap: 1.5rem;
+    align-items: center;
+  }
+
+  .app__cabeza::before {
+    content: '';
+    position: absolute;
+    z-index: -1;
+    left: -3rem;
+    top: 50%;
+    width: 12rem;
+    aspect-ratio: 1;
+    translate: 0 -50%;
+    background: radial-gradient(closest-side, rgb(255 167 107 / 0.35), rgb(255 196 154 / 0.15) 55%, rgb(253 246 238 / 0));
+    pointer-events: none;
+  }
+
+  .app {
+    isolation: isolate;
+  }
+
+  .app__movil {
+    width: 100%;
+    height: auto;
+    stroke: var(--n700);
+    stroke-width: 1.4;
+    stroke-linecap: round;
+    stroke-linejoin: round;
+    overflow: visible;
+  }
+
+  .traza--suave {
+    stroke: var(--n300);
+  }
+
+  .app__sol {
+    fill: var(--n300);
+    opacity: 0.85;
+  }
+
+  .app__titulo {
+    font-size: 1.625rem;
+    line-height: 1.15;
+    letter-spacing: -0.02em;
+  }
+
+  .app__texto {
+    margin-top: 0.5rem;
+    color: var(--tinta-60);
+  }
+
+  /* Pasos: filas con línea fina, como las razones */
+  .app__pasos {
+    margin: 1.75rem 0 1.5rem;
+    border-top: 1px solid var(--linea-fuerte);
+  }
+
+  .app__paso {
+    display: flex;
+    align-items: baseline;
+    gap: 1rem;
+    padding: 0.875rem 0;
+    border-bottom: 1px solid var(--linea);
+    font-size: 1.0625rem;
+    line-height: 1.4;
+  }
+
+  .app__paso a {
+    color: var(--tinta);
+    text-decoration: underline;
+    text-decoration-color: var(--n500);
+    text-decoration-thickness: 1.5px;
+    text-underline-offset: 0.2em;
+  }
+
+  .app__paso a:hover {
+    color: var(--n900);
+  }
+
+  .app__numero {
+    flex: none;
+    width: 1.375rem;
+    font-size: 0.75rem;
+    letter-spacing: 0.08em;
+    font-variant-numeric: tabular-nums;
+    color: var(--n700);
+  }
+
+  @media (max-width: 64rem) {
+    .razon {
+      grid-template-columns: auto minmax(0, 1fr);
+    }
+
+    .razon__texto {
+      grid-column: 2;
+    }
+  }
+
+  @media (max-width: 56.25rem) {
+    .porque__rejilla {
+      grid-template-columns: 1fr;
+    }
+
+    .app__cabeza {
+      grid-template-columns: 4.5rem minmax(0, 1fr);
+      gap: 1.25rem;
+    }
+  }
+</style>

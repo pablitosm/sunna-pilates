@@ -5,26 +5,27 @@ import Footer from '../components/Footer.astro';
 import MobileBar from '../components/MobileBar.astro';
 import BookingPanel from '../components/vue/BookingPanel.vue';
 import CookieConsent from '../components/vue/CookieConsent.vue';
-import DevCursorToggle from '../components/DevCursorToggle.astro';
-import Logo from '../components/Logo.astro';
-import { getSite, idiomas, localeOg, mapsUrl, raizIdioma, whatsappUrl, type Lang } from '../lib/content';
+import { getSite, idiomas, localeOg, mapsUrl, urlPagina, whatsappUrl, type Lang, type Pagina } from '../lib/content';
 
 interface Props {
   titulo?: string;
   descripcion?: string;
   lang?: Lang;
-  inicio?: string;
   indexar?: boolean;
-  /** Portada de un idioma: enlaza sus versiones en los otros idiomas (hreflang). */
+  /** Portada o página propia de un idioma: enlaza sus versiones en los otros idiomas (hreflang). */
   alternos?: boolean;
+  /** Página propia (primera sesión, precios, cada espacio); sin ella, la portada. */
+  pagina?: Pagina;
+  /** Sin la barra fija del móvil (la página ya tiene sus propios botones de reservar). */
+  sinBarraMovil?: boolean;
 }
-const { titulo, descripcion, lang = 'es', inicio = '', indexar = true, alternos = false } = Astro.props;
+const { titulo, descripcion, lang = 'es', indexar = true, alternos = false, pagina, sinBarraMovil = false } = Astro.props;
 const { ajustes, home } = await getSite(lang);
 
 const title = titulo ? `${titulo} · SUNNA` : home.seo.titulo;
 const description = descripcion ?? home.seo.descripcion;
 const canonical = Astro.site ? new URL(Astro.url.pathname, Astro.site).href : undefined;
-const wa = whatsappUrl(ajustes.contacto.whatsapp);
+const wa = whatsappUrl(ajustes.contacto.whatsapp, home.ui.whatsappMensaje);
 const hayMedicion = Boolean(ajustes.medicion.googleAnalyticsId || ajustes.medicion.metaPixelId);
 
 // Datos estructurados de negocio local (SEO local).
@@ -50,30 +51,9 @@ const negocio = {
 ---
 
 <!doctype html>
-<html lang={lang} data-cursor={ajustes.cursorPersonalizado ? 'on' : 'off'}>
+<html lang={lang}>
   <head>
     <meta charset="utf-8" />
-    <script is:inline>
-      // Carga: solo la primera vez en la sesión. Titular por líneas: se prepara antes de pintar.
-      (function () {
-        var h = document.documentElement;
-        try {
-          if (sessionStorage.getItem('sunna-cargado')) h.classList.add('ya-cargado');
-          else sessionStorage.setItem('sunna-cargado', '1');
-        } catch (e) {}
-        if (!window.matchMedia('(prefers-reduced-motion: reduce)').matches) h.classList.add('js-lineas');
-      })();
-    </script>
-    {
-      import.meta.env.DEV && (
-        <script is:inline>
-          try {
-            var c = localStorage.getItem('sunna-cursor-dev');
-            if (c) document.documentElement.dataset.cursor = c;
-          } catch (e) {}
-        </script>
-      )
-    }
     <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
     <title>{title}</title>
     <meta name="description" content={description} />
@@ -86,7 +66,7 @@ const negocio = {
           <link
             rel="alternate"
             hreflang={l}
-            href={new URL(raizIdioma(l === 'x-default' ? 'es' : l), Astro.site).href}
+            href={new URL(urlPagina(l === 'x-default' ? 'es' : l, pagina), Astro.site).href}
           />
         ))
     }
@@ -103,18 +83,16 @@ const negocio = {
     <script type="application/ld+json" set:html={JSON.stringify(negocio)} />
   </head>
   <body>
-    <div class="carga" aria-hidden="true">
-      <div class="carga__halo"></div>
-      <div class="carga__logo"><Logo label="" /></div>
-    </div>
     <a class="saltar" href="#contenido">{home.ui.saltar}</a>
-    <Header ajustes={ajustes} home={home} inicio={inicio} lang={lang} />
+    <Header ajustes={ajustes} home={home} lang={lang} pagina={pagina} />
     <main id="contenido">
       <slot />
     </main>
     <Footer ajustes={ajustes} home={home} />
-    <MobileBar ajustes={ajustes} home={home} />
+    {!sinBarraMovil && <MobileBar ajustes={ajustes} home={home} />}
 
+    {
+      ajustes.estado === 'preapertura' && (
     <BookingPanel
       client:idle
       estado={ajustes.estado}
@@ -125,6 +103,8 @@ const negocio = {
       privacidadUrl="/privacidad"
       textos={home.panel}
     />
+      )
+    }
 
     {
       hayMedicion && (
@@ -137,9 +117,7 @@ const negocio = {
         />
       )
     }
-    <DevCursorToggle />
     <script>
-      import '../scripts/cursor';
       import '../scripts/movimiento';
     </script>
   </body>

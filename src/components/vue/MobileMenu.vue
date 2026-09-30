@@ -2,7 +2,7 @@
 import { ref } from 'vue';
 
 const props = defineProps<{
-  links: { texto: string; href: string }[];
+  links: { texto: string; href: string; hijos?: { texto: string; href: string }[] }[];
   whatsapp: string;
   whatsappTexto: string;
   instagram: string;
@@ -65,6 +65,11 @@ function alPulsarFondo(e: MouseEvent) {
         <ul role="list" class="menu__lista">
           <li v-for="l in props.links" :key="l.href">
             <a :href="l.href" @click="cerrarMenu">{{ l.texto }}</a>
+            <ul v-if="l.hijos?.length" role="list" class="menu__sublista">
+              <li v-for="h in l.hijos" :key="h.href">
+                <a :href="h.href" @click="cerrarMenu">{{ h.texto }}</a>
+              </li>
+            </ul>
           </li>
         </ul>
       </nav>
@@ -90,6 +95,19 @@ function alPulsarFondo(e: MouseEvent) {
 </template>
 
 <style scoped>
+.menu__sublista {
+  display: grid;
+  gap: 0.25rem;
+  margin: 0.25rem 0 0.5rem 1rem;
+  padding-left: 1rem;
+  border-left: 1px solid var(--n200);
+}
+
+.menu__lista .menu__sublista a {
+  font-size: 1.125rem;
+  color: var(--tinta-60);
+}
+
 .menu__idiomas ul {
   display: flex;
   flex-wrap: wrap;
@@ -144,9 +162,7 @@ function alPulsarFondo(e: MouseEvent) {
 }
 
 .menu::backdrop {
-  background: rgb(253 246 238 / 0.55);
-  -webkit-backdrop-filter: blur(6px);
-  backdrop-filter: blur(6px);
+  background: rgb(59 29 14 / 0.28);
 }
 
 .menu__hoja {

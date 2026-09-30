@@ -1,0 +1,77 @@
+---
+/*
+ * Indicador para seguir bajando: círculo con una flecha que baja y sube
+ * despacio, junto al nombre de lo que viene. Lleva a esa sección.
+ */
+interface Props {
+  href: string;
+  texto: string;
+  class?: string;
+}
+const { href, texto, class: className } = Astro.props;
+---
+
+<a class:list={['seguir', className]} href={href}>
+  <span class="seguir__circulo" aria-hidden="true">
+    <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
+      <path d="M12 4.5v14.25M6.75 13.5 12 18.75l5.25-5.25"></path>
+    </svg>
+  </span>
+  {texto}
+</a>
+
+<style>
+  .seguir {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.875rem;
+    font-size: 1rem;
+    color: var(--n900);
+    text-decoration: none;
+  }
+
+  .seguir__circulo {
+    display: grid;
+    place-items: center;
+    width: 2.75rem;
+    height: 2.75rem;
+    border-radius: 50%;
+    background: var(--crema);
+    box-shadow:
+      inset 0 0 0 1px var(--n200),
+      0 8px 20px -12px rgb(140 58 18 / 0.5);
+    transition: background-color 0.3s var(--ease);
+  }
+
+  .seguir:hover .seguir__circulo {
+    background: var(--n100);
+  }
+
+  .seguir:hover {
+    text-decoration: underline;
+    text-decoration-color: var(--n300);
+    text-underline-offset: 0.25em;
+  }
+
+  .seguir:focus-visible {
+    outline: 3px solid var(--n500);
+    outline-offset: 4px;
+    border-radius: var(--r-pill);
+  }
+
+  @media (prefers-reduced-motion: no-preference) {
+    .seguir__circulo svg {
+      animation: seguir-baja 2.2s var(--ease) infinite;
+    }
+  }
+
+  @keyframes seguir-baja {
+    0%,
+    100% {
+      transform: translateY(-2px);
+    }
+    50% {
+      transform: translateY(4px);
+    }
+  }
+</style>

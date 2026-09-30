@@ -14,7 +14,7 @@ const { pagina } = Astro.props;
 const { Content } = await render(pagina);
 ---
 
-<Base titulo={pagina.data.titulo} descripcion={pagina.data.descripcion} inicio="/" indexar={false}>
+<Base titulo={pagina.data.titulo} descripcion={pagina.data.descripcion} indexar={false}>
   <article class="legal envoltura">
     <h1 class="t-h2">{pagina.data.titulo}</h1>
     {pagina.data.actualizado && <p class="t-small t-secundario">Actualizado: {pagina.data.actualizado}</p>}
@@ -26,7 +26,7 @@ const { Content } = await render(pagina);
 
 <style>
   .legal {
-    padding-block: 9rem var(--seccion);
+    padding-block: var(--pagina-arriba) var(--seccion);
     max-width: 46rem;
   }
 

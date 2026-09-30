@@ -1,11 +1,12 @@
 ---
 /*
  * Botón firma: la píldora fundida (Naranja 500 + círculo con flecha, algo
- * más alto que la píldora). Abre el panel de reserva / lista de espera.
- * Sin JavaScript, sigue el enlace.
+ * más alto que la píldora). Abierto: lleva a la página de la primera sesión
+ * gratis. Preapertura: abre el panel de lista de espera (sin JavaScript,
+ * sigue el enlace).
  */
 import Icon from './Icon.astro';
-import { ctaHref, type Ajustes, type Home } from '../lib/content';
+import { ctaHref, idiomaDe, type Ajustes, type Home } from '../lib/content';
 
 interface Props {
   ajustes: Ajustes;
@@ -17,15 +18,16 @@ interface Props {
 const { ajustes, home, corto = false, tamano = 'normal', class: className } = Astro.props;
 const textos = corto ? home.botones.principalCorto : home.botones.principal;
 const label = textos[ajustes.estado];
-const href = ctaHref(ajustes);
+const href = ctaHref(ajustes, idiomaDe(Astro.currentLocale));
+const abrePanel = ajustes.estado === 'preapertura';
 const externo = href.startsWith('http');
 ---
 
 <a
   class:list={['cta', `cta--${tamano}`, className]}
   href={href}
-  data-open-booking
-  data-cur="cta"
+  data-open-booking={abrePanel ? '' : undefined}
+ 
   {...externo ? { target: '_blank', rel: 'noopener' } : {}}
 >
   <span class="cta__texto">{label}</span>

@@ -6,14 +6,10 @@
 import '../styles/global.css';
 import Logo from '../components/Logo.astro';
 import Icon from '../components/Icon.astro';
-import { getSite } from '../lib/content';
-
-// El mismo cursor que la web (ajustes.yaml → cursorPersonalizado)
-const { ajustes } = await getSite('es');
 ---
 
 <!doctype html>
-<html lang="es" data-cursor={ajustes.cursorPersonalizado ? 'on' : 'off'}>
+<html lang="es">
   <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
@@ -27,7 +23,7 @@ const { ajustes } = await getSite('es');
     <div class="acceso__portal" aria-hidden="true"><span class="acceso__sol"></span></div>
 
     <main class="acceso__marco">
-      <form class="tarjeta vidrio" method="post" action="/auth/login" data-login>
+      <form class="tarjeta" method="post" action="/auth/login" data-login>
         <div class="tarjeta__logo">
           <Logo label="SUNNA" />
         </div>
@@ -66,8 +62,6 @@ const { ajustes } = await getSite('es');
     </main>
 
     <script>
-      import '../scripts/cursor';
-
       const q = new URLSearchParams(location.search);
       const next = q.get('next');
       const campoNext = document.querySelector<HTMLInputElement>('[data-next]');
@@ -180,6 +174,9 @@ const { ajustes } = await getSite('es');
     width: min(100%, 28rem);
     padding: clamp(1.75rem, 1rem + 3vw, 2.75rem);
     border-radius: var(--r-l);
+    background: var(--crema);
+    border: 1px solid var(--n100);
+    box-shadow: 0 24px 48px -28px rgb(140 58 18 / 0.4);
   }
 
   .tarjeta__logo {

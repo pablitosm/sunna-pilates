@@ -1,34 +1,34 @@
 ---
 /*
  * Recovery y los tres espacios: el reformer, la sauna y la sala de luz roja.
+ * Cada espacio tiene además su propia página (pagina + tipos) con este mismo apartado.
  * Cada apartado es un arco (foto real o ilustración de línea) junto a su
  * explicación y lo que incluye cada membresía. La luz roja lleva su propio
  * rojo (--rojo-*); el resto vive en la escala naranja.
  */
-import PhotoSlot from '../PhotoSlot.astro';
+import ArcoEspacio from '../ArcoEspacio.astro';
 import type { Home } from '../../lib/content';
 
 interface Props {
   home: Home;
+  /** Solo estos espacios (la página de cada espacio muestra uno). */
+  tipos?: Home['recovery']['apartados'][number]['tipo'][];
+  /** Como página propia: sin cabecera de sección y con el título como h1. */
+  pagina?: boolean;
 }
-const { recovery } = Astro.props.home;
-
-// Rejilla de puntos de los paneles de luz roja (dos paneles de 72 × 148, 4 × 11 leds),
-// centrada en cada panel
-const panel = { y: 34, ancho: 72, alto: 148 };
-const columnas = 4;
-const filas = 11;
-const paso = { x: 14, y: 12.4 };
-const puntos = [74, 166].flatMap((x0) =>
-  Array.from({ length: columnas * filas }, (_, i) => ({
-    x: x0 + (panel.ancho - (columnas - 1) * paso.x) / 2 + (i % columnas) * paso.x,
-    y: panel.y + (panel.alto - (filas - 1) * paso.y) / 2 + Math.floor(i / columnas) * paso.y,
-  })),
-);
+const { home, tipos, pagina = false } = Astro.props;
+const { recovery } = home;
+const apartados = tipos ? recovery.apartados.filter((a) => tipos.includes(a.tipo)) : recovery.apartados;
+const Titulo = pagina ? 'h1' : 'h3';
 ---
 
-<section id="recovery" class="recovery seccion" aria-labelledby="recovery-titulo">
+<section
+  id={pagina ? undefined : 'recovery'}
+  class:list={['recovery seccion', { 'recovery--pagina': pagina }]}
+  aria-labelledby={pagina ? undefined : 'recovery-titulo'}
+>
   <div class="envoltura">
+    {!pagina && (
     <header class="recovery__cabeza">
       <div>
         <p class="etiqueta recovery__etiqueta">{recovery.etiqueta}</p>
@@ -38,52 +38,18 @@ const puntos = [74, 166].flatMap((x0) =>
         {recovery.lineas.map((l, i) => <p class:list={['recovery__linea', { 'recovery__linea--suave': i > 0 }]}>{l}</p>)}
       </div>
     </header>
+    )}
 
     <ul role="list" class="apartados">
       {
-        recovery.apartados.map((a) => (
+        apartados.map((a) => (
           <li class:list={['apartado', `apartado--${a.tipo}`]}>
             <div class="apartado__visual">
-              {a.foto ? (
-                <PhotoSlot foto={a.foto} class="apartado__arco" sizes="(min-width: 56rem) 40vw, 100vw" />
-              ) : (
-                <div class:list={['apartado__arco', `apartado__arco--${a.tipo}`]} aria-hidden="true">
-                  {a.tipo === 'reformer' && (
-                    <svg class="dibujo con-trazado" data-trazar viewBox="0 0 320 200" fill="none">
-                      <rect class="traza" x="24" y="120" width="272" height="22" rx="11" pathLength="1" />
-                      <path class="traza" d="M48 142v24M272 142v24" pathLength="1" />
-                      <rect class="traza" x="122" y="102" width="94" height="18" rx="5" pathLength="1" />
-                      <path class="traza" d="M196 102V90a5 5 0 0 1 10 0v12" pathLength="1" />
-                      <path class="traza" d="M84 111l4-5 4 10 4-10 4 10 4-10 4 10 4-10 4 10 4-5" pathLength="1" />
-                      <path class="traza" d="M60 120V76a10 10 0 0 1 10-10h8" pathLength="1" />
-                      <path class="traza" d="M216 108l66-10M286 103v17" pathLength="1" />
-                      <circle class="traza" cx="286" cy="98" r="5" pathLength="1" />
-                    </svg>
-                  )}
-                  {a.tipo === 'sauna' && (
-                    <svg class="dibujo con-trazado" data-trazar viewBox="0 0 320 200" fill="none">
-                      <path class="traza traza--suave" d="M80 30v170M120 30v170M160 30v170M200 30v170M240 30v170" pathLength="1" />
-                      <path class="traza" d="M36 104h248M36 114h248" pathLength="1" />
-                      <path class="traza" d="M60 114v28M260 114v28" pathLength="1" />
-                      <path class="traza" d="M24 142h272M24 152h272" pathLength="1" />
-                      <path class="traza" d="M48 152v32M272 152v32" pathLength="1" />
-                    </svg>
-                  )}
-                  {a.tipo === 'luz-roja' && (
-                    <svg class="dibujo dibujo--paneles con-trazado" data-trazar viewBox="0 0 320 200" fill="none">
-                      <rect class="traza" x="74" y={panel.y} width={panel.ancho} height={panel.alto} rx="8" pathLength="1" />
-                      <rect class="traza" x="166" y={panel.y} width={panel.ancho} height={panel.alto} rx="8" pathLength="1" />
-                      {puntos.map((p) => (
-                        <circle class="led" cx={p.x} cy={p.y} r="2.2" />
-                      ))}
-                    </svg>
-                  )}
-                </div>
-              )}
+              <ArcoEspacio tipo={a.tipo} foto={a.foto} class="apartado__arco" />
             </div>
 
             <div class="apartado__texto">
-              <h3 class="apartado__titulo">{a.titulo}</h3>
+              <Titulo class="apartado__titulo">{a.titulo}</Titulo>
               <p class="apartado__intro">{a.texto}</p>
 
               <ul role="list" class="apartado__puntos">
@@ -143,6 +109,16 @@ const puntos = [74, 166].flatMap((x0) =>
     color: var(--tinta-60);
   }
 
+  /* Página propia de un espacio: el apartado hace de portada */
+  .recovery--pagina {
+    padding-top: var(--pagina-arriba);
+  }
+
+  .recovery--pagina .apartado__titulo {
+    font-size: clamp(2.5rem, 1.8rem + 3vw, 4rem);
+    line-height: 1.02;
+  }
+
   /* ───────── Apartados ───────── */
   .apartados {
     display: grid;
@@ -192,93 +168,9 @@ const puntos = [74, 166].flatMap((x0) =>
 
   /* El arco: 180 px arriba, 28 px abajo */
   .apartado :global(.apartado__arco) {
-    display: grid;
-    place-items: end center;
-    height: clamp(22rem, 14rem + 16vw, 32rem);
-    border-radius: 180px 180px var(--r-l) var(--r-l);
+    aspect-ratio: 4 / 3;
+    border-radius: 14px;
     overflow: hidden;
-  }
-
-  .apartado__arco--reformer {
-    background:
-      radial-gradient(70% 45% at 50% 100%, rgb(255 167 107 / 0.35), rgb(255 167 107 / 0) 100%),
-      linear-gradient(180deg, var(--crema), var(--tostado) 55%, var(--n100));
-  }
-
-  .apartado__arco--sauna {
-    background:
-      radial-gradient(90% 55% at 50% 100%, rgb(255 130 53 / 0.45), rgb(255 130 53 / 0) 100%),
-      linear-gradient(180deg, var(--n50), var(--n100) 45%, var(--n200) 80%, var(--n300));
-  }
-
-  .apartado__arco--luz-roja {
-    background:
-      radial-gradient(60% 50% at 50% 55%, var(--rojo-200) 0%, var(--rojo-300) 20%, var(--rojo-500) 52%, var(--rojo-700) 78%, var(--rojo-900) 100%);
-  }
-
-  .dibujo {
-    width: 88%;
-    height: auto;
-    margin-bottom: 8%;
-    stroke: var(--n700);
-    stroke-width: 1.1;
-    stroke-linecap: round;
-    stroke-linejoin: round;
-    overflow: visible;
-  }
-
-  .dibujo--paneles {
-    margin-bottom: 12%;
-    stroke: var(--rojo-100);
-  }
-
-  .traza--suave {
-    stroke: var(--n300);
-    opacity: 0.55;
-  }
-
-  .led {
-    fill: var(--rojo-50);
-    opacity: 0.85;
-  }
-
-  /* Las líneas se trazan al entrar; los leds se encienden después */
-  .con-trazado .traza {
-    stroke-dasharray: 1;
-    stroke-dashoffset: 1;
-    transition: stroke-dashoffset 1.2s var(--ease);
-  }
-
-  .con-trazado .led {
-    opacity: 0;
-    transition: opacity 0.9s var(--ease) 0.7s;
-  }
-
-  .con-trazado.trazado .traza {
-    stroke-dashoffset: 0;
-  }
-
-  .con-trazado.trazado .led {
-    opacity: 0.85;
-  }
-
-  @supports (animation-timeline: view()) {
-    @media (prefers-reduced-motion: no-preference) {
-      .apartado :global(.apartado__arco) {
-        animation: apartado-crece linear both;
-        animation-timeline: view();
-        animation-range: entry 0% cover 35%;
-      }
-    }
-  }
-
-  @keyframes apartado-crece {
-    from {
-      clip-path: inset(40% 0 0 0 round 180px 180px 28px 28px);
-    }
-    to {
-      clip-path: inset(0 0 0 0 round 180px 180px 28px 28px);
-    }
   }
 
   /* ───────── Texto ───────── */
@@ -390,8 +282,7 @@ const puntos = [74, 166].flatMap((x0) =>
     }
 
     .apartado :global(.apartado__arco) {
-      height: clamp(17rem, 12rem + 20vw, 22rem);
-      border-radius: 120px 120px var(--r-s) var(--r-s);
+      aspect-ratio: 4 / 3;
     }
   }
 
