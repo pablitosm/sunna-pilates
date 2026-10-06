@@ -1,0 +1,262 @@
+---
+/*
+ * Barra de socios fundadores: fija encima de la cabecera en todas las páginas
+ * mientras ajustes.yaml → fundadores.mostrar esté activo. Las ventajas se
+ * despliegan hacia abajo; los enlaces a #fundadores las abren.
+ */
+import type { Ajustes, Home } from '../lib/content';
+
+interface Props {
+  ajustes: Ajustes;
+  home: Home;
+}
+const { ajustes, home } = Astro.props;
+const f = home.precios.fundadores;
+const { plazasTotales, plazasLibres, mostrar } = ajustes.fundadores;
+const libres = Math.min(plazasLibres, plazasTotales);
+---
+
+{
+  mostrar && (
+    <aside id="fundadores" class="fundadores" aria-labelledby="fundadores-titulo">
+      <div class="envoltura fundadores__dentro">
+        <details class="fundadores__mas">
+          <summary>
+            <span id="fundadores-titulo" class="fundadores__titulo">{f.titulo}</span>
+            <span class="fundadores__plazas">
+              <strong>{libres}</strong> {f.plazas} {plazasTotales}
+            </span>
+            <span class="fundadores__ver">
+              {f.verVentajas}
+              <span class="fundadores__signo" aria-hidden="true" />
+            </span>
+          </summary>
+          <ul role="list" class="ventajas">
+            {f.ventajas.map((v) => (
+              <li>{v}</li>
+            ))}
+            <li class="ventajas__pack">
+              <span class="ventajas__pack-titulo">{f.pack.titulo}</span>
+              {f.pack.texto}
+            </li>
+          </ul>
+        </details>
+      </div>
+    </aside>
+  )
+}
+
+<script>
+  // Los botones de "hazte socio/a fundador/a" llevan a #fundadores: al llegar se abren las ventajas.
+  const abrirVentajas = () => {
+    if (location.hash !== '#fundadores') return;
+    const mas = document.querySelector<HTMLDetailsElement>('.fundadores__mas');
+    if (mas) mas.open = true;
+  };
+  abrirVentajas();
+  window.addEventListener('hashchange', abrirVentajas);
+
+  // La barra va encima de la cabecera: su alto (cerrada) baja la cabecera y el contenido.
+  const barra = document.querySelector<HTMLElement>('.fundadores summary');
+  if (barra) {
+    const medir = () =>
+      document.documentElement.style.setProperty('--aviso-alto', `${barra.getBoundingClientRect().height}px`);
+    new ResizeObserver(medir).observe(barra);
+    medir();
+  }
+</script>
+
+<style>
+  :global(:root:has(.fundadores)) {
+    --aviso-alto: 3.75rem;
+  }
+
+  .fundadores {
+    position: fixed;
+    inset: 0 0 auto;
+    z-index: 41;
+    max-height: 100dvh;
+    overflow-y: auto;
+    overscroll-behavior: contain;
+    background: var(--n900);
+    color: var(--crema);
+    transition:
+      transform 0.4s var(--ease),
+      box-shadow 0.2s var(--ease);
+  }
+
+  .fundadores:has(.fundadores__mas[open]) {
+    box-shadow: 0 12px 40px rgb(66 28 8 / 0.22);
+  }
+
+  :global(body.panel-abierto) .fundadores {
+    transform: translateY(-110%);
+    visibility: hidden;
+    transition:
+      transform 0.4s var(--ease),
+      visibility 0s 0.4s;
+  }
+
+  .fundadores__dentro {
+    display: flex;
+    align-items: flex-start;
+    justify-content: space-between;
+    gap: 1.5rem;
+  }
+
+  .fundadores__mas {
+    flex: 1;
+    min-width: 0;
+  }
+
+  .fundadores__mas summary {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: baseline;
+    gap: 0.25rem 1.25rem;
+    min-height: 3rem;
+    padding-block: 0.875rem;
+    align-content: center;
+    cursor: pointer;
+    list-style: none;
+  }
+
+  .fundadores__mas summary::-webkit-details-marker {
+    display: none;
+  }
+
+  .fundadores__titulo {
+    font-size: 1.25rem;
+    letter-spacing: -0.015em;
+  }
+
+  .fundadores__plazas {
+    font-size: 0.875rem;
+    color: rgb(253 246 238 / 0.75);
+  }
+
+  .fundadores__plazas strong {
+    font-weight: 500;
+    color: var(--n300);
+  }
+
+  /* Abre y cierra las ventajas: texto subrayado, a la derecha de la barra */
+  .fundadores__ver {
+    display: inline-flex;
+    align-items: center;
+    align-self: center;
+    gap: 0.5rem;
+    margin-left: auto;
+    font-size: 0.9375rem;
+    color: rgb(253 246 238 / 0.85);
+    text-decoration: underline;
+    text-decoration-color: rgb(253 246 238 / 0.3);
+    text-underline-offset: 0.25em;
+    transition:
+      color 0.2s var(--ease),
+      text-decoration-color 0.2s var(--ease);
+  }
+
+  .fundadores__mas summary:hover .fundadores__ver {
+    color: var(--crema);
+    text-decoration-color: var(--n300);
+  }
+
+  /* Signo + que gira a × al abrir */
+  .fundadores__signo {
+    position: relative;
+    width: 0.75rem;
+    height: 0.75rem;
+    transition: transform 0.2s ease;
+  }
+
+  .fundadores__signo::before,
+  .fundadores__signo::after {
+    content: '';
+    position: absolute;
+    inset: 50% 0 auto;
+    height: 1.5px;
+    margin-top: -0.75px;
+    background: var(--n300);
+  }
+
+  .fundadores__signo::after {
+    transform: rotate(90deg);
+  }
+
+  .fundadores__mas[open] .fundadores__signo {
+    transform: rotate(45deg);
+  }
+
+  .ventajas {
+    display: grid;
+    grid-template-columns: repeat(4, minmax(0, 1fr));
+    gap: 1.5rem;
+    margin-block: 0 1.375rem;
+    padding-top: 1rem;
+    border-top: 1px solid rgb(253 246 238 / 0.18);
+    font-size: 0.875rem;
+    line-height: 1.5;
+    color: rgb(253 246 238 / 0.85);
+  }
+
+  .ventajas li {
+    padding-left: 0.875rem;
+    border-left: 2px solid var(--n300);
+  }
+
+  .ventajas__pack-titulo {
+    display: block;
+    color: var(--crema);
+    font-weight: 500;
+  }
+
+  .fundadores :focus-visible {
+    outline-color: var(--n200);
+  }
+
+  @media (max-width: 64rem) {
+    .ventajas {
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+    }
+  }
+
+  /* Móvil: barra más baja, el título en su propia línea */
+  @media (max-width: 56.25rem) {
+    :global(:root:has(.fundadores)) {
+      --aviso-alto: 4.25rem;
+    }
+    .fundadores {
+      max-height: calc(100dvh - 4.5rem - env(safe-area-inset-bottom));
+    }
+    .fundadores__mas summary {
+      min-height: 0;
+      padding-block: 0.625rem;
+      gap: 0.125rem 0.875rem;
+    }
+    .fundadores__titulo {
+      flex-basis: 100%;
+      font-size: 0.9375rem;
+    }
+    .fundadores__plazas {
+      font-size: 0.8125rem;
+    }
+    .fundadores__ver {
+      font-size: 0.8125rem;
+    }
+  }
+
+  @media (max-width: 48rem) {
+    .ventajas {
+      grid-template-columns: 1fr;
+      gap: 0.75rem;
+    }
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    .fundadores,
+    .fundadores__signo {
+      transition: none;
+    }
+  }
+</style>

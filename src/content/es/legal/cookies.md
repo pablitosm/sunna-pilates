@@ -14,7 +14,7 @@ actualizado: ""
 | _ga, _ga_* | Google Analytics | Analítica, solo si la aceptas |
 | _fbp | Meta | Medición de anuncios, solo si la aceptas |
 
-El mapa de Google Maps solo se carga si pulsas «Ver el mapa»; en ese momento Google puede instalar sus propias cookies.
+El mapa de la web es un dibujo y no carga nada de terceros. Si pulsas «Abrir en el mapa», Google Maps se abre en una pestaña aparte, con sus propias condiciones y cookies.
 
 ## Cómo cambiar tu elección
 

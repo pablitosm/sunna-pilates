@@ -262,9 +262,9 @@ Content that the brief has not yet supplied is shown honestly, in a small monosp
 A single warm orange ramp over cream, with a deep brown ink doing all dark work.
 
 ### Primary
-- **Sun Orange / Naranja 500**: the signature. Fills the CTA pill and its arrow disc, membership badge, FAQ-card arrow discs, the map pin, focus ring, and the cores of every halo and the closing sun. Text on it is always Tinta.
+- **Sun Orange / Naranja 500**: the signature. Fills the CTA pill, membership badge, FAQ-card arrow discs, the map pin, focus ring, and the cores of every halo and the closing sun. Text on it is always Tinta.
 - **Ember / Naranja 700**: forms, never text blocks. Glyph strokes, the em-dash bullets on membership lists, the founders counter figure, the late-shift hours in the schedule, dashed borders.
-- **Burnt Sienna / Naranja 900**: the only orange that carries running text (secondary links, address link, WhatsApp icon, FAQ plus sign) and the field of the founders band and footer.
+- **Burnt Sienna / Naranja 900**: the CTA arrow disc, and the only orange that carries running text (secondary links, address link, WhatsApp icon, FAQ plus sign) and the field of the founders band and footer.
 
 ### Secondary
 - **Peach ramp / Naranja 50–300**: Naranja 50 is the default card surface; Naranja 100 the question cards and field hairlines; Naranja 200 hairline borders, selection, grid lines on the map and the hero tint; Naranja 300 hover state of the CTA and the accent (numbers, bullets, prices per session) on dark fields.
@@ -359,7 +359,7 @@ Circle and arch. Cards and panels use a 28px corner; inner panels (counter, noti
 ## Components
 
 ### Buttons
-- **CTA pill (signature):** Naranja 500 pill 64px tall, Tinta 19px label, fused with a 70px arrow disc that is taller than the pill and overhangs it. Short neutral shadow (`--sombra-boton`), never an orange glow. Hover: fill steps to Naranja 300 and the disc slides 6px right. Compact variant 48px / 52px disc / 15px label for the header. On ≤40rem the normal pill is 56px / 60px disc, 16px, full width.
+- **CTA pill (signature):** Naranja 500 pill 64px tall, Tinta 19px label, with a 52px Naranja 900 arrow disc (Crema arrow) seated inside its right end, 6px from the edge (client decision, 2026-10-06: the old orange disc read as orange on orange). Short neutral shadow (`--sombra-boton`), never an orange glow. Hover: fill steps to Naranja 300 and the arrow nudges 3px right inside the disc. Compact variant 48px / 38px disc / 15px label for the header. On ≤40rem the normal pill is 56px / 44px disc, 16px, full width; in the mobile bar beside WhatsApp, 52px / 40px disc.
 - **Ink button:** Tinta pill, Crema 500-weight text, 44px (cookie consent).
 - **Text link:** Naranja 900 or Tinta with a 1px Naranja 300 underline offset 0.22em; underline turns Naranja 500 on hover.
 - **Focus:** 3px Naranja 500 outline, 3–4px offset; Naranja 200/300 on dark bands.
@@ -397,12 +397,13 @@ Title at left; at right, one tab per FAQ group (pills, active in Naranja 500) an
 
 ### Bands
 - **Recovery:** Naranja 50 field. Title at left, the two brief lines at right, then three rows (El reformer, La sauna, La sala de luz roja) alternating an arch visual with its explanation: panel-title heading, lead intro, em-dash bullets, and an "En tu membresía" 4-column strip (plan / amount, hairline dividers; 2×2 under 36rem). Each arch is a real photo or a 1.1px line drawing that traces on entering view: the reformer on a cream-to-peach ground, sauna benches over a rising orange heat, two LED panels over the Rojo glow.
-- **Founders:** Naranja 900 field, 60px title, numbered benefits in Naranja 300, a Crema card holding the counter.
+- **Founders:** a slim Naranja 900 bar fixed above the header on every page while `fundadores.mostrar` is on (client decision, 2026-10-06): 20px Crema title, the places counter in Naranja 300, and an underlined "Ver ventajas" with a + that turns to ×. The benefits unfold downward over the header in four columns with 2px Naranja 300 rules (two under 64rem, one under 48rem). Its measured height (`--aviso-alto`) pushes the header and page tops down.
 - **Footer:** Naranja 900, giant Crema wordmark, 4-column uppercase-labelled link columns, 13px base line.
 
 ### Motion (from the reference motion notes)
 - **Load:** no loading screen; the page shows immediately (client decision, 2026-09-30: no generic "AI" effects).
 - **Hero:** static. No masked line reveal, no blur-in, no parallax; the headline and photo are there from the first paint. Header never shrinks.
+- **No page transitions, entrance animations, hover lifts, pulses or bobbing arrows** (client decision, 2026-09-30). Menus, dialogs and the cookie banner appear instantly. The only loop left is the dot next to "El estudio solo abre con alguien de SUNNA dentro", which the client asked for.
 - **Cómo funciona:** on desktop the section pins and the four step cards travel horizontally with scroll; cards lean up to 4px toward the pointer. Mobile and reduced motion: plain stack.
 - **Glyphs:** trace their line on entering view, 60ms stagger, no bounce.
 - **Estudio:** each arch grows from the bottom as it enters; its contents drift 8%.
@@ -421,7 +422,7 @@ Title at left; at right, one tab per FAQ group (pills, active in Naranja 500) an
 - **Do** use the 11px uppercase +0.16em label to name the card, group, place or datum it sits on.
 - **Do** mark missing content with the 11px monospace `[PENDIENTE]` marker instead of inventing it.
 - **Do** keep all headlines at weight 400 with tightening tracking.
-- **Do** fuse the CTA pill with its oversized arrow disc; it is the one action shape.
+- **Do** seat the Naranja 900 arrow disc inside the CTA pill; it is the one action shape.
 - **Do** use 28px corners on cards, 14/16px inside them, 999px on pills and 180px on arch photos.
 - **Do** keep the film grain and warm-tinted shadows on every surface.
 - **Do** respect reduced motion (halos stop breathing, scroll animations off).

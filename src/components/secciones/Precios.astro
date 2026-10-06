@@ -1,68 +1,31 @@
 ---
-import CtaButton from '../CtaButton.astro';
 import ContactoDudas from '../ContactoDudas.astro';
-import type { Ajustes, Home } from '../../lib/content';
+import { ctaEsFundador, type Ajustes, type Home } from '../../lib/content';
 
 interface Props {
   ajustes: Ajustes;
   home: Home;
-  /** Como página propia: título h1, primero las membresías y después los fundadores. */
+  /** Como página propia: título h1 y más aire arriba. */
   pagina?: boolean;
 }
 const { ajustes, home, pagina = false } = Astro.props;
 const Titulo = pagina ? 'h1' : 'h2';
 const { precios } = home;
-const f = precios.fundadores;
-const { plazasTotales, plazasLibres, mostrar } = ajustes.fundadores;
-const libres = Math.min(plazasLibres, plazasTotales);
 const euros = (n: number) => new Intl.NumberFormat('es-ES').format(n);
 const g = precios.graficos;
+const intro = (ctaEsFundador(ajustes) && precios.introFundador) || precios.intro;
 ---
 
 <section id="precios" class:list={['precios', { 'precios--pagina': pagina }]} aria-labelledby="precios-titulo">
   <div class="envoltura precios__cabeza">
     <div class="cabeza-seccion">
-      <Titulo id="precios-titulo" class="t-h2 precios__titulo">{precios.titulo}</Titulo>
-      <span class="etiqueta">{precios.subtitulo}</span>
+      <div>
+        <Titulo id="precios-titulo" class="t-h2 precios__titulo">{precios.titulo}</Titulo>
+        {intro && <p class="t-lead precios__intro">{intro}</p>}
+      </div>
+      {precios.subtitulo && <span class="etiqueta">{precios.subtitulo}</span>}
     </div>
   </div>
-
-  {
-    mostrar && (
-      <div id="fundadores" class="fundadores" aria-labelledby="fundadores-titulo">
-        <div class="envoltura fundadores__rejilla">
-          <div>
-            <p class="etiqueta fundadores__etiqueta">{f.etiqueta}</p>
-            <h3 id="fundadores-titulo" class="fundadores__titulo">{f.titulo}</h3>
-            <ol role="list" class="ventajas">
-              {f.ventajas.map((v, i) => (
-                <li>
-                  <span class="ventajas__num" aria-hidden="true">
-                    {String(i + 1).padStart(2, '0')}
-                  </span>
-                  <span>{v}</span>
-                </li>
-              ))}
-            </ol>
-            <CtaButton ajustes={ajustes} home={home} class="fundadores__cta" />
-          </div>
-
-          <div class="fundadores__tarjeta">
-            <div class="contador">
-              <span class="contador__cifra">{libres}</span>
-              <span class="contador__texto">
-                {f.plazas} {plazasTotales}
-              </span>
-            </div>
-            <div class="pack">
-              <p class="etiqueta">{f.pack.titulo}</p>
-              <p class="pack__texto">{f.pack.texto}</p>
-            </div>
-          </div>
-        </div>
-      </div>
-    )
-  }
 
   <div class="envoltura precios__tarjetas">
     <ul role="list" class="membresias">
@@ -81,34 +44,23 @@ const g = precios.graficos;
               <strong>{m.precioSesion}</strong> {precios.porSesion}
             </p>
             <div class="grafico">
-              <p class="grafico__sesiones">{m.pilates}</p>
+              <p class="grafico__sesiones">
+                {m.pilates}
+                {m.pilatesSemana && <span class="grafico__semana">{m.pilatesSemana}</span>}
+              </p>
             </div>
 
             {g && m.luzRoja !== undefined && m.sauna !== undefined ? (
               <div class="grafico">
-                <p class="etiqueta grafico__titulo">{g.recovery}</p>
                 <p class="solo-lectores">{m.recovery}</p>
                 <dl class="recovery" aria-hidden="true">
                   {[
-                    { nombre: g.luzRoja, n: m.luzRoja, tono: 'rojo' },
-                    { nombre: g.sauna, n: m.sauna, tono: 'sauna' },
+                    { nombre: g.luzRoja, n: m.luzRoja },
+                    { nombre: g.sauna, n: m.sauna },
                   ].map((r) => (
                     <div class:list={['recovery__fila', { 'recovery__fila--no': r.n === 0 }]}>
                       <dt>{r.nombre}</dt>
-                      <dd>
-                        {r.n === 0 ? (
-                          g.noIncluida
-                        ) : r.n < 0 ? (
-                          <span class:list={['recovery__ilimitado', `recovery__ilimitado--${r.tono}`]}>{g.ilimitado}</span>
-                        ) : (
-                          <span class="puntos">
-                            {Array.from({ length: r.n }, () => (
-                              <span class:list={['punto', `punto--${r.tono}`]} />
-                            ))}
-                            <span class="puntos__n">× {r.n}</span>
-                          </span>
-                        )}
-                      </dd>
+                      <dd>{r.n === 0 ? g.noIncluida : r.n < 0 ? g.ilimitado : g.alMes ? `${r.n} ${g.alMes}` : r.n}</dd>
                     </div>
                   ))}
                 </dl>
@@ -144,7 +96,7 @@ const g = precios.graficos;
     padding-block: var(--seccion);
   }
 
-  /* Página de precios: más aire arriba (cabecera fija) y los fundadores después */
+  /* Página de precios: más aire arriba (cabecera fija) */
   .precios--pagina {
     display: flex;
     flex-direction: column;
@@ -157,112 +109,11 @@ const g = precios.graficos;
     line-height: 1.02;
   }
 
-  .precios--pagina .fundadores {
-    order: 3;
-    margin: clamp(3.5rem, 2rem + 4vw, 6rem) 0 0;
-  }
-
-  /* ── Socios fundadores: franja Naranja 900 ── */
-  .fundadores {
-    margin-bottom: clamp(3rem, 2rem + 3vw, 5rem);
-    padding-block: var(--seccion);
-    background: var(--n900);
-    color: var(--crema);
-  }
-
-  .fundadores__rejilla {
-    display: grid;
-    grid-template-columns: minmax(0, 1fr) minmax(0, 38.75rem);
-    gap: clamp(2.5rem, 1rem + 5vw, 5rem);
-    align-items: start;
-  }
-
-  .fundadores__etiqueta {
-    margin-bottom: 1.625rem;
-    color: rgb(253 246 238 / 0.7);
-  }
-
-  .fundadores__titulo {
-    margin-bottom: 2.125rem;
-    font-size: clamp(2.25rem, 1.4rem + 3vw, 3.75rem);
-    line-height: 1.04;
-    letter-spacing: -0.025em;
-  }
-
-  .ventajas {
-    display: flex;
-    flex-direction: column;
-    gap: 0.875rem;
-    max-width: 44ch;
-    font-size: 1.0625rem;
-    line-height: 1.55;
-  }
-
-  .ventajas li {
-    display: flex;
-    gap: 0.875rem;
-  }
-
-  .ventajas__num {
-    flex: none;
-    width: 1.5rem;
-    font-variant-numeric: tabular-nums;
-    color: var(--n300);
-  }
-
-  .fundadores :global(.fundadores__cta) {
-    margin-top: 2.375rem;
-  }
-
-  .fundadores :focus-visible {
-    outline-color: var(--n200);
-  }
-
-  .fundadores__tarjeta {
-    padding: 2.125rem 2.125rem 1.875rem;
-    border-radius: var(--r-l);
-    background: var(--crema);
-    color: var(--tinta);
-  }
-
-  .contador {
-    display: flex;
-    align-items: center;
-    gap: 1.125rem;
-    padding: 1.125rem 1.375rem;
-    border-radius: var(--r-s);
-    background: var(--n50);
-  }
-
-  .contador__cifra {
-    font-size: 2.5rem;
-    line-height: 1;
-    letter-spacing: -0.02em;
-  }
-
-  .contador__texto {
-    font-size: 0.875rem;
-    line-height: 1.5;
+  .precios__intro {
+    max-width: 64ch;
+    text-wrap: balance;
+    margin-top: 1.25rem;
     color: var(--tinta-60);
-  }
-
-  .pack {
-    margin-top: 1.5rem;
-    padding-top: 1.25rem;
-    border-top: 1px solid var(--linea);
-  }
-
-  .pack .etiqueta {
-    margin-bottom: 0.625rem;
-  }
-
-  .pack__texto {
-    font-size: 1.125rem;
-    line-height: 1.5;
-  }
-
-  .precios__enlace {
-    margin-top: 2rem;
   }
 
   /* ── Membresías ── */
@@ -323,29 +174,20 @@ const g = precios.graficos;
     color: var(--tinta-60);
   }
 
-  /* Precio por sesión: píldora con la cifra grande, bien visible bajo el precio mensual */
+  /* Precio por sesión: dato secundario bajo el precio mensual, visible sin competir con él */
   .membresia__sesion {
-    display: inline-flex;
-    align-self: flex-start;
+    display: flex;
     align-items: baseline;
     gap: 0.375rem;
-    padding: 0.5rem 1rem;
-    border-radius: var(--r-pill);
-    background: var(--n100);
+    margin-top: -0.375rem;
     font-size: 0.9375rem;
     color: var(--n900);
   }
 
   .membresia__sesion strong {
-    font-size: 1.375rem;
+    font-size: 1.25rem;
     font-weight: 500;
-    line-height: 1.1;
     letter-spacing: -0.015em;
-    color: var(--tinta);
-  }
-
-  .membresia--destacada .membresia__sesion {
-    background: var(--n500);
     color: var(--tinta);
   }
 
@@ -372,16 +214,24 @@ const g = precios.graficos;
     line-height: 1.4;
   }
 
+  .grafico__semana {
+    display: block;
+    margin-top: 0.125rem;
+    font-size: 0.8125rem;
+    color: var(--tinta-60);
+  }
+
+  /* Luz roja y sauna: nombre y cantidad en dos columnas; las cantidades
+     arrancan todas en la misma línea vertical */
   .recovery {
     display: grid;
     gap: 0.5rem;
   }
 
   .recovery__fila {
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-    gap: 1rem;
+    display: grid;
+    grid-template-columns: 5.5rem minmax(0, 1fr);
+    gap: 0.75rem;
     font-size: 0.9375rem;
   }
 
@@ -392,49 +242,6 @@ const g = precios.graficos;
   .recovery__fila--no dt,
   .recovery__fila--no dd {
     color: var(--tinta-60);
-  }
-
-  .puntos {
-    display: inline-flex;
-    align-items: center;
-    gap: 0.3125rem;
-  }
-
-  .punto {
-    width: 0.625rem;
-    height: 0.625rem;
-    border-radius: 50%;
-  }
-
-  .punto--rojo {
-    background: var(--rojo-500);
-  }
-
-  .punto--sauna {
-    background: var(--n500);
-  }
-
-  .puntos__n {
-    margin-left: 0.25rem;
-    font-size: 0.8125rem;
-    font-variant-numeric: tabular-nums;
-    color: var(--tinta-60);
-  }
-
-  .recovery__ilimitado {
-    padding: 0.125rem 0.625rem;
-    border-radius: var(--r-pill);
-    font-size: 0.8125rem;
-  }
-
-  .recovery__ilimitado--rojo {
-    background: var(--rojo-100);
-    color: var(--rojo-900);
-  }
-
-  .recovery__ilimitado--sauna {
-    background: var(--n100);
-    color: var(--n900);
   }
 
   .membresia__extra {
@@ -456,9 +263,6 @@ const g = precios.graficos;
       grid-template-columns: repeat(2, minmax(0, 1fr));
       row-gap: 1.75rem;
     }
-    .fundadores__rejilla {
-      grid-template-columns: 1fr;
-    }
   }
 
   @media (max-width: 36rem) {
@@ -468,9 +272,6 @@ const g = precios.graficos;
     .membresia,
     .membresia--destacada {
       min-height: 0;
-    }
-    .fundadores :global(.fundadores__cta) {
-      width: 100%;
     }
   }
 </style>

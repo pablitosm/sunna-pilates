@@ -9,7 +9,6 @@ import Base from '../layouts/Base.astro';
 import Portada from './secciones/Portada.astro';
 import PorQue from './secciones/PorQue.astro';
 import ComoFunciona from './secciones/ComoFunciona.astro';
-import Explora from './secciones/Explora.astro';
 import Estudio from './secciones/Estudio.astro';
 import Faq from './secciones/Faq.astro';
 import Cierre from './secciones/Cierre.astro';
@@ -26,7 +25,6 @@ const { ajustes, home } = await getSite(lang);
   <Portada ajustes={ajustes} home={home} />
   <PorQue ajustes={ajustes} home={home} />
   <ComoFunciona ajustes={ajustes} home={home} />
-  <Explora home={home} />
   <Estudio ajustes={ajustes} home={home} />
   <Faq ajustes={ajustes} home={home} />
   <Cierre ajustes={ajustes} home={home} />

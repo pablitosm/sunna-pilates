@@ -1,0 +1,10 @@
+# Panel y formulario (servicio sunnapilates-panel en 127.0.0.1:8084).
+# Va dentro del bloque http://:8082 del Caddyfile, en el mismo `route` que el
+# forward_auth de la web y ANTES de él: el panel tiene su propio inicio de
+# sesión de administrador y /api/registro tiene que ser público para el formulario.
+handle /panel* {
+	reverse_proxy 127.0.0.1:8084
+}
+handle /api/registro {
+	reverse_proxy 127.0.0.1:8084
+}

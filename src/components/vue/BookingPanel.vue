@@ -39,41 +39,11 @@ const primerCampo = ref<HTMLInputElement | null>(null);
 const envio = ref<'inicial' | 'enviando' | 'exito' | 'error' | 'sinConexion'>('inicial');
 const datos = reactive({ nombre: '', email: '', telefono: '', consentimiento: false, web: '' });
 
-// El panel no aparece: se estira desde el botón que lo invoca (320 ms, la esquina
-// se redondea por el camino) y al cerrar vuelve al mismo punto.
-const DURACION = 320;
-const CURVA = 'cubic-bezier(0.22, 1, 0.36, 1)';
-const sinMovimiento = () => window.matchMedia('(prefers-reduced-motion: reduce)').matches;
-let origen: DOMRect | null = null;
-let cerrando = false;
-
-function recorteDesde(hoja: HTMLElement, r: DOMRect) {
-  const h = hoja.getBoundingClientRect();
-  const lim = (v: number) => Math.max(0, v);
-  return `inset(${lim(r.top - h.top)}px ${lim(h.right - r.right)}px ${lim(h.bottom - r.bottom)}px ${lim(r.left - h.left)}px round 999px)`;
-}
-
-function hoja() {
-  return dialogo.value?.querySelector<HTMLElement>('.panel__hoja') ?? null;
-}
-
 function abrir(desde?: Element | null) {
   const d = dialogo.value;
   if (!d || d.open) return;
-  origen = desde ? desde.getBoundingClientRect() : null;
   d.showModal();
   document.body.classList.add('panel-abierto');
-  const h = hoja();
-  if (h && !sinMovimiento()) {
-    const desdeRecorte = origen ? recorteDesde(h, origen) : 'inset(40% 40% 40% 40% round 999px)';
-    h.animate(
-      [
-        { clipPath: desdeRecorte, opacity: origen ? 1 : 0 },
-        { clipPath: 'inset(0 0 0 0 round 28px)', opacity: 1 },
-      ],
-      { duration: DURACION, easing: CURVA },
-    );
-  }
   if (props.estado === 'preapertura' && envio.value !== 'exito') {
     requestAnimationFrame(() => primerCampo.value?.focus());
   }
@@ -81,29 +51,10 @@ function abrir(desde?: Element | null) {
 
 function cerrar() {
   const d = dialogo.value;
-  const h = hoja();
-  if (!d || !d.open || cerrando) return;
-  if (!h || sinMovimiento()) {
-    d.close();
-    return;
-  }
-  cerrando = true;
-  const hasta = origen ? recorteDesde(h, origen) : 'inset(40% 40% 40% 40% round 999px)';
-  const a = h.animate(
-    [
-      { clipPath: 'inset(0 0 0 0 round 28px)', opacity: 1 },
-      { clipPath: hasta, opacity: origen ? 1 : 0 },
-    ],
-    { duration: DURACION, easing: CURVA },
-  );
-  a.onfinish = () => {
-    cerrando = false;
-    d.close();
-  };
+  if (d?.open) d.close();
 }
 
 function alCancelar(e: Event) {
-  // Esc: cierre animado en lugar del cierre instantáneo del navegador
   e.preventDefault();
   cerrar();
 }
@@ -512,15 +463,8 @@ onBeforeUnmount(() => document.removeEventListener('click', alPulsarDocumento));
   background: radial-gradient(circle at 50% 50%, var(--n300), var(--n500) 60%, transparent 72%);
   filter: blur(0.5px);
   box-shadow: 0 0 60px 20px rgb(255 130 53 / 0.35);
-  animation: brillo 0.6s var(--ease);
 }
 
-@keyframes brillo {
-  from {
-    transform: scale(0.6);
-    opacity: 0;
-  }
-}
 
 .widget.widget--solo {
   min-height: 0;

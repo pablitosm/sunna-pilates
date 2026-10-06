@@ -108,7 +108,7 @@ const plazas =
     pointer-events: none;
   }
 
-  /* Sin foto: el halo de sol, que respira */
+  /* Sin foto: el halo de sol */
   .portada__halo {
     position: absolute;
     z-index: -1;
@@ -125,19 +125,6 @@ const plazas =
       rgb(255 196 154 / 0.14) 58%,
       rgb(253 246 238 / 0) 100%
     );
-    animation: respirar 14s ease-in-out infinite;
-  }
-
-  @keyframes respirar {
-    0%,
-    100% {
-      transform: scale(1);
-      opacity: 0.92;
-    }
-    50% {
-      transform: scale(1.06);
-      opacity: 1;
-    }
   }
 
   .portada__fecha {
@@ -227,7 +214,7 @@ const plazas =
     }
 
     .portada:not(.portada--foto) {
-      padding-top: 8rem;
+      padding-top: calc(8rem + var(--aviso-alto));
     }
 
     .portada__foto {

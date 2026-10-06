@@ -19,6 +19,7 @@ ui:
   abrirMenu: "Abrir menú"
   menu: "Menú"
   paso: "Paso"
+  detallesReserva: "Detalles de la reserva"
   porMes: "/mes"
   mapaTitulo: "Mapa: ubicación de SUNNA"
   pieEstudio: "Estudio"
@@ -32,14 +33,17 @@ menu:
   - texto: "Cómo funciona"
     ancla: "como-funciona"
   - texto: "Espacios"
-    ancla: "descubre"
+    pagina: "reformer"
     submenu:
       - texto: "Reformer"
         pagina: "reformer"
+        descripcion: "6 reformers con iPad y cascos. Esa hora, el reformer es tuyo."
       - texto: "Luz roja"
         pagina: "luz-roja"
+        descripcion: "Una sala con paneles de luz roja para relajarte."
       - texto: "Sauna"
         pagina: "sauna"
+        descripcion: "Sauna de infrarrojos, más suave que una tradicional."
   - texto: "Precios"
     pagina: "precios"
 
@@ -47,10 +51,12 @@ botones:
   principal:
     preapertura: "Quiero ser socio/a fundador/a"
     abierto: "Reserva tu primera sesión gratis"
+    fundador: "Conviértete en socio/a fundador/a"
   # Botón fijo del menú y de la barra del móvil.
   principalCorto:
     preapertura: "Quiero ser socio/a fundador/a"
     abierto: "Primera sesión gratis"
+    fundador: "Hazte socio/a fundador/a"
   secundario: "Cómo funciona"
   precios: "Ver precios"
 
@@ -77,8 +83,12 @@ porQue:
   titulo: "Por qué SUNNA"
   intro: "Entrenas cuando quieres, a tu ritmo, con una clase guiada en pantalla. Y nunca empiezas sola/o: la primera vez te lo enseñamos todo."
   razones:
-    - titulo: "Abierto de 05:00 a 23:00"
-      texto: "Sin recepción ni horarios de grupo, el estudio puede abrir muchas más horas. Las 2–3 primeras semanas, de 08:00 a 14:00 y de 16:00 a 22:00, siempre con alguien de SUNNA."
+    - titulo: "Abierto mañana y tarde"
+      texto: "De 08:00 a 14:00 y de 16:00 a 22:00. Sin horarios de grupo: reservas la hora que te va bien."
+      # Con ajustes.yaml → horario: ampliado se muestra esto en su lugar.
+      ampliado:
+        titulo: "Abierto de 05:00 a 23:00"
+        texto: "Sin recepción ni horarios de grupo, el estudio abre muchas más horas."
     - titulo: "Todo es autónomo"
       texto: "Reservas tu reformer en la app y la puerta se abre con tu reserva. Sin llaves, sin recepción, sin esperas."
     - titulo: "Tu clase, a tu ritmo"
@@ -90,6 +100,8 @@ porQue:
       - "Descarga la app de SUNNA."
       - "Reserva tu primera sesión gratis."
       - "Ven al estudio y entra con el móvil."
+    # Paso 2 mientras quedan plazas de socio fundador (enlaza a la oferta de fundadores).
+    pasoFundador: "Hazte socio/a fundador/a."
     proximamente: "Próximamente"
     appStore: "App Store"
     googlePlay: "Google Play"
@@ -140,41 +152,31 @@ comoFunciona:
     - icono: "arco"
       titulo: "Ven a tu primera sesión. Es gratis."
       texto: "45 minutos con nosotros: te enseñamos el reformer, la app, cómo entrar y cómo elegir tu clase. Es obligatoria antes de entrenar por tu cuenta."
-    - icono: "anillo"
-      titulo: "Reserva tu reformer en la app."
-      texto: "Eliges día y hora. Esa hora el reformer es tuyo."
+    # Reservar y entrar van en un solo paso: los dos son «desde el móvil».
     - icono: "pantalla"
-      titulo: "Entra con el móvil."
-      texto: "La puerta se abre con tu reserva. Sin llaves ni recepción."
+      titulo: "Reserva en la app y entra con el móvil."
+      texto: "Eliges día y hora: esa hora el reformer es tuyo. La puerta se abre con tu reserva, sin llaves ni recepción."
     - icono: "punto"
       titulo: "Elige tu clase y dale al play."
       texto: "En el iPad de tu reformer: full body, core, pierna, movilidad… de 10 a 45 minutos."
   notaFinal: "Al terminar, deja tu reformer listo para la siguiente persona."
-  # PENDIENTE: confirmar antes de publicar. Los plazos exactos se cierran con bsport (sin cifras).
+  # PENDIENTE: confirmar con bsport el plazo de reserva. Cancelación gratuita: hasta 2 horas antes.
   datos:
     reserva: "Cada reserva es un bloque de 1 hora: hasta 50 min de clase + tiempo para entrar, colocar y salir."
-    cancelacion: "Se reserva con antelación y se cancela sin coste hasta cierto plazo antes."
+    cancelacion: "Se reserva con antelación y la cancelación es gratuita hasta 2 horas antes."
     horario:
       titulo: "Horario"
-      intro: "Abrimos en dos tramos mientras validamos la operación autónoma. Cuando esté validada, el estudio pasa a 05:00–23:00."
       fases:
-        - etiqueta: "Las 2–3 primeras semanas"
+        - fase: "inicial"
+          intro: "Abrimos en dos tramos mientras validamos la operación autónoma."
+          etiqueta: "Las 2–3 primeras semanas"
           horas: ["08:00 — 14:00", "16:00 — 22:00"]
           texto: "El estudio solo abre con alguien de SUNNA dentro."
-        - etiqueta: "Después"
+        - fase: "ampliado"
           horas: ["05:00 — 23:00"]
           texto: "Acceso autónomo."
-      # PENDIENTE (confirmar con SUNNA): franjas de demanda del diseño de referencia.
-      franjas:
-        titulo: "Cómo se llena el día"
-        items:
-        - horas: "07:00 — 09:00"
-          texto: "Franja más demandada. Antes del trabajo."
-        - horas: "12:00 — 15:00"
-          texto: "La franja tranquila. A mediodía el estudio es casi tuyo."
-          tranquila: true
-        - horas: "18:00 — 21:00"
-          texto: "Franja más demandada. Para cerrar el día."
+      # "Cómo se llena el día" (franjas de demanda) se quita hasta tener estadísticas reales.
+      # El componente lo sigue admitiendo: basta con volver a añadir "franjas:" aquí.
 
 # 4 · LAS CLASES
 clases:
@@ -280,10 +282,13 @@ dudas:
 # PENDIENTE: cifras provisionales. Confirmar si son de socio fundador o estándar.
 precios:
   titulo: "Precios"
-  subtitulo: "Cuatro membresías mensuales."
+  intro: "Elige cuántas veces al mes quieres tu reformer. Todas las membresías incluyen luz roja, y la sauna entra desde Standard. Tu primera sesión es gratis."
+  # Mientras quedan plazas de socio fundador se muestra esta intro.
+  introFundador: "Elige cuántas veces al mes quieres tu reformer. Todas las membresías incluyen luz roja, y la sauna entra desde Standard. Mientras queden plazas, entras como socio/a fundador/a."
   porSesion: "por sesión"
   graficos:
     recovery: "Recovery al mes"
+    alMes: "al mes"
     luzRoja: "Luz roja"
     sauna: "Sauna"
     ilimitado: "Ilimitado"
@@ -297,21 +302,24 @@ precios:
       luzRoja: 1
       sauna: 0
       precioSesion: "13,75 €"
-      pilates: "1 sesión/semana (4/mes)"
+      pilates: "4 sesiones al mes"
+      pilatesSemana: "1 por semana"
       recovery: "1 luz roja"
     - nombre: "Standard"
       precio: 100
       luzRoja: 2
       sauna: 1
       precioSesion: "12,50 €"
-      pilates: "2 sesiones/semana (8/mes)"
+      pilates: "8 sesiones al mes"
+      pilatesSemana: "2 por semana"
       recovery: "2 luz roja + 1 sauna"
     - nombre: "Pro"
       precio: 140
       luzRoja: 3
       sauna: 2
       precioSesion: "11,67 €"
-      pilates: "3 sesiones/semana (12/mes)"
+      pilates: "12 sesiones al mes"
+      pilatesSemana: "3 por semana"
       recovery: "3 luz roja + 2 sauna"
     - nombre: "Premium"
       precio: 180
@@ -319,7 +327,8 @@ precios:
       sauna: -1
       # 180 € entre 60 sesiones al mes, el máximo reservable.
       precioSesion: "3 €"
-      pilates: "Ilimitado (según disponibilidad)"
+      pilates: "Ilimitado"
+      pilatesSemana: "Según disponibilidad"
       recovery: "Recovery ilimitado con reserva"
       extra: "Prioridad en reservas"
       destacada: true
@@ -334,6 +343,7 @@ precios:
       titulo: "Pack de bienvenida"
       texto: "Calcetines, tote bag, pegatinas y algún detalle más."
     plazas: "plazas libres de"
+    verVentajas: "Ver ventajas de fundador"
 
 # 8 · EL ESTUDIO
 # Cada arco muestra un dato del estudio. Tonos: claro, medio, sol, tinta, rojo.
@@ -386,11 +396,12 @@ faq:
           respuesta: "Desde la app de SUNNA (bsport). Eliges día, hora y reformer."
         - pregunta: "¿Cómo entro?"
           respuesta: "Con el móvil: la puerta se abre solo si tienes reserva en ese momento."
-        # PENDIENTE: plazo de cancelación (con bsport).
         - pregunta: "¿Puedo cancelar?"
-          respuesta: "Sí, sin coste si avisas con antelación."
+          respuesta: "Sí, la cancelación es gratuita hasta 2 horas antes."
         - pregunta: "¿Qué horario tenéis?"
-          respuesta: "Las primeras semanas, 08:00–14:00 y 16:00–22:00, siempre con alguien del equipo. Después iremos ampliando hasta 05:00–23:00."
+          respuesta: "De 08:00 a 14:00 y de 16:00 a 22:00, siempre con alguien del equipo en el estudio."
+          # Con ajustes.yaml → horario: ampliado se muestra esta respuesta.
+          respuestaAmpliado: "De 05:00 a 23:00, con acceso autónomo."
     - titulo: "Las clases"
       preguntas:
         - pregunta: "¿Cómo es una clase?"
@@ -419,13 +430,20 @@ cierre:
   texto: "Reserva y te lo enseñamos todo."
   # Mientras la web está en preapertura se muestra este texto en lugar del anterior.
   textoPreapertura: "Apúntate a la lista de espera y te escribiremos antes de la apertura."
+  # Mientras quedan plazas de socio fundador (web abierta) se muestran estos en su lugar.
+  fundador:
+    titulo: "Sé uno de los 40 socios fundadores."
+    texto: "Precio de fundador protegido para siempre, prioridad para reservar en la apertura y pack de bienvenida."
 
 # 11 · PIE
 pie:
   horarioTitulo: "Horario"
   horario:
-    - "Las 2–3 primeras semanas: 08:00–14:00 y 16:00–22:00"
-    - "Después: 05:00–23:00"
+    inicial:
+      - "08:00–14:00"
+      - "16:00–22:00"
+    ampliado:
+      - "05:00–23:00"
   legal:
     - texto: "Aviso legal"
       url: "/aviso-legal"

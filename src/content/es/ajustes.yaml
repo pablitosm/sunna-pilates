@@ -17,6 +17,12 @@ estado: abierto
 # Mientras esté vacía (""), la web no muestra ninguna fecha.
 fechaApertura: ""
 
+# HORARIO DEL ESTUDIO (en "Cómo funciona" y en el pie). Solo se ve uno a la vez.
+#   inicial  → las 2–3 primeras semanas: 08:00–14:00 y 16:00–22:00,
+#              siempre con alguien de SUNNA dentro.
+#   ampliado → acceso autónomo de 05:00 a 23:00.
+horario: inicial
+
 direccion:
   # PENDIENTE: confirmación final de la dirección.
   calle: "C/ San Francisco Javier 5, bajo exterior"
@@ -33,7 +39,7 @@ contacto:
   whatsapp: "+34 675 04 94 60"
   # PENDIENTE: teléfono de ayuda, tal cual quieras que se vea, p. ej. "+34 600 111 222".
   telefonoAyuda: ""
-  email: "hello@sunnapilates.es"
+  email: "info@sunnapilates.es"
   instagram: "https://www.instagram.com/sunnapilates/"
   # PENDIENTE: enlace a la ficha de Google Business.
   googleBusiness: ""

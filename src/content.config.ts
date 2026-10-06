@@ -16,6 +16,8 @@ const ajustes = defineCollection({
   loader: glob({ pattern: '*/ajustes.yaml', base: './src/content' }),
   schema: z.object({
     estado: z.enum(['preapertura', 'abierto']),
+    // Qué horario se muestra: el de las primeras semanas o el ampliado.
+    horario: z.enum(['inicial', 'ampliado']).default('inicial'),
     fechaApertura: opcional,
     direccion: z.object({
       calle: texto,
@@ -56,7 +58,8 @@ const ajustes = defineCollection({
   }),
 });
 
-const boton = z.object({ preapertura: texto, abierto: texto });
+// fundador: texto mientras la web está abierta y quedan plazas de socio fundador.
+const boton = z.object({ preapertura: texto, abierto: texto, fundador: opcional });
 
 const home = defineCollection({
   loader: glob({ pattern: '*/home.yaml', base: './src/content' }),
@@ -75,6 +78,8 @@ const home = defineCollection({
         abrirMenu: texto,
         menu: texto,
         paso: texto,
+        // Abre la letra pequeña de la reserva en Cómo funciona.
+        detallesReserva: opcional,
         porMes: texto,
         mapaTitulo: texto,
         pieEstudio: texto,
@@ -92,7 +97,14 @@ const home = defineCollection({
           pagina: z.enum(['primera-sesion', 'precios', 'reformer', 'luz-roja', 'sauna']).optional(),
           ancla: opcional,
           submenu: z
-            .array(z.object({ texto, pagina: z.enum(['primera-sesion', 'precios', 'reformer', 'luz-roja', 'sauna']) }))
+            .array(
+              z.object({
+                texto,
+                pagina: z.enum(['primera-sesion', 'precios', 'reformer', 'luz-roja', 'sauna']),
+                // Una línea bajo el nombre, en el desplegable del escritorio.
+                descripcion: opcional,
+              }),
+            )
             .optional(),
         }),
       ),
@@ -118,11 +130,14 @@ const home = defineCollection({
         .object({
           titulo: texto,
           intro: texto,
-          razones: z.array(z.object({ titulo: texto, texto })),
+          // ampliado: título y texto alternativos cuando ajustes.yaml → horario es "ampliado".
+          razones: z.array(z.object({ titulo: texto, texto, ampliado: z.object({ titulo: texto, texto }).optional() })),
           app: z.object({
             titulo: texto,
             texto: opcional,
             pasos: z.array(texto),
+            // Paso 2 mientras quedan plazas de socio fundador.
+            pasoFundador: opcional,
             proximamente: texto,
             appStore: texto,
             googlePlay: texto,
@@ -165,7 +180,16 @@ const home = defineCollection({
           horario: z.object({
             titulo: texto,
             intro: opcional,
-            fases: z.array(z.object({ etiqueta: texto, horas: z.array(texto), texto })),
+            // Una fase por horario; solo se muestra la que marca ajustes.yaml → horario.
+            fases: z.array(
+              z.object({
+                fase: z.enum(['inicial', 'ampliado']),
+                intro: opcional,
+                etiqueta: opcional,
+                horas: z.array(texto),
+                texto,
+              }),
+            ),
             // Cómo se llena el día: franjas de más y menos demanda (tranquila = verde oliva).
             franjas: z
               .object({
@@ -209,7 +233,10 @@ const home = defineCollection({
       }),
       precios: z.object({
         titulo: texto,
-        subtitulo: texto,
+        subtitulo: opcional,
+        // Texto bajo el título de precios.
+        intro: opcional,
+        introFundador: opcional,
         porSesion: texto,
         // Textos de los gráficos de cada tarjeta y del contacto bajo los precios.
         graficos: z
@@ -219,6 +246,8 @@ const home = defineCollection({
             sauna: texto,
             ilimitado: texto,
             noIncluida: texto,
+            // Unidad tras la cantidad de luz roja y sauna ("2 al mes").
+            alMes: opcional,
           })
           .optional(),
         contacto: z.object({ titulo: texto, texto }).optional(),
@@ -228,6 +257,8 @@ const home = defineCollection({
             precio: z.number(),
             precioSesion: texto,
             pilates: texto,
+            // Equivalencia semanal, en pequeño bajo las sesiones al mes.
+            pilatesSemana: opcional,
             recovery: texto,
             extra: opcional,
             destacada: z.boolean().default(false),
@@ -243,6 +274,7 @@ const home = defineCollection({
           ventajas: z.array(texto),
           pack: z.object({ titulo: texto, texto }),
           plazas: texto,
+          verVentajas: texto,
         }),
       }),
       estudio: z.object({
@@ -263,15 +295,23 @@ const home = defineCollection({
         grupos: z.array(
           z.object({
             titulo: texto,
-            preguntas: z.array(z.object({ pregunta: texto, respuesta: opcional })),
+            // respuestaAmpliado sustituye a respuesta cuando ajustes.yaml → horario es "ampliado".
+            preguntas: z.array(z.object({ pregunta: texto, respuesta: opcional, respuestaAmpliado: opcional })),
           }),
         ),
       }),
       // textoPreapertura sustituye a texto mientras la web está en preapertura.
-      cierre: z.object({ titulo: texto, texto, textoPreapertura: opcional }),
+      // fundador sustituye título y texto mientras quedan plazas de socio fundador (web abierta).
+      cierre: z.object({
+        titulo: texto,
+        texto,
+        textoPreapertura: opcional,
+        fundador: z.object({ titulo: texto, texto }).optional(),
+      }),
       pie: z.object({
         horarioTitulo: texto,
-        horario: z.array(texto),
+        // Líneas del horario en el pie, una lista por fase.
+        horario: z.object({ inicial: z.array(texto), ampliado: z.array(texto) }),
         legal: z.array(z.object({ texto, url: texto })),
         cookies: texto,
       }),

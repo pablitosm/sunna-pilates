@@ -166,14 +166,6 @@ onBeforeUnmount(() => document.removeEventListener('click', abrirPreferencias));
   box-shadow: var(--sombra);
   font-size: var(--t-small);
   line-height: 1.5;
-  animation: aparecer 0.5s var(--ease);
-}
-
-@keyframes aparecer {
-  from {
-    opacity: 0;
-    transform: translateY(12px);
-  }
 }
 
 .cookies__texto a {

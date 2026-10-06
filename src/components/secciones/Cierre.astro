@@ -1,7 +1,7 @@
 ---
 import CtaButton from '../CtaButton.astro';
 import Logo from '../Logo.astro';
-import type { Ajustes, Home } from '../../lib/content';
+import { ctaEsFundador, type Ajustes, type Home } from '../../lib/content';
 
 interface Props {
   ajustes: Ajustes;
@@ -9,7 +9,10 @@ interface Props {
 }
 const { ajustes, home } = Astro.props;
 const { cierre } = home;
-const texto = (ajustes.estado === 'preapertura' && cierre.textoPreapertura) || cierre.texto;
+// Mientras quedan plazas de socio fundador, el cierre invita a serlo (como el botón).
+const fundador = ctaEsFundador(ajustes) ? cierre.fundador : undefined;
+const titulo = fundador?.titulo ?? cierre.titulo;
+const texto = fundador?.texto ?? ((ajustes.estado === 'preapertura' && cierre.textoPreapertura) || cierre.texto);
 ---
 
 <section id="cierre" class="cierre" aria-labelledby="cierre-titulo">
@@ -19,7 +22,7 @@ const texto = (ajustes.estado === 'preapertura' && cierre.textoPreapertura) || c
       <Logo label="SUNNA" />
     </div>
     <div class="cierre__texto">
-      <h2 id="cierre-titulo" class="t-h2">{cierre.titulo}</h2>
+      <h2 id="cierre-titulo" class="t-h2">{titulo}</h2>
       <p>{texto}</p>
     </div>
     <CtaButton ajustes={ajustes} home={home} />
@@ -39,7 +42,7 @@ const texto = (ajustes.estado === 'preapertura' && cierre.textoPreapertura) || c
     padding-inline: var(--gutter);
   }
 
-  /* El sol: canto nítido, más claro hacia el centro. Sube 60 px con el scroll. */
+  /* El sol: canto nítido, más claro hacia el centro. */
   .cierre__sol {
     position: absolute;
     z-index: -1;
@@ -57,25 +60,6 @@ const texto = (ajustes.estado === 'preapertura' && cierre.textoPreapertura) || c
       var(--n500) 84%,
       var(--n500) 100%
     );
-  }
-
-  @supports (animation-timeline: view()) {
-    @media (prefers-reduced-motion: no-preference) {
-      .cierre__sol {
-        animation: amanecer linear both;
-        animation-timeline: view();
-        animation-range: entry 0% cover 70%;
-      }
-    }
-  }
-
-  @keyframes amanecer {
-    from {
-      transform: translateY(60px);
-    }
-    to {
-      transform: translateY(0);
-    }
   }
 
   .cierre__contenido {

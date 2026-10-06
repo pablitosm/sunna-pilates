@@ -1,5 +1,7 @@
 ---
-import { mapsEmbedUrl, mapsUrl, type Ajustes, type Home } from '../../lib/content';
+import Horario from '../Horario.astro';
+import MapaEstudio from '../MapaEstudio.astro';
+import { mapsUrl, type Ajustes, type Home } from '../../lib/content';
 
 interface Props {
   ajustes: Ajustes;
@@ -8,6 +10,7 @@ interface Props {
 const { ajustes, home } = Astro.props;
 const { estudio } = home;
 const d = ajustes.direccion;
+
 ---
 
 <section id="estudio" class="estudio seccion" aria-labelledby="estudio-titulo">
@@ -16,203 +19,106 @@ const d = ajustes.direccion;
       <h2 id="estudio-titulo" class="t-h2">{estudio.titulo}</h2>
     </div>
 
-    <div class="lugar">
-      <div class="mapa" data-mapa data-pulso>
-        <div class="mapa__dibujo" aria-hidden="true">
-          <span class="mapa__franja"></span>
-          <span class="mapa__halo"></span>
-          <span class="mapa__punto"></span>
-        </div>
-        <div class="mapa__accion">
-          <button type="button" class="mapa__boton" data-mapa-cargar data-src={mapsEmbedUrl(ajustes)} data-titulo={home.ui.mapaTitulo}>
-            {estudio.mapa.boton}
-          </button>
-          <p class="mapa__aviso">{estudio.mapa.aviso}</p>
-        </div>
-      </div>
+    <!-- El mapa entero lleva a Google Maps -->
+    <a class="mapa" href={mapsUrl(ajustes)} target="_blank" rel="noopener" aria-label={`${estudio.mapa.abrir}: ${d.calle}, ${d.codigoPostal} ${d.ciudad}`}>
+      <!-- Dibujado con datos reales de OpenStreetMap (scripts/mapa-estudio.mjs) -->
+      <MapaEstudio />
+      <span class="mapa__credito">© OpenStreetMap</span>
+    </a>
 
-      <div class="lugar__datos">
-        <div>
-          <p class="etiqueta lugar__etiqueta">{estudio.mapa.direccion}</p>
-          <address class="lugar__direccion">
-            {d.calle}
-            <br />
-            {d.codigoPostal} {d.ciudad}
-          </address>
-        </div>
+    <!-- Bajo el mapa, el dónde y el cuándo: dirección a la izquierda, horario a la derecha -->
+    <div class="lugar">
+      <div>
+        <p class="etiqueta lugar__etiqueta">{estudio.mapa.direccion}</p>
+        <address class="lugar__direccion">
+          {d.calle}
+          <br />
+          {d.codigoPostal} {d.ciudad}
+        </address>
         {
           d.comoLlegar && (
-            <div>
-              <p class="etiqueta lugar__etiqueta">{estudio.mapa.comoLlegar}</p>
-              <p class="lugar__direccion">{d.comoLlegar}</p>
-            </div>
+            <>
+              <p class="etiqueta lugar__etiqueta lugar__etiqueta--llegar">{estudio.mapa.comoLlegar}</p>
+              <p class="lugar__llegar">{d.comoLlegar}</p>
+            </>
           )
         }
-        <a class="lugar__enlace" href={mapsUrl(ajustes)} target="_blank" rel="noopener">
-          {estudio.mapa.abrir}
+        <a class="enlace-flecha lugar__enlace" href={mapsUrl(ajustes)} target="_blank" rel="noopener">
+          {estudio.mapa.abrir} <span aria-hidden="true">→</span>
         </a>
       </div>
+      <Horario ajustes={ajustes} home={home} derecha />
     </div>
   </div>
 </section>
 
-<script>
-  // El mapa de Google solo se carga si la persona lo pide (evita cookies de terceros).
-  document.querySelectorAll<HTMLButtonElement>('[data-mapa-cargar]').forEach((boton) => {
-    boton.addEventListener('click', () => {
-      const mapa = boton.closest('[data-mapa]');
-      if (!mapa || !boton.dataset.src) return;
-      const iframe = document.createElement('iframe');
-      iframe.src = boton.dataset.src;
-      iframe.title = boton.dataset.titulo ?? '';
-      iframe.loading = 'lazy';
-      iframe.referrerPolicy = 'no-referrer-when-downgrade';
-      iframe.className = 'mapa__iframe';
-      mapa.replaceChildren(iframe);
-    });
-  });
-</script>
-
 <style>
-  /* Mapa en tonos de paleta + dirección */
-  .lugar {
-    display: flex;
-    gap: 1.75rem;
-    align-items: stretch;
-  }
-
-  .mapa {
-    position: relative;
-    flex: 1;
-    min-height: 28.75rem;
-    border-radius: var(--r-l);
-    overflow: hidden;
+  /* El estudio va sobre tostado: la sección con tinte entre Cómo funciona y las preguntas (crema) */
+  .estudio {
     background: var(--tostado);
   }
 
-  .mapa__dibujo > span {
-    position: absolute;
+  /* Mapa dibujado, siempre visible; todo él es un enlace */
+  .mapa {
     display: block;
-  }
-
-
-
-  .mapa__franja {
-    left: 0;
-    right: 0;
-    bottom: 0;
-    height: 120px;
+    position: relative;
+    height: clamp(20rem, 14rem + 18vw, 32rem);
+    border-radius: var(--r-l);
+    overflow: hidden;
     background: var(--n100);
   }
 
-  .mapa__halo {
-    left: 50%;
-    top: 46%;
-    width: 220px;
-    height: 220px;
-    margin: -110px 0 0 -110px;
-    border-radius: 999px;
-    background: radial-gradient(closest-side, rgb(255 130 53 / 0.55), rgb(255 196 154 / 0));
-  }
-
-  .mapa__punto {
-    left: 50%;
-    top: 46%;
-    width: 18px;
-    height: 18px;
-    margin: -9px 0 0 -9px;
-    border-radius: 999px;
-    background: var(--n500);
-    box-shadow: 0 0 0 4px rgb(253 246 238 / 0.9);
-  }
-
-  .mapa__accion {
+  /* Atribución obligatoria de los datos (licencia ODbL) */
+  .mapa__credito {
     position: absolute;
-    left: 1.5rem;
-    bottom: 1.5rem;
-    right: 1.5rem;
-    display: flex;
-    flex-wrap: wrap;
-    align-items: center;
-    gap: 0.75rem 1rem;
-  }
-
-  .mapa__boton {
-    padding: 0.625rem 1rem;
-    border: 0;
-    border-radius: var(--r-s);
-    background: rgb(253 246 238 / 0.85);
-    font: 400 0.9375rem var(--font);
-    color: var(--tinta);
-    cursor: pointer;
-  }
-
-  .mapa__aviso {
-    font-size: 0.8125rem;
+    right: 0.875rem;
+    bottom: 0.625rem;
+    font-size: 0.6875rem;
     color: var(--tinta-60);
   }
 
-  /* El punto pulsa una vez al entrar */
-  .mapa.pulsado .mapa__punto {
-    animation: pulso 1.2s var(--ease) 1;
+  .mapa:focus-visible {
+    outline: 3px solid var(--n500);
+    outline-offset: 4px;
   }
 
-  @keyframes pulso {
-    from {
-      box-shadow:
-        0 0 0 4px rgb(253 246 238 / 0.9),
-        0 0 0 4px rgb(255 130 53 / 0.5);
-    }
-    to {
-      box-shadow:
-        0 0 0 4px rgb(253 246 238 / 0.9),
-        0 0 0 44px rgb(255 130 53 / 0);
-    }
-  }
-
-  .mapa :global(.mapa__iframe) {
-    position: absolute;
-    inset: 0;
-    width: 100%;
-    height: 100%;
-    border: 0;
-  }
-
-  .lugar__datos {
-    flex: 0 0 26.25rem;
-    display: flex;
-    flex-direction: column;
-    gap: 1.625rem;
-    padding: 2.75rem 2.375rem;
-    border-radius: var(--r-l);
-    background: var(--n50);
+  /* Dirección y horario bajo el mapa, sin panel: la dirección pegada al borde
+     izquierdo del mapa y el horario al derecho, como en espejo */
+  .lugar {
+    display: grid;
+    grid-template-columns: minmax(0, 1fr) auto;
+    gap: 2.25rem clamp(2rem, 1rem + 4vw, 6rem);
+    align-items: start;
+    margin-top: clamp(1.75rem, 1.25rem + 1.5vw, 2.5rem);
   }
 
   .lugar__etiqueta {
-    margin-bottom: 0.5rem;
+    margin-bottom: 0.625rem;
+  }
+
+  .lugar__etiqueta--llegar {
+    margin-top: 1.5rem;
   }
 
   .lugar__direccion {
-    font-size: 1.125rem;
-    line-height: 1.6;
+    font-size: var(--t-h3);
+    line-height: 1.3;
+    letter-spacing: -0.015em;
     font-style: normal;
   }
 
+  .lugar__llegar {
+    max-width: 40ch;
+    color: var(--tinta-60);
+  }
+
   .lugar__enlace {
-    margin-top: auto;
-    font-size: 1.0625rem;
-    color: var(--n900);
+    margin-top: 1.25rem;
   }
 
   @media (max-width: 56.25rem) {
     .lugar {
-      flex-direction: column;
-    }
-    .lugar__datos {
-      flex-basis: auto;
-    }
-    .mapa {
-      min-height: 20rem;
+      grid-template-columns: 1fr;
     }
   }
 </style>

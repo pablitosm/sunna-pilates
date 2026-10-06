@@ -19,6 +19,7 @@ ui:
   abrirMenu: "Open menu"
   menu: "Menu"
   paso: "Step"
+  detallesReserva: "Booking details"
   porMes: "/month"
   mapaTitulo: "Map: SUNNA location"
   pieEstudio: "Studio"
@@ -31,14 +32,17 @@ menu:
   - texto: "How it works"
     ancla: "como-funciona"
   - texto: "Spaces"
-    ancla: "descubre"
+    pagina: "reformer"
     submenu:
       - texto: "Reformer"
         pagina: "reformer"
+        descripcion: "6 reformers with iPad and headphones. For that hour, it’s yours."
       - texto: "Red light"
         pagina: "luz-roja"
+        descripcion: "A room with red light panels to unwind."
       - texto: "Sauna"
         pagina: "sauna"
+        descripcion: "An infrared sauna, gentler than a traditional one."
   - texto: "Pricing"
     pagina: "precios"
 
@@ -46,9 +50,11 @@ botones:
   principal:
     preapertura: "Become a founding member"
     abierto: "Book your free first session"
+    fundador: "Become a founding member"
   principalCorto:
     preapertura: "Become a founding member"
     abierto: "Free first session"
+    fundador: "Become a founding member"
   secundario: "How it works"
   precios: "See pricing"
 
@@ -70,8 +76,12 @@ porQue:
   titulo: "Why SUNNA"
   intro: "Train whenever you want, at your own pace, with a class guided on screen. And you never start alone: the first time, we show you everything."
   razones:
-    - titulo: "Open 05:00 to 23:00"
-      texto: "With no reception desk and no group timetable, the studio can open far longer hours. For the first 2–3 weeks, 08:00–14:00 and 16:00–22:00, always with someone from SUNNA."
+    - titulo: "Open morning and afternoon"
+      texto: "08:00–14:00 and 16:00–22:00. No group timetable: you book the hour that suits you."
+      # Con ajustes.yaml → horario: ampliado se muestra esto en su lugar.
+      ampliado:
+        titulo: "Open 05:00 to 23:00"
+        texto: "With no reception desk and no group timetable, the studio opens far longer hours."
     - titulo: "Everything runs on its own"
       texto: "Book your reformer in the app and the door opens with your booking. No keys, no reception, no waiting."
     - titulo: "Your class, your pace"
@@ -83,6 +93,8 @@ porQue:
       - "Download the SUNNA app."
       - "Book your free first session."
       - "Come to the studio and get in with your phone."
+    # Paso 2 mientras quedan plazas de socio fundador (enlaza a la oferta de fundadores).
+    pasoFundador: "Become a founding member."
     proximamente: "Coming soon"
     appStore: "App Store"
     googlePlay: "Google Play"
@@ -130,39 +142,30 @@ comoFunciona:
     - icono: "arco"
       titulo: "Come to your first session. It's free."
       texto: "45 minutes with us: we show you the reformer, the app, how to get in and how to choose your class. It's required before you train on your own."
-    - icono: "anillo"
-      titulo: "Book your reformer in the app."
-      texto: "Pick a day and time. For that hour, the reformer is yours."
+    # Reservar y entrar van en un solo paso: los dos son «desde el móvil».
     - icono: "pantalla"
-      titulo: "Get in with your phone."
-      texto: "The door opens with your booking. No keys, no reception."
+      titulo: "Book in the app and get in with your phone."
+      texto: "Pick a day and time: for that hour, the reformer is yours. The door opens with your booking, no keys, no reception."
     - icono: "punto"
       titulo: "Choose your class and press play."
       texto: "On your reformer's iPad: full body, core, legs, mobility… from 10 to 45 minutes."
   notaFinal: "When you finish, leave your reformer ready for the next person."
   datos:
     reserva: "Each booking is a 1-hour block: up to 50 min of class + time to come in, set up and leave."
-    cancelacion: "You book in advance and can cancel free of charge up to a set time before."
+    cancelacion: "You book in advance and cancellation is free up to 2 hours before."
     horario:
       titulo: "Opening hours"
-      intro: "We open in two blocks while we validate the self-service model. Once it's validated, the studio moves to 05:00–23:00."
       fases:
-        - etiqueta: "The first 2–3 weeks"
+        - fase: "inicial"
+          intro: "We open in two blocks while we validate the self-service model."
+          etiqueta: "The first 2–3 weeks"
           horas: ["08:00 — 14:00", "16:00 — 22:00"]
           texto: "The studio only opens with someone from SUNNA inside."
-        - etiqueta: "After that"
+        - fase: "ampliado"
           horas: ["05:00 — 23:00"]
           texto: "Self-service access."
-      franjas:
-        titulo: "How the day fills up"
-        items:
-        - horas: "07:00 — 09:00"
-          texto: "Busiest slot. Before work."
-        - horas: "12:00 — 15:00"
-          texto: "The quiet slot. At midday the studio is almost yours."
-          tranquila: true
-        - horas: "18:00 — 21:00"
-          texto: "Busiest slot. To round off the day."
+      # "Cómo se llena el día" (franjas de demanda) se quita hasta tener estadísticas reales.
+      # El componente lo sigue admitiendo: basta con volver a añadir "franjas:" aquí.
 
 # 4 · LAS CLASES
 clases:
@@ -257,10 +260,13 @@ dudas:
 # 7 · PRECIOS
 precios:
   titulo: "Prices"
-  subtitulo: "Four monthly memberships."
+  intro: "Choose how many times a month you want your reformer. Every membership includes red light, and the sauna comes in from Standard. Your first session is free."
+  # Mientras quedan plazas de socio fundador se muestra esta intro.
+  introFundador: "Choose how many times a month you want your reformer. Every membership includes red light, and the sauna comes in from Standard. While places last, you join as a founding member."
   porSesion: "per session"
   graficos:
     recovery: "Recovery per month"
+    alMes: "a month"
     luzRoja: "Red light"
     sauna: "Sauna"
     ilimitado: "Unlimited"
@@ -274,28 +280,32 @@ precios:
       luzRoja: 1
       sauna: 0
       precioSesion: "€13.75"
-      pilates: "1 session/week (4/month)"
+      pilates: "4 sessions a month"
+      pilatesSemana: "1 a week"
       recovery: "1 red light"
     - nombre: "Standard"
       precio: 100
       luzRoja: 2
       sauna: 1
       precioSesion: "€12.50"
-      pilates: "2 sessions/week (8/month)"
+      pilates: "8 sessions a month"
+      pilatesSemana: "2 a week"
       recovery: "2 red light + 1 sauna"
     - nombre: "Pro"
       precio: 140
       luzRoja: 3
       sauna: 2
       precioSesion: "€11.67"
-      pilates: "3 sessions/week (12/month)"
+      pilates: "12 sessions a month"
+      pilatesSemana: "3 a week"
       recovery: "3 red light + 2 sauna"
     - nombre: "Premium"
       precio: 180
       luzRoja: -1
       sauna: -1
       precioSesion: "€3"
-      pilates: "Unlimited (subject to availability)"
+      pilates: "Unlimited"
+      pilatesSemana: "Subject to availability"
       recovery: "Unlimited recovery with booking"
       extra: "Booking priority"
       destacada: true
@@ -310,6 +320,7 @@ precios:
       titulo: "Welcome pack"
       texto: "Socks, tote bag, stickers and a few more surprises."
     plazas: "places left of"
+    verVentajas: "See founding member benefits"
 
 # 8 · EL ESTUDIO
 estudio:
@@ -356,9 +367,11 @@ faq:
         - pregunta: "How do I get in?"
           respuesta: "With your phone: the door only opens if you have a booking at that time."
         - pregunta: "Can I cancel?"
-          respuesta: "Yes, free of charge if you let us know in advance."
+          respuesta: "Yes, cancellation is free up to 2 hours before."
         - pregunta: "What are your opening hours?"
-          respuesta: "For the first few weeks, 08:00–14:00 and 16:00–22:00, always with someone from the team. After that we'll gradually extend to 05:00–23:00."
+          respuesta: "08:00–14:00 and 16:00–22:00, always with someone from the team in the studio."
+          # Con ajustes.yaml → horario: ampliado se muestra esta respuesta.
+          respuestaAmpliado: "05:00–23:00, with self-service access."
     - titulo: "The classes"
       preguntas:
         - pregunta: "What is a class like?"
@@ -384,13 +397,20 @@ cierre:
   texto: "Book and we'll show you everything."
   # Mientras la web está en preapertura se muestra este texto en lugar del anterior.
   textoPreapertura: "Join the waiting list and we'll write to you before opening."
+  # Mientras quedan plazas de socio fundador (web abierta) se muestran estos en su lugar.
+  fundador:
+    titulo: "Be one of SUNNA's 40 founding members."
+    texto: "A founding price protected for good, priority booking at opening and a welcome pack."
 
 # 11 · PIE (las páginas legales están en castellano)
 pie:
   horarioTitulo: "Opening hours"
   horario:
-    - "The first 2–3 weeks: 08:00–14:00 and 16:00–22:00"
-    - "After that: 05:00–23:00"
+    inicial:
+      - "08:00–14:00"
+      - "16:00–22:00"
+    ampliado:
+      - "05:00–23:00"
   legal:
     - texto: "Legal notice (ES)"
       url: "/aviso-legal"

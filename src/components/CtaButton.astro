@@ -1,12 +1,12 @@
 ---
 /*
- * Botón firma: la píldora fundida (Naranja 500 + círculo con flecha, algo
- * más alto que la píldora). Abierto: lleva a la página de la primera sesión
+ * Botón firma: la píldora Naranja 500 con un disco Naranja 900 y flecha crema
+ * encajado dentro, a la derecha. Abierto: lleva a la página de la primera sesión
  * gratis. Preapertura: abre el panel de lista de espera (sin JavaScript,
  * sigue el enlace).
  */
 import Icon from './Icon.astro';
-import { ctaHref, idiomaDe, type Ajustes, type Home } from '../lib/content';
+import { ctaEsFundador, ctaHref, idiomaDe, type Ajustes, type Home } from '../lib/content';
 
 interface Props {
   ajustes: Ajustes;
@@ -17,7 +17,8 @@ interface Props {
 }
 const { ajustes, home, corto = false, tamano = 'normal', class: className } = Astro.props;
 const textos = corto ? home.botones.principalCorto : home.botones.principal;
-const label = textos[ajustes.estado];
+// Abierto y con plazas de fundador: invita a hacerse socio/a fundador/a en vez de a la primera sesión.
+const label = (ctaEsFundador(ajustes) && textos.fundador) || textos[ajustes.estado];
 const href = ctaHref(ajustes, idiomaDe(Astro.currentLocale));
 const abrePanel = ajustes.estado === 'preapertura';
 const externo = href.startsWith('http');
@@ -37,7 +38,7 @@ const externo = href.startsWith('http');
 <style>
   .cta {
     --alto: 4rem;
-    --circulo: 4.375rem;
+    --circulo: 3.25rem;
     display: inline-flex;
     align-items: center;
     height: var(--alto);
@@ -59,8 +60,8 @@ const externo = href.startsWith('http');
 
   .cta--compacto {
     --alto: 3rem;
-    --circulo: 3.25rem;
-    padding: 0 0.25rem 0 1.375rem;
+    --circulo: 2.375rem;
+    padding: 0 0.3125rem 0 1.375rem;
     font-size: 0.9375rem;
   }
 
@@ -70,25 +71,27 @@ const externo = href.startsWith('http');
     place-items: center;
     width: var(--circulo);
     height: var(--circulo);
-    margin-left: 1.25rem;
+    margin-left: 1rem;
     border-radius: 50%;
-    background: var(--n500);
-    box-shadow: inset 0 0 0 1px rgb(59 29 14 / 0.1);
-    transition:
-      transform 0.22s var(--ease),
-      background-color 0.22s var(--ease);
+    background: var(--n900);
+    color: var(--crema);
+    transition: background-color 0.22s var(--ease);
+  }
+
+  .cta__circulo :global(svg) {
+    transition: transform 0.22s var(--ease);
   }
 
   .cta--compacto .cta__circulo {
-    margin-left: 0.875rem;
+    margin-left: 0.75rem;
   }
 
   @media (hover: hover) {
     .cta:hover {
       background: var(--n300);
     }
-    .cta:hover .cta__circulo {
-      transform: translateX(6px);
+    .cta:hover .cta__circulo :global(svg) {
+      transform: translateX(3px);
     }
   }
 
@@ -105,7 +108,7 @@ const externo = href.startsWith('http');
   @media (max-width: 40rem) {
     .cta--normal {
       --alto: 3.5rem;
-      --circulo: 3.75rem;
+      --circulo: 2.75rem;
       padding-left: 1.5rem;
       font-size: 1rem;
       white-space: normal;

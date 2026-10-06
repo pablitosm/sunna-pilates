@@ -1,5 +1,6 @@
 ---
 import '../styles/global.css';
+import BarraFundadores from '../components/BarraFundadores.astro';
 import Header from '../components/Header.astro';
 import Footer from '../components/Footer.astro';
 import MobileBar from '../components/MobileBar.astro';
@@ -84,6 +85,7 @@ const negocio = {
   </head>
   <body>
     <a class="saltar" href="#contenido">{home.ui.saltar}</a>
+    <BarraFundadores ajustes={ajustes} home={home} />
     <Header ajustes={ajustes} home={home} lang={lang} pagina={pagina} />
     <main id="contenido">
       <slot />
@@ -118,7 +120,6 @@ const negocio = {
       )
     }
     <script>
-      import '../scripts/movimiento';
     </script>
   </body>
 </html>

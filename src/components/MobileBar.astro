@@ -73,7 +73,7 @@ const wa = whatsappUrl(ajustes.contacto.whatsapp, home.ui.whatsappMensaje);
   /* Con WhatsApp al lado, el botón se compacta para que el texto quepa en una línea */
   .barra__pildora:has(.barra__wa) :global(.barra__cta) {
     --alto: 3.25rem;
-    --circulo: 3.25rem;
+    --circulo: 2.5rem;
     padding-left: 1.25rem;
     font-size: 0.9375rem;
     white-space: nowrap;
@@ -117,9 +117,6 @@ const wa = whatsappUrl(ajustes.contacto.whatsapp, home.ui.whatsappMensaje);
     transition: transform 0.4s var(--ease);
   }
 
-  .wa-flotante:hover {
-    transform: translateY(-3px);
-  }
 
   @media (max-width: 56.25rem) {
     .wa-flotante {

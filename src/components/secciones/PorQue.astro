@@ -1,12 +1,12 @@
 ---
 /*
- * Por qué SUNNA frente a otros estudios (horario amplio y todo autónomo),
- * junto al acceso a la app: tres pasos y las tiendas. Va justo después de
+ * Por qué SUNNA frente a otros estudios (horario amplio y todo autónomo)
+ * y, debajo, el acceso a la app: el móvil, el título y las tiendas. Va justo después de
  * la portada para que se entienda el modelo sin bajar mucho.
  */
 import Glifo from '../Glifo.astro';
 import TiendasApp from '../TiendasApp.astro';
-import { idiomaDe, urlPagina, type Ajustes, type Home } from '../../lib/content';
+import type { Ajustes, Home } from '../../lib/content';
 
 interface Props {
   ajustes: Ajustes;
@@ -14,32 +14,36 @@ interface Props {
 }
 const { ajustes, home } = Astro.props;
 const pq = home.porQue;
+// Con el horario ampliado, las razones que lo tienen usan su título y texto alternativos.
+const razones = (pq?.razones ?? []).map((r) => (ajustes.horario === 'ampliado' && r.ampliado) || r);
 const glifos = ['anillo', 'pantalla', 'punto'] as const;
-const primeraSesion = urlPagina(idiomaDe(Astro.currentLocale), 'primera-sesion');
 ---
 
 {
   pq && (
     <section id="por-que" class="porque seccion" aria-labelledby="porque-titulo">
-      <div class="envoltura porque__rejilla">
-        <div class="porque__razones">
+      <div class="envoltura">
+        <div class="porque__cabeza">
           <h2 id="porque-titulo" class="t-h2">{pq.titulo}</h2>
           <p class="t-lead porque__intro">{pq.intro}</p>
-
-          <ul role="list" class="razones">
-            {pq.razones.map((r, i) => (
-              <li class="razon">
-                <Glifo forma={glifos[i % glifos.length]} tamano={44} class="razon__glifo" />
-                <h3 class="razon__titulo">{r.titulo}</h3>
-                <p class="razon__texto">{r.texto}</p>
-              </li>
-            ))}
-          </ul>
         </div>
 
-        <aside class="app" aria-labelledby="app-titulo">
+        <ul role="list" class="razones">
+          {razones.map((r, i) => (
+            <li class="razon">
+              <Glifo forma={glifos[i % glifos.length]} tamano={44} class="razon__glifo" />
+              <h3 class="razon__titulo">{r.titulo}</h3>
+              <p class="razon__texto">{r.texto}</p>
+            </li>
+          ))}
+        </ul>
+      </div>
+
+      <!-- La app, debajo y en una franja melocotón de borde a borde (no un recuadro):
+           el móvil con su sol, el título y las tiendas -->
+      <aside class="app" aria-labelledby="app-titulo">
+        <div class="envoltura">
           <div class="app__cabeza">
-            <!-- El móvil dibujado en línea, como los espacios: sol, puerta y lista de clases -->
             <svg class="app__movil" viewBox="0 0 100 180" fill="none" aria-hidden="true">
               <rect class="traza" x="8" y="4" width="84" height="172" rx="16" />
               <path class="traza" d="M38 18h24" />
@@ -47,61 +51,50 @@ const primeraSesion = urlPagina(idiomaDe(Astro.currentLocale), 'primera-sesion')
               <path class="traza" d="M32 128v-24a18 18 0 0 1 36 0v24" />
               <path class="traza traza--suave" d="M28 146h44M28 158h30" />
             </svg>
-            <div>
+            <div class="app__textos">
               <h3 id="app-titulo" class="app__titulo">{pq.app.titulo}</h3>
               {pq.app.texto && <p class="app__texto">{pq.app.texto}</p>}
             </div>
+            <TiendasApp ajustes={ajustes} textos={pq.app} class="app__tiendas" />
           </div>
-          <ol role="list" class="app__pasos">
-            {pq.app.pasos.map((p, i) => (
-              <li class="app__paso">
-                <span class="app__numero" aria-hidden="true">{String(i + 1).padStart(2, '0')}</span>
-                {i === 1 ? <a href={primeraSesion}>{p}</a> : <span>{p}</span>}
-              </li>
-            ))}
-          </ol>
-          <TiendasApp ajustes={ajustes} textos={pq.app} class="app__tiendas" />
-        </aside>
-      </div>
+        </div>
+      </aside>
     </section>
   )
 }
 
 <style>
-  .porque__rejilla {
+  /* Cabecera: título a la izquierda, la idea en una frase a la derecha */
+  .porque__cabeza {
     display: grid;
-    grid-template-columns: minmax(0, 1fr) minmax(0, 27rem);
-    gap: clamp(2.5rem, 1rem + 5vw, 6rem);
-    align-items: start;
+    grid-template-columns: minmax(0, 1fr) minmax(0, 34rem);
+    gap: 1.25rem clamp(2.5rem, 1rem + 5vw, 6rem);
+    align-items: end;
   }
 
   .porque__intro {
-    max-width: 38ch;
-    margin-top: 1.25rem;
     color: var(--tinta-60);
   }
 
-  /* Tres razones, en filas con línea fina: icono, título y una frase */
+  /* Tres razones en columnas, colgadas de una línea fina */
   .razones {
-    margin-top: clamp(2.25rem, 1.5rem + 2vw, 3.25rem);
+    display: grid;
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+    gap: 0 clamp(1.5rem, 0.5rem + 2.5vw, 3rem);
+    margin-top: var(--titulo-contenido);
     border-top: 1px solid var(--linea-fuerte);
   }
 
   .razon {
-    display: grid;
-    grid-template-columns: auto minmax(0, 15rem) minmax(0, 1fr);
-    gap: 0.5rem 1.5rem;
-    align-items: baseline;
-    padding: 1.625rem 0;
-    border-bottom: 1px solid var(--linea);
+    padding-top: clamp(1.75rem, 1.25rem + 1vw, 2.25rem);
   }
 
   .razon :global(.razon__glifo) {
-    align-self: center;
     color: var(--n700);
   }
 
   .razon__titulo {
+    margin-top: 1.25rem;
     font-size: 1.375rem;
     line-height: 1.2;
     letter-spacing: -0.015em;
@@ -109,17 +102,31 @@ const primeraSesion = urlPagina(idiomaDe(Astro.currentLocale), 'primera-sesion')
   }
 
   .razon__texto {
+    max-width: 36ch;
+    margin-top: 0.625rem;
     color: var(--tinta-60);
     line-height: 1.6;
   }
 
-  /* La app: un arco con el móvil dibujado en línea y, debajo, tres pasos */
-  /* Cabecera de la app: el móvil dibujado junto al título, sobre un resplandor sin borde */
+  /* La sección acaba en la franja de la app, sin espacio crema debajo */
+  .porque {
+    padding-bottom: 0;
+  }
+
+  /* La app: franja Naranja 100 de borde a borde, entre dos secciones crema; el sol, solo detrás del móvil */
+  .app {
+    isolation: isolate;
+    overflow: hidden;
+    margin-top: var(--seccion);
+    padding-block: var(--seccion);
+    background: var(--n100);
+  }
+
   .app__cabeza {
     position: relative;
     display: grid;
-    grid-template-columns: 5.5rem minmax(0, 1fr);
-    gap: 1.5rem;
+    grid-template-columns: clamp(4.5rem, 3rem + 3vw, 6.5rem) minmax(0, 1fr) auto;
+    gap: clamp(1.25rem, 0.75rem + 1.5vw, 2.25rem);
     align-items: center;
   }
 
@@ -127,17 +134,13 @@ const primeraSesion = urlPagina(idiomaDe(Astro.currentLocale), 'primera-sesion')
     content: '';
     position: absolute;
     z-index: -1;
-    left: -3rem;
+    left: clamp(-5rem, -3rem - 2vw, -2.5rem);
     top: 50%;
-    width: 12rem;
+    width: clamp(14rem, 10rem + 8vw, 20rem);
     aspect-ratio: 1;
     translate: 0 -50%;
-    background: radial-gradient(closest-side, rgb(255 167 107 / 0.35), rgb(255 196 154 / 0.15) 55%, rgb(253 246 238 / 0));
+    background: radial-gradient(closest-side, rgb(255 130 53 / 0.38), rgb(255 167 107 / 0.16) 55%, rgb(255 224 201 / 0));
     pointer-events: none;
-  }
-
-  .app {
-    isolation: isolate;
   }
 
   .app__movil {
@@ -155,76 +158,97 @@ const primeraSesion = urlPagina(idiomaDe(Astro.currentLocale), 'primera-sesion')
   }
 
   .app__sol {
-    fill: var(--n300);
+    fill: var(--n500);
+    stroke: none;
     opacity: 0.85;
   }
 
   .app__titulo {
-    font-size: 1.625rem;
-    line-height: 1.15;
+    font-size: var(--t-h2);
+    line-height: 1.06;
     letter-spacing: -0.02em;
+    text-wrap: balance;
   }
 
   .app__texto {
-    margin-top: 0.5rem;
+    margin-top: 0.625rem;
+    font-size: var(--t-lead);
     color: var(--tinta-60);
   }
 
-  /* Pasos: filas con línea fina, como las razones */
-  .app__pasos {
-    margin: 1.75rem 0 1.5rem;
-    border-top: 1px solid var(--linea-fuerte);
-  }
-
-  .app__paso {
-    display: flex;
-    align-items: baseline;
-    gap: 1rem;
-    padding: 0.875rem 0;
-    border-bottom: 1px solid var(--linea);
-    font-size: 1.0625rem;
-    line-height: 1.4;
-  }
-
-  .app__paso a {
-    color: var(--tinta);
-    text-decoration: underline;
-    text-decoration-color: var(--n500);
-    text-decoration-thickness: 1.5px;
-    text-underline-offset: 0.2em;
-  }
-
-  .app__paso a:hover {
-    color: var(--n900);
-  }
-
-  .app__numero {
-    flex: none;
-    width: 1.375rem;
-    font-size: 0.75rem;
-    letter-spacing: 0.08em;
-    font-variant-numeric: tabular-nums;
-    color: var(--n700);
-  }
-
   @media (max-width: 64rem) {
-    .razon {
-      grid-template-columns: auto minmax(0, 1fr);
+    .porque__cabeza {
+      grid-template-columns: 1fr;
     }
 
-    .razon__texto {
+    .porque__intro {
+      max-width: 38ch;
+    }
+
+    .app__cabeza {
+      grid-template-columns: clamp(4.5rem, 3rem + 3vw, 6.5rem) minmax(0, 1fr);
+    }
+
+    .app :global(.app__tiendas) {
       grid-column: 2;
     }
   }
 
   @media (max-width: 56.25rem) {
-    .porque__rejilla {
+    .razones {
       grid-template-columns: 1fr;
+      border-top: 0;
     }
 
+    .razon {
+      display: grid;
+      grid-template-columns: auto minmax(0, 1fr);
+      gap: 0.375rem 1.25rem;
+      padding: 1.5rem 0;
+      border-top: 1px solid var(--linea);
+    }
+
+    .razon:first-child {
+      border-top-color: var(--linea-fuerte);
+    }
+
+    .razon :global(.razon__glifo) {
+      grid-row: span 2;
+    }
+
+    .razon__titulo {
+      margin-top: 0;
+      align-self: end;
+    }
+
+    .razon__texto {
+      margin-top: 0;
+    }
+  }
+
+  @media (max-width: 40rem) {
     .app__cabeza {
-      grid-template-columns: 4.5rem minmax(0, 1fr);
+      grid-template-columns: 3.25rem minmax(0, 1fr);
       gap: 1.25rem;
+      align-items: start;
+    }
+
+    /* Con las tiendas debajo, el resplandor se centra en el móvil, no en todo el bloque */
+    .app__cabeza::before {
+      top: 3rem;
+      width: 12rem;
+    }
+
+    .app__titulo {
+      font-size: 2rem;
+    }
+
+    .app__texto {
+      font-size: var(--t-body);
+    }
+
+    .app :global(.app__tiendas) {
+      grid-column: 1 / -1;
     }
   }
 </style>

@@ -1,7 +1,7 @@
 ---
 /*
- * Indicador para seguir bajando: círculo con una flecha que baja y sube
- * despacio, junto al nombre de lo que viene. Lleva a esa sección.
+ * Indicador para seguir bajando: círculo con una flecha junto al nombre
+ * de lo que viene. Lleva a esa sección.
  */
 interface Props {
   href: string;
@@ -57,21 +57,5 @@ const { href, texto, class: className } = Astro.props;
     outline: 3px solid var(--n500);
     outline-offset: 4px;
     border-radius: var(--r-pill);
-  }
-
-  @media (prefers-reduced-motion: no-preference) {
-    .seguir__circulo svg {
-      animation: seguir-baja 2.2s var(--ease) infinite;
-    }
-  }
-
-  @keyframes seguir-baja {
-    0%,
-    100% {
-      transform: translateY(-2px);
-    }
-    50% {
-      transform: translateY(4px);
-    }
   }
 </style>

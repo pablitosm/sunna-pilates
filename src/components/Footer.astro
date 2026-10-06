@@ -51,7 +51,7 @@ const anio = new Date().getFullYear();
 
       <div class="pie__col">
         <h2 class="etiqueta pie__titulo">{home.pie.horarioTitulo}</h2>
-        {home.pie.horario.map((h) => <span>{h}</span>)}
+        {home.pie.horario[ajustes.horario].map((h) => <span>{h}</span>)}
       </div>
 
       <div class="pie__col">

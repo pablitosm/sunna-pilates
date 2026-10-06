@@ -79,16 +79,23 @@ export function mapsUrl(a: Ajustes) {
   );
 }
 
-export function mapsEmbedUrl(a: Ajustes) {
-  return `https://www.google.com/maps?q=${encodeURIComponent(direccionCompleta(a))}&output=embed`;
-}
-
 /**
  * Destino del botón principal. Abierto: la página de la primera sesión gratis,
  * que explica la sesión y lleva a la app, a bsport o a WhatsApp. Preapertura:
  * abre el panel de lista de espera (sin JavaScript, el bloque de fundadores).
  */
+/** Quedan plazas de socio fundador y la oferta está a la vista (ajustes.yaml → fundadores). */
+export function hayPlazasFundador(a: Ajustes) {
+  return a.fundadores.mostrar && Math.min(a.fundadores.plazasLibres, a.fundadores.plazasTotales) > 0;
+}
+
+/** Botón principal abierto: mientras quedan plazas de fundador, lleva a la oferta de fundadores. */
+export function ctaEsFundador(a: Ajustes) {
+  return a.estado === 'abierto' && hayPlazasFundador(a);
+}
+
 export function ctaHref(a: Ajustes, lang: Lang = 'es') {
+  if (ctaEsFundador(a)) return `${urlPagina(lang, 'precios')}#fundadores`;
   if (a.estado === 'abierto') return urlPagina(lang, 'primera-sesion');
   return a.fundadores.mostrar ? `${urlPagina(lang, 'precios')}#fundadores` : '#cierre';
 }

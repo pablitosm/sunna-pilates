@@ -8,9 +8,16 @@ interface Props {
 }
 const { ajustes, home } = Astro.props;
 const { faq } = home;
+// Con el horario ampliado, las preguntas que lo tienen usan su respuesta alternativa.
 // Las preguntas sin respuesta (pendientes) no se muestran.
+const ampliado = ajustes.horario === 'ampliado';
 const grupos = faq.grupos
-  .map((g) => ({ ...g, preguntas: g.preguntas.filter((p) => p.respuesta.trim()) }))
+  .map((g) => ({
+    ...g,
+    preguntas: g.preguntas
+      .map((p) => ({ ...p, respuesta: (ampliado && p.respuestaAmpliado) || p.respuesta }))
+      .filter((p) => p.respuesta.trim()),
+  }))
   .filter((g) => g.preguntas.length);
 ---
 
@@ -105,7 +112,6 @@ const grupos = faq.grupos
     position: relative;
     isolation: isolate;
     overflow: hidden;
-    background: var(--tostado);
   }
 
 

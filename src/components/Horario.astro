@@ -1,0 +1,219 @@
+---
+/*
+ * Horario del estudio, junto a la dirección en «El estudio»: el «dónde» y el
+ * «cuándo» en el mismo sitio. Solo se muestra la fase vigente
+ * (ajustes.yaml → horario), nunca las dos a la vez.
+ */
+import type { Ajustes, Home } from '../lib/content';
+
+interface Props {
+  ajustes: Ajustes;
+  home: Home;
+  // A la derecha cuando va pegado al borde derecho de algo (el mapa en El estudio)
+  derecha?: boolean;
+}
+const { ajustes, home, derecha = false } = Astro.props;
+const horario = home.comoFunciona.datos.horario;
+const fase = horario.fases.find((f) => f.fase === ajustes.horario);
+const { horariosUrl, appUrl } = ajustes.reservas;
+---
+
+{
+  fase && (
+    <div class:list={['horario', `horario--${fase.fase}`, { 'horario--derecha': derecha }]}>
+      <p class="etiqueta horario__etiqueta">
+        {horario.titulo}
+        {fase.etiqueta && <span> · {fase.etiqueta}</span>}
+      </p>
+      <div class="horario__franjas">
+        {fase.horas.map((h) => (
+          <p class="horario__horas">{h}</p>
+        ))}
+      </div>
+      <p class:list={['horario__texto', { 'horario__texto--destacado': fase.fase === 'inicial' }]}>{fase.texto}</p>
+      {fase.intro && <p class="horario__intro">{fase.intro}</p>}
+
+      {
+        horario.franjas && (
+          <div class="franjas">
+            <p class="etiqueta franjas__titulo">{horario.franjas.titulo}</p>
+            <ul role="list" class="franjas__lista">
+              {horario.franjas.items.map((f) => (
+                <li class:list={['franja', { 'franja--tranquila': f.tranquila }]}>
+                  <p class="franja__horas">{f.horas}</p>
+                  <p class="franja__texto">{f.texto}</p>
+                </li>
+              ))}
+            </ul>
+          </div>
+        )
+      }
+
+      {
+        (horariosUrl || appUrl) && (
+          <p class="horario__enlaces">
+            {horariosUrl && (
+              <a class="enlace-flecha" href={horariosUrl} target="_blank" rel="noopener">
+                {home.enlaces.horarios} →
+              </a>
+            )}
+            {appUrl && (
+              <a class="enlace-flecha" href={appUrl} target="_blank" rel="noopener">
+                {home.enlaces.app} →
+              </a>
+            )}
+          </p>
+        )
+      }
+    </div>
+  )
+}
+
+<style>
+  .horario__etiqueta {
+    margin-bottom: 0.625rem;
+  }
+
+  .horario__franjas {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.25rem 2rem;
+  }
+
+  .horario__horas {
+    font-size: clamp(1.75rem, 1.2rem + 1.8vw, 2.5rem);
+    line-height: 1.1;
+    letter-spacing: -0.02em;
+    font-variant-numeric: tabular-nums;
+    white-space: nowrap;
+  }
+
+  .horario__texto {
+    margin-top: 1rem;
+    font-size: 0.9375rem;
+    color: var(--tinta-60);
+  }
+
+  /* Las primeras semanas siempre hay alguien de SUNNA: se lee de un vistazo */
+  .horario__texto--destacado {
+    display: flex;
+    align-items: center;
+    gap: 0.875rem;
+    font-size: 1.0625rem;
+    line-height: 1.4;
+    color: var(--tinta);
+  }
+
+  .horario__texto--destacado::before {
+    content: '';
+    flex: none;
+    width: 0.75rem;
+    height: 0.75rem;
+    margin-left: 0.25rem;
+    border-radius: 999px;
+    background: var(--n500);
+    box-shadow: 0 0 0 5px rgb(255 130 53 / 0.22);
+    animation: horario-respira 4.5s ease-in-out infinite;
+  }
+
+  /* Respira despacio, como alguien presente en la sala */
+  @keyframes horario-respira {
+    0%,
+    100% {
+      transform: scale(1);
+      box-shadow: 0 0 0 4px rgb(255 130 53 / 0.24);
+    }
+    50% {
+      transform: scale(1.12);
+      box-shadow: 0 0 0 9px rgb(255 130 53 / 0.08);
+    }
+  }
+
+  .horario__intro {
+    max-width: 46ch;
+    margin-top: 0.75rem;
+    font-size: 0.9375rem;
+    line-height: 1.55;
+    color: var(--tinta-60);
+  }
+
+  .horario__enlaces {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.75rem 2rem;
+    margin-top: 1.25rem;
+  }
+
+  /* Cómo se llena el día (oculto hasta tener datos reales): tres franjas, la tranquila en oliva */
+  .franjas {
+    margin-top: 1.75rem;
+  }
+
+  .franjas__titulo {
+    margin-bottom: 1rem;
+  }
+
+  .franjas__lista {
+    display: grid;
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+    gap: 0.75rem;
+  }
+
+  .franja {
+    padding: 1.125rem 1.25rem;
+    border-radius: var(--r-s);
+    background: var(--n50);
+  }
+
+  .franja__horas {
+    font-size: 1.25rem;
+    line-height: 1.1;
+    white-space: nowrap;
+    font-variant-numeric: tabular-nums;
+  }
+
+  .franja__texto {
+    margin-top: 0.5rem;
+    font-size: 0.875rem;
+    line-height: 1.5;
+    color: var(--tinta-60);
+  }
+
+  .franja--tranquila {
+    background: var(--oliva);
+  }
+
+  .franja--tranquila .franja__horas,
+  .franja--tranquila .franja__texto {
+    color: var(--oliva-tinta);
+  }
+
+  /* Alineado a la derecha (en móvil vuelve a la izquierda, como todo lo demás) */
+  @media (min-width: 56.3125rem) {
+    .horario--derecha {
+      text-align: right;
+    }
+
+    .horario--derecha .horario__franjas,
+    .horario--derecha .horario__texto--destacado,
+    .horario--derecha .horario__enlaces {
+      justify-content: flex-end;
+    }
+
+    .horario--derecha .horario__intro {
+      margin-left: auto;
+    }
+  }
+
+  @media (max-width: 40rem) {
+    .franjas__lista {
+      grid-template-columns: 1fr;
+    }
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    .horario__texto--destacado::before {
+      animation: none;
+    }
+  }
+</style>
