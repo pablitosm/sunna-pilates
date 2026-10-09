@@ -220,9 +220,9 @@ recovery:
         - plan: "Basic"
           cantidad: "Non inclus"
         - plan: "Standard"
-          cantidad: "1 par mois"
+          cantidad: "1 par semaine"
         - plan: "Pro"
-          cantidad: "2 par mois"
+          cantidad: "2 par semaine"
         - plan: "Premium"
           cantidad: "Illimité"
       pendiente: "[PENDIENTE] duración de cada sesión y qué llevar"
@@ -235,11 +235,11 @@ recovery:
         - "Incluse dans tous les abonnements."
       membresia:
         - plan: "Basic"
-          cantidad: "1 par mois"
+          cantidad: "1 par semaine"
         - plan: "Standard"
-          cantidad: "2 par mois"
+          cantidad: "2 par semaine"
         - plan: "Pro"
-          cantidad: "3 par mois"
+          cantidad: "3 par semaine"
         - plan: "Premium"
           cantidad: "Illimité"
       pendiente: "[PENDIENTE] duración de cada sesión y qué llevar"
@@ -265,8 +265,8 @@ precios:
   introFundador: "Choisis combien de fois par mois tu veux ton reformer. La lumière rouge est incluse dans tous les abonnements, le sauna à partir de Standard. Tant qu'il reste des places, tu deviens membre fondateur."
   porSesion: "par séance"
   graficos:
-    recovery: "Recovery par mois"
-    alMes: "par mois"
+    recovery: "Recovery par semaine"
+    porSemana: "par semaine"
     luzRoja: "Lumière rouge"
     sauna: "Sauna"
     ilimitado: "Illimité"
@@ -282,7 +282,7 @@ precios:
       precioSesion: "13,75 €"
       pilates: "4 séances par mois"
       pilatesSemana: "1 par semaine"
-      recovery: "1 lumière rouge"
+      recovery: "1 lumière rouge par semaine"
     - nombre: "Standard"
       precio: 100
       luzRoja: 2
@@ -290,7 +290,7 @@ precios:
       precioSesion: "12,50 €"
       pilates: "8 séances par mois"
       pilatesSemana: "2 par semaine"
-      recovery: "2 lumière rouge + 1 sauna"
+      recovery: "2 lumière rouge + 1 sauna par semaine"
     - nombre: "Pro"
       precio: 140
       luzRoja: 3
@@ -298,7 +298,7 @@ precios:
       precioSesion: "11,67 €"
       pilates: "12 séances par mois"
       pilatesSemana: "3 par semaine"
-      recovery: "3 lumière rouge + 2 sauna"
+      recovery: "3 lumière rouge + 2 sauna par semaine"
     - nombre: "Premium"
       precio: 180
       luzRoja: -1

@@ -220,9 +220,9 @@ recovery:
         - plan: "Basic"
           cantidad: "Not included"
         - plan: "Standard"
-          cantidad: "1 a month"
+          cantidad: "1 a week"
         - plan: "Pro"
-          cantidad: "2 a month"
+          cantidad: "2 a week"
         - plan: "Premium"
           cantidad: "Unlimited"
       pendiente: "[PENDIENTE] duración de cada sesión y qué llevar"
@@ -235,11 +235,11 @@ recovery:
         - "Included in every membership."
       membresia:
         - plan: "Basic"
-          cantidad: "1 a month"
+          cantidad: "1 a week"
         - plan: "Standard"
-          cantidad: "2 a month"
+          cantidad: "2 a week"
         - plan: "Pro"
-          cantidad: "3 a month"
+          cantidad: "3 a week"
         - plan: "Premium"
           cantidad: "Unlimited"
       pendiente: "[PENDIENTE] duración de cada sesión y qué llevar"
@@ -265,8 +265,8 @@ precios:
   introFundador: "Choose how many times a month you want your reformer. Every membership includes red light, and the sauna comes in from Standard. While places last, you join as a founding member."
   porSesion: "per session"
   graficos:
-    recovery: "Recovery per month"
-    alMes: "a month"
+    recovery: "Recovery per week"
+    porSemana: "a week"
     luzRoja: "Red light"
     sauna: "Sauna"
     ilimitado: "Unlimited"
@@ -282,7 +282,7 @@ precios:
       precioSesion: "€13.75"
       pilates: "4 sessions a month"
       pilatesSemana: "1 a week"
-      recovery: "1 red light"
+      recovery: "1 red light a week"
     - nombre: "Standard"
       precio: 100
       luzRoja: 2
@@ -290,7 +290,7 @@ precios:
       precioSesion: "€12.50"
       pilates: "8 sessions a month"
       pilatesSemana: "2 a week"
-      recovery: "2 red light + 1 sauna"
+      recovery: "2 red light + 1 sauna a week"
     - nombre: "Pro"
       precio: 140
       luzRoja: 3
@@ -298,7 +298,7 @@ precios:
       precioSesion: "€11.67"
       pilates: "12 sessions a month"
       pilatesSemana: "3 a week"
-      recovery: "3 red light + 2 sauna"
+      recovery: "3 red light + 2 sauna a week"
     - nombre: "Premium"
       precio: 180
       luzRoja: -1

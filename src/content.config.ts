@@ -246,8 +246,8 @@ const home = defineCollection({
             sauna: texto,
             ilimitado: texto,
             noIncluida: texto,
-            // Unidad tras la cantidad de luz roja y sauna ("2 al mes").
-            alMes: opcional,
+            // Unidad tras la cantidad de luz roja y sauna ("2 a la semana").
+            porSemana: opcional,
           })
           .optional(),
         contacto: z.object({ titulo: texto, texto }).optional(),

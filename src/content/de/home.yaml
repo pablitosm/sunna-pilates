@@ -220,9 +220,9 @@ recovery:
         - plan: "Basic"
           cantidad: "Nicht enthalten"
         - plan: "Standard"
-          cantidad: "1 pro Monat"
+          cantidad: "1 pro Woche"
         - plan: "Pro"
-          cantidad: "2 pro Monat"
+          cantidad: "2 pro Woche"
         - plan: "Premium"
           cantidad: "Unbegrenzt"
       pendiente: "[PENDIENTE] duración de cada sesión y qué llevar"
@@ -235,11 +235,11 @@ recovery:
         - "In allen Mitgliedschaften enthalten."
       membresia:
         - plan: "Basic"
-          cantidad: "1 pro Monat"
+          cantidad: "1 pro Woche"
         - plan: "Standard"
-          cantidad: "2 pro Monat"
+          cantidad: "2 pro Woche"
         - plan: "Pro"
-          cantidad: "3 pro Monat"
+          cantidad: "3 pro Woche"
         - plan: "Premium"
           cantidad: "Unbegrenzt"
       pendiente: "[PENDIENTE] duración de cada sesión y qué llevar"
@@ -265,8 +265,8 @@ precios:
   introFundador: "Wähle, wie oft im Monat du deinen Reformer willst. Rotlicht ist in jeder Mitgliedschaft dabei, die Sauna ab Standard. Solange Plätze frei sind, wirst du Gründungsmitglied."
   porSesion: "pro Session"
   graficos:
-    recovery: "Recovery pro Monat"
-    alMes: "pro Monat"
+    recovery: "Recovery pro Woche"
+    porSemana: "pro Woche"
     luzRoja: "Rotlicht"
     sauna: "Sauna"
     ilimitado: "Unbegrenzt"
@@ -282,7 +282,7 @@ precios:
       precioSesion: "13,75 €"
       pilates: "4 Sessions im Monat"
       pilatesSemana: "1 pro Woche"
-      recovery: "1 Rotlicht"
+      recovery: "1 Rotlicht pro Woche"
     - nombre: "Standard"
       precio: 100
       luzRoja: 2
@@ -290,7 +290,7 @@ precios:
       precioSesion: "12,50 €"
       pilates: "8 Sessions im Monat"
       pilatesSemana: "2 pro Woche"
-      recovery: "2 Rotlicht + 1 Sauna"
+      recovery: "2 Rotlicht + 1 Sauna pro Woche"
     - nombre: "Pro"
       precio: 140
       luzRoja: 3
@@ -298,7 +298,7 @@ precios:
       precioSesion: "11,67 €"
       pilates: "12 Sessions im Monat"
       pilatesSemana: "3 pro Woche"
-      recovery: "3 Rotlicht + 2 Sauna"
+      recovery: "3 Rotlicht + 2 Sauna pro Woche"
     - nombre: "Premium"
       precio: 180
       luzRoja: -1

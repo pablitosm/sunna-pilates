@@ -239,9 +239,9 @@ recovery:
         - plan: "Basic"
           cantidad: "No incluida"
         - plan: "Standard"
-          cantidad: "1 al mes"
+          cantidad: "1 a la semana"
         - plan: "Pro"
-          cantidad: "2 al mes"
+          cantidad: "2 a la semana"
         - plan: "Premium"
           cantidad: "Ilimitada"
       # PENDIENTE: duración de cada sesión y qué llevar.
@@ -255,11 +255,11 @@ recovery:
         - "Incluida en todas las membresías."
       membresia:
         - plan: "Basic"
-          cantidad: "1 al mes"
+          cantidad: "1 a la semana"
         - plan: "Standard"
-          cantidad: "2 al mes"
+          cantidad: "2 a la semana"
         - plan: "Pro"
-          cantidad: "3 al mes"
+          cantidad: "3 a la semana"
         - plan: "Premium"
           cantidad: "Ilimitada"
       # PENDIENTE: duración de cada sesión y qué llevar.
@@ -287,8 +287,8 @@ precios:
   introFundador: "Elige cuántas veces al mes quieres tu reformer. Todas las membresías incluyen luz roja, y la sauna entra desde Standard. Mientras queden plazas, entras como socio/a fundador/a."
   porSesion: "por sesión"
   graficos:
-    recovery: "Recovery al mes"
-    alMes: "al mes"
+    recovery: "Recovery a la semana"
+    porSemana: "a la semana"
     luzRoja: "Luz roja"
     sauna: "Sauna"
     ilimitado: "Ilimitado"
@@ -304,7 +304,7 @@ precios:
       precioSesion: "13,75 €"
       pilates: "4 sesiones al mes"
       pilatesSemana: "1 por semana"
-      recovery: "1 luz roja"
+      recovery: "1 luz roja a la semana"
     - nombre: "Standard"
       precio: 100
       luzRoja: 2
@@ -312,7 +312,7 @@ precios:
       precioSesion: "12,50 €"
       pilates: "8 sesiones al mes"
       pilatesSemana: "2 por semana"
-      recovery: "2 luz roja + 1 sauna"
+      recovery: "2 luz roja + 1 sauna a la semana"
     - nombre: "Pro"
       precio: 140
       luzRoja: 3
@@ -320,7 +320,7 @@ precios:
       precioSesion: "11,67 €"
       pilates: "12 sesiones al mes"
       pilatesSemana: "3 por semana"
-      recovery: "3 luz roja + 2 sauna"
+      recovery: "3 luz roja + 2 sauna a la semana"
     - nombre: "Premium"
       precio: 180
       luzRoja: -1

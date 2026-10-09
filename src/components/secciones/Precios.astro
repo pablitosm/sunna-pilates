@@ -60,7 +60,7 @@ const intro = (ctaEsFundador(ajustes) && precios.introFundador) || precios.intro
                   ].map((r) => (
                     <div class:list={['recovery__fila', { 'recovery__fila--no': r.n === 0 }]}>
                       <dt>{r.nombre}</dt>
-                      <dd>{r.n === 0 ? g.noIncluida : r.n < 0 ? g.ilimitado : g.alMes ? `${r.n} ${g.alMes}` : r.n}</dd>
+                      <dd>{r.n === 0 ? g.noIncluida : r.n < 0 ? g.ilimitado : g.porSemana ? `${r.n} ${g.porSemana}` : r.n}</dd>
                     </div>
                   ))}
                 </dl>
