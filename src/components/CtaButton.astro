@@ -78,8 +78,9 @@ const externo = href.startsWith('http');
     transition: background-color 0.22s var(--ease);
   }
 
+  /* Al salir del hover la flecha vuelve más despacio que al entrar. */
   .cta__circulo :global(svg) {
-    transition: transform 0.22s var(--ease);
+    transition: transform 0.6s var(--ease);
   }
 
   .cta--compacto .cta__circulo {
@@ -87,11 +88,9 @@ const externo = href.startsWith('http');
   }
 
   @media (hover: hover) {
-    .cta:hover {
-      background: var(--n300);
-    }
     .cta:hover .cta__circulo :global(svg) {
       transform: translateX(3px);
+      transition-duration: 0.22s;
     }
   }
 

@@ -408,10 +408,6 @@ onBeforeUnmount(() => document.removeEventListener('click', alPulsarDocumento));
   transition: background-color 0.3s var(--ease);
 }
 
-.enviar:hover {
-  background: var(--n300);
-}
-
 .enviar:disabled {
   background: var(--n200);
   cursor: progress;
