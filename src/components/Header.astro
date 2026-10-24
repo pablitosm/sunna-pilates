@@ -1,7 +1,6 @@
 ---
 import Logo from './Logo.astro';
 import CtaButton from './CtaButton.astro';
-import Glifo from './Glifo.astro';
 import MobileMenu from './vue/MobileMenu.vue';
 import type { Ajustes, Home, Lang, Pagina } from '../lib/content';
 import { idiomas, nombresIdioma, raizIdioma, urlPagina, whatsappUrl } from '../lib/content';
@@ -55,7 +54,13 @@ const opcionesIdioma = idiomas.map((l) => ({
                       {l.hijos.map((h, i) => (
                         <li class:list={{ 'submenu__destacado': i === 0 }}>
                           <a href={h.href} aria-current={h.actual ? 'page' : undefined} class:list={[i === 0 ? 'destacado' : 'opcion']}>
-                            {i === 0 && <Glifo forma="arco" tamano={32} class="destacado__glifo" />}
+                            {i === 0 && (
+                              <svg class="destacado__arco" width="36" height="36" viewBox="0 0 36 36" aria-hidden="true">
+                                <path class="destacado__arco-marco" d="M6 34V18a12 12 0 0 1 24 0v16z" />
+                                <path class="destacado__arco-luz" d="M10 34V18.5a8 8 0 0 1 16 0V34z" />
+                                <circle class="destacado__arco-sol" cx="18" cy="22" r="4.5" />
+                              </svg>
+                            )}
                             <span class="opcion__titulo">{h.texto}</span>
                             {h.descripcion && <span class="opcion__texto">{h.descripcion}</span>}
                           </a>
@@ -516,8 +521,11 @@ const opcionesIdioma = idiomas.map((l) => ({
     color: var(--tinta-60);
   }
 
-  /* Destacado: tarjeta naranja con el glifo del sol */
+  /* Destacado (Reformer): papel cálido con su grano y el arco del sol recortado, como los
+     dibujos de la web. Al pasar, el sol sube un poco y el papel se calienta. */
   .cabecera .destacado {
+    position: relative;
+    isolation: isolate;
     display: flex;
     flex-direction: column;
     justify-content: flex-end;
@@ -527,20 +535,52 @@ const opcionesIdioma = idiomas.map((l) => ({
     padding: 1.125rem;
     border: 0;
     border-radius: var(--r);
-    background: linear-gradient(145deg, var(--n200) 0%, var(--n500) 100%);
+    background: color-mix(in srgb, var(--sol-300) 50%, var(--sol-100));
     color: var(--tinta);
     text-decoration: none;
     white-space: normal;
-    transition: filter 0.2s var(--ease);
+    overflow: hidden;
+    transition: background-color 0.3s var(--ease);
   }
 
-  .cabecera .destacado:hover {
-    filter: saturate(1.15) brightness(1.03);
+  .cabecera .destacado::after {
+    content: '';
+    position: absolute;
+    z-index: -1;
+    inset: 0;
+    background-image: var(--grano-papel);
+    mix-blend-mode: multiply;
+    opacity: 0.18;
+    pointer-events: none;
   }
 
-  .destacado :global(.destacado__glifo) {
+  .cabecera .destacado:hover,
+  .cabecera .destacado:focus-visible {
+    background: color-mix(in srgb, var(--sol-300) 72%, var(--sol-100));
+  }
+
+  .destacado__arco {
+    display: block;
     margin-bottom: auto;
-    opacity: 0.75;
+    overflow: visible;
+  }
+
+  .destacado__arco-marco {
+    fill: var(--n700);
+  }
+
+  .destacado__arco-luz {
+    fill: color-mix(in srgb, var(--sol-100) 70%, var(--crema));
+  }
+
+  .destacado__arco-sol {
+    fill: var(--sol-500);
+    transition: translate 0.45s var(--ease);
+  }
+
+  .destacado:hover .destacado__arco-sol,
+  .destacado:focus-visible .destacado__arco-sol {
+    translate: 0 -3px;
   }
 
   .destacado .opcion__titulo {
@@ -549,6 +589,47 @@ const opcionesIdioma = idiomas.map((l) => ({
 
   .destacado .opcion__texto {
     color: rgb(var(--tinta-rgb) / 0.75);
+  }
+
+  /* Luz roja y sauna: sin fondo al pasar; el nombre recibe la misma pasada de rotulador
+     que los enlaces del header (y la deja puesta en la página actual) */
+  .cabecera .submenu__panel .opcion:hover,
+  .cabecera .submenu__panel .opcion[aria-current='page'] {
+    background: none;
+  }
+
+  .submenu__panel .opcion .opcion__titulo {
+    position: relative;
+    isolation: isolate;
+    justify-self: start;
+  }
+
+  .submenu__panel .opcion .opcion__titulo::after {
+    content: '';
+    position: absolute;
+    z-index: -1;
+    left: -0.35em;
+    right: -0.35em;
+    bottom: 0.0625rem;
+    height: 0.8125rem;
+    background: var(--banda, var(--n200));
+    -webkit-mask: var(--rotulador) center / 100% 100% no-repeat;
+    mask: var(--rotulador) center / 100% 100% no-repeat;
+    rotate: -1.2deg;
+    clip-path: inset(-20% 100% -20% 0);
+    transition: clip-path 0.32s cubic-bezier(0.55, 0, 0.75, 0.4);
+    pointer-events: none;
+  }
+
+  .submenu__panel li:nth-child(odd) .opcion .opcion__titulo::after {
+    rotate: 0.9deg;
+  }
+
+  .submenu__panel .opcion:hover .opcion__titulo::after,
+  .submenu__panel .opcion:focus-visible .opcion__titulo::after,
+  .submenu__panel .opcion[aria-current='page'] .opcion__titulo::after {
+    clip-path: inset(-20% -2% -20% 0);
+    transition: clip-path 0.5s var(--ease);
   }
 
   @media (max-width: 75rem) {
