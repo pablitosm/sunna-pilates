@@ -1,23 +1,162 @@
 ---
 import Base from '../layouts/Base.astro';
+import Icon from '../components/Icon.astro';
 ---
 
-<Base titulo="Página no encontrada" indexar={false}>
+<!-- Sin la barra fija del móvil: aquí el botón es «Volver al inicio» -->
+<Base titulo="Página no encontrada" indexar={false} sinBarraMovil>
   <section class="no-encontrada envoltura">
-    <h1 class="t-display">Esta página no existe.</h1>
-    <p class="t-lead t-secundario">Puede que el enlace haya cambiado.</p>
-    <a href="/">Volver al inicio</a>
+    <!-- 4 · sol · 4: el cero es el sol, poniéndose sobre la arena (en recortes, como el resto de la web) -->
+    <div class="no-encontrada__lamina grano" aria-hidden="true">
+      <svg viewBox="0 0 320 240" preserveAspectRatio="xMidYMid slice">
+        <rect class="cielo" width="320" height="240" />
+        <g class="sol">
+          <circle class="sol__halo" cx="160" cy="150" r="64" />
+          <circle class="sol__disco" cx="160" cy="150" r="44" />
+        </g>
+        <text class="cifra" x="74" y="150" text-anchor="middle">4</text>
+        <text class="cifra" x="246" y="150" text-anchor="middle">4</text>
+        <path class="arena" d="M0 148c48-6 108-8 164-5s104 4 156-1v98H0z" />
+        <path class="arena-tostada" d="M0 186c70-6 168-7 320-1v55H0z" />
+        <path class="brillo" d="M128 166h64M146 176h28" />
+      </svg>
+    </div>
+
+    <div class="no-encontrada__texto">
+      <h1 class="t-display no-encontrada__titulo">Esta página <em class="acento">no existe</em>.</h1>
+      <p class="t-lead t-secundario">Puede que el enlace haya cambiado.</p>
+      <a class="no-encontrada__boton boton-sol" href="/">
+        Volver al inicio
+        <Icon name="flecha" size={20} />
+      </a>
+    </div>
   </section>
 </Base>
 
 <style>
-  /* Toda la primera pantalla, con el mensaje centrado en vertical; el pie queda debajo */
+  /* Toda la primera pantalla: el texto a la izquierda y el recorte a la derecha, centrados
+     en vertical; el pie queda debajo */
   .no-encontrada {
+    display: grid;
+    grid-template-columns: minmax(0, 1.05fr) minmax(0, 1fr);
+    gap: clamp(2rem, 1rem + 4vw, 5rem);
+    align-items: center;
+    min-height: 100svh;
+    padding-block: var(--pagina-arriba) var(--seccion);
+    /* Ni el sol ni la pasada del rotulador empujan la página hacia los lados */
+    overflow-x: clip;
+  }
+
+  .no-encontrada__texto {
+    min-width: 0;
     display: grid;
     gap: 1.5rem;
     justify-items: start;
-    align-content: center;
-    min-height: 100svh;
-    padding-block: var(--pagina-arriba) var(--seccion);
+    grid-row: 1;
+  }
+
+  .no-encontrada__titulo {
+    max-width: 11ch;
+    text-wrap: balance;
+  }
+
+  .no-encontrada__boton {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.625rem;
+    max-width: 100%;
+    min-height: 3.5rem;
+    margin-top: 0.5rem;
+    padding: 0 1.625rem;
+    border-radius: var(--r-pill);
+    font-size: var(--t-body);
+    text-decoration: none;
+  }
+
+  .no-encontrada__lamina {
+    grid-column: 2;
+    width: 100%;
+    max-width: 100%;
+    aspect-ratio: 4 / 3;
+    border-radius: var(--r);
+    overflow: hidden;
+  }
+
+  .no-encontrada__lamina svg {
+    display: block;
+    width: 100%;
+    height: 100%;
+  }
+
+  /* Recorte: colores de la paleta, como los dibujos de la web */
+  .cielo {
+    fill: color-mix(in srgb, var(--sol-100) 50%, var(--crema));
+  }
+
+  .sol__halo {
+    fill: var(--sol-200);
+    opacity: 0.6;
+  }
+
+  .sol__disco {
+    fill: var(--sol-500);
+  }
+
+  .cifra {
+    fill: var(--n700);
+    font-family: var(--font);
+    font-size: 132px;
+    font-weight: 500;
+    letter-spacing: -0.04em;
+  }
+
+  .arena {
+    fill: color-mix(in srgb, var(--sol-200) 30%, var(--tostado));
+  }
+
+  .arena-tostada {
+    fill: color-mix(in srgb, var(--sol-300) 32%, var(--tostado));
+  }
+
+  .brillo {
+    fill: none;
+    stroke: color-mix(in srgb, var(--sol-100) 50%, var(--crema));
+    stroke-width: 3;
+    stroke-linecap: round;
+  }
+
+  /* El sol se pone muy despacio y vuelve a asomar */
+  .sol {
+    animation: sol-404 9s ease-in-out infinite alternate;
+  }
+
+  @keyframes sol-404 {
+    from {
+      translate: 0 -10px;
+    }
+    to {
+      translate: 0 8px;
+    }
+  }
+
+  /* Móvil y tableta: el recorte arriba y el texto debajo */
+  @media (max-width: 56.25rem) {
+    .no-encontrada {
+      grid-template-columns: minmax(0, 1fr);
+      align-content: center;
+      gap: 1.75rem;
+      padding-top: calc(var(--pagina-arriba) - 2.5rem);
+    }
+
+    /* Más apaisado: solo recorta cielo y arena, y el botón cabe en la primera pantalla */
+    .no-encontrada__lamina {
+      grid-column: 1;
+      grid-row: 1;
+      aspect-ratio: 2 / 1;
+    }
+
+    .no-encontrada__texto {
+      grid-row: 2;
+    }
   }
 </style>
