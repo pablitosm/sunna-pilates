@@ -2,12 +2,14 @@
 """
 Panel de administración de SUNNA.
 
-Sirve el panel en /panel (con su propio inicio de sesión de administrador) y
-recibe los registros del formulario de la web en POST /api/registro.
+Sirve el panel en /panel (con su propio inicio de sesión de administrador),
+recibe los registros del formulario de la web en POST /api/registro y los eventos
+de la analítica propia (sin cookies) en POST /api/evento.
 Los datos viven en PostgreSQL (esquema en panel.sql).
 
 Apartados:
   /panel             Resumen: cifras y últimos registros.
+  /panel/analitica   Analítica de la web: visitas, clics, apartados vistos, fuentes y embudo.
   /panel/registros   Quién se ha registrado; búsqueda, CSV y borrado.
   /panel/usuarios    Administradores: crear, cambiar contraseña, borrar.
 
@@ -54,8 +56,17 @@ IDIOMAS = ("es", "en", "de", "fr")
 VENTANA = 15 * 60
 MAX_FALLOS = 10
 MAX_REGISTROS = 20
+MAX_EVENTOS = 600
 fallos = {}
 envios = {}
+eventos = {}
+
+# Analítica: tipos de evento que manda la web y navegadores que no son personas
+TIPOS_EVENTO = ("vista", "clic", "seccion", "salida")
+BOTS = re.compile(r"bot|crawl|spider|slurp|lighthouse|headless|preview|facebookexternalhit|whatsapp|curl|python|wget", re.I)
+ID_VISTA = re.compile(r"^[a-z0-9]{6,24}$")
+PAGINA = re.compile(r"^[a-z-]{0,30}$")
+ZONA_HORARIA = "Atlantic/Canary"
 
 
 # ─── Base de datos ──────────────────────────────────────────────
@@ -222,6 +233,162 @@ EMAIL = re.compile(r"^[^@\s]+@[^@\s]+\.[^@\s]+$")
 USUARIO = re.compile(r"^[a-zA-Z0-9._-]{3,40}$")
 
 
+# ─── Analítica ──────────────────────────────────────────────────
+
+def dispositivo_de(agente):
+    if re.search(r"iPad|Tablet|PlayBook|Silk", agente) or (re.search(r"Android", agente) and not re.search(r"Mobile", agente)):
+        return "tableta"
+    if re.search(r"Mobi|iPhone|iPod|Android", agente):
+        return "movil"
+    return "escritorio"
+
+
+# De dónde llega la visita: el dominio de procedencia o el utm_source, con nombres conocidos
+FUENTES = (
+    (r"(^|\.)google\.", "Google"), (r"instagram", "Instagram"), (r"(^|\.)(facebook|fb)\.|^l\.facebook", "Facebook"),
+    (r"(^|\.)(t\.co|twitter\.com|x\.com)$", "X"), (r"whatsapp|^wa\.me", "WhatsApp"), (r"tiktok", "TikTok"),
+    (r"(^|\.)bing\.", "Bing"), (r"duckduckgo", "DuckDuckGo"), (r"(^|\.)yahoo\.", "Yahoo"),
+    (r"maps\.app|google\.[a-z.]+/maps", "Google Maps"), (r"linkedin|lnkd", "LinkedIn"),
+)
+
+
+def fuente_de(texto):
+    texto = (texto or "").strip().lower()[:120]
+    if not texto:
+        return "Directo"
+    if texto.startswith("www."):
+        texto = texto[4:]
+    for patron, nombre in FUENTES:
+        if re.search(patron, texto):
+            return nombre
+    return texto
+
+
+def huella(ip, agente):
+    """Visitante anónimo: cambia cada día y no permite recuperar la IP."""
+    dia = datetime.now(timezone.utc).strftime("%Y-%m-%d")
+    return firma("visitante:{}:{}:{}".format(dia, ip, agente))[:16]
+
+
+def recortar(valor, largo):
+    return re.sub(r"\s+", " ", str(valor or "")).strip()[:largo]
+
+
+def entero(valor, minimo, maximo):
+    try:
+        return max(minimo, min(maximo, int(valor)))
+    except (TypeError, ValueError):
+        return None
+
+
+def numero(n):
+    return "{:,}".format(int(n or 0)).replace(",", ".")
+
+
+def duracion(segundos):
+    if not segundos:
+        return "0 s"
+    segundos = int(round(segundos))
+    return "{}m {:02d}s".format(segundos // 60, segundos % 60) if segundos >= 60 else "{} s".format(segundos)
+
+
+def escala(maximo):
+    """Techo «redondo» para el eje del gráfico (1, 2, 5, 10, 20, 50…)."""
+    maximo = max(int(maximo or 0), 4)
+    paso = 1
+    while True:
+        for m in (1, 2, 5):
+            if paso * m * 4 >= maximo:
+                return paso * m * 4
+        paso *= 10
+
+
+def grafico_dias(serie):
+    """Visitantes (área) y páginas vistas (línea) por día, en SVG sin librerías."""
+    ancho, alto, izq, abajo, arriba, der = 760, 230, 40, 28, 14, 10
+    plano_a, plano_h = ancho - izq - der, alto - arriba - abajo
+    techo = escala(max([f[2] for f in serie] + [0]))
+    n = len(serie)
+    paso = plano_a / max(n - 1, 1)
+
+    def x(i):
+        return izq + i * paso
+
+    def y(v):
+        return arriba + plano_h - plano_h * v / techo
+
+    rejilla = ""
+    for k in range(5):
+        valor = techo * k // 4
+        rejilla += ('<line x1="{0}" x2="{1}" y1="{2:.1f}" y2="{2:.1f}" class="g-rejilla"/>'
+                    '<text x="{3}" y="{4:.1f}" class="g-eje" text-anchor="end">{5}</text>').format(
+            izq, ancho - der, y(valor), izq - 8, y(valor) + 4, numero(valor))
+    puntos_vis = " ".join("{:.1f},{:.1f}".format(x(i), y(f[1])) for i, f in enumerate(serie))
+    puntos_vistas = " ".join("{:.1f},{:.1f}".format(x(i), y(f[2])) for i, f in enumerate(serie))
+    area = "M{:.1f},{:.1f} L{} L{:.1f},{:.1f} Z".format(x(0), y(0), puntos_vis, x(n - 1), y(0))
+    cada = max(1, int(round(n / 7)))
+    etiquetas = "".join(
+        '<text x="{:.1f}" y="{}" class="g-eje" text-anchor="middle">{}</text>'.format(x(i), alto - 8, f[0].strftime("%d/%m"))
+        for i, f in enumerate(serie) if i % cada == 0 or i == n - 1 and n - 1 - (i // cada) * cada > cada // 2
+    )
+    puntos = "" if n > 31 else "".join(
+        '<circle cx="{:.1f}" cy="{:.1f}" r="3" class="g-punto"/>'.format(x(i), y(f[1])) for i, f in enumerate(serie))
+    zonas = "".join(
+        '<rect x="{:.1f}" y="{}" width="{:.1f}" height="{}" class="g-zona"><title>{}: {} {} · {} {}</title></rect>'.format(
+            x(i) - paso / 2, arriba, paso, plano_h, f[0].strftime("%d/%m/%Y"),
+            numero(f[1]), "visitante" if f[1] == 1 else "visitantes", numero(f[2]), "vista" if f[2] == 1 else "vistas")
+        for i, f in enumerate(serie))
+    return ('<svg class="grafico" viewBox="0 0 {} {}" role="img" aria-label="Visitantes y páginas vistas por día">'
+            '{}<path d="{}" class="g-area"/><polyline points="{}" class="g-linea"/>'
+            '<polyline points="{}" class="g-linea g-linea--vistas"/>{}{}{}</svg>').format(
+        ancho, alto, rejilla, area, puntos_vis, puntos_vistas, puntos, etiquetas, zonas)
+
+
+def lista_barras(filas, vacio="Sin datos en este periodo."):
+    """Filas (texto, detalle, valor, valor_mostrado, marca) como barras horizontales, al estilo de Vercel."""
+    if not filas:
+        return '<p class="vacio vacio--corto">{}</p>'.format(e(vacio))
+    maximo = max(f[2] for f in filas) or 1
+    items = ""
+    for texto, detalle, valor, mostrado, marca in filas:
+        items += ('<li class="barra"><span class="barra__relleno" style="width:{:.1f}%"></span>'
+                  '<span class="barra__texto"><span class="barra__nombre">{}</span>{}{}</span>'
+                  '<span class="barra__valor">{}</span></li>').format(
+            100 * valor / maximo, e(texto), '<span class="marca-reserva">Reserva</span>' if marca else "",
+            '<span class="barra__detalle">{}</span>'.format(e(detalle)) if detalle else "", e(mostrado))
+    return '<ul class="barras" role="list">{}</ul>'.format(items)
+
+
+def cifra_comparada(titulo, valor, anterior, mostrado, destacada=False, nota=""):
+    cambio = ""
+    if anterior:
+        dif = (valor - anterior) * 100.0 / anterior
+        if abs(dif) >= 0.5:
+            cambio = '<span class="cambio cambio--{}">{}{:.0f}%</span>'.format("sube" if dif > 0 else "baja", "+" if dif > 0 else "", dif)
+    elif valor:
+        cambio = '<span class="cambio cambio--sube">nuevo</span>'
+    return ('<div class="cifra{}"><p class="etiqueta">{}</p><strong>{}{}</strong>{}</div>').format(
+        " cifra--destacada" if destacada else "", e(titulo), e(mostrado), cambio,
+        '<p class="cifra__nota">{}</p>'.format(e(nota)) if nota else "")
+
+
+# Nombres legibles de los apartados (id del <section> en la web)
+APARTADOS = {
+    "portada": "Portada", "por-que": "Por qué SUNNA", "como-funciona": "Cómo funciona", "explora": "Descubre SUNNA",
+    "estudio": "El estudio", "faq": "Preguntas frecuentes", "dudas": "¿Y si…?", "cierre": "Cierre",
+    "precios": "Precios", "fundadores": "Socios fundadores", "incluye": "Qué hacemos en 45 min", "prueba": "Primera sesión",
+    "clases": "Las clases", "recovery": "Reformer, sauna y luz roja",
+}
+PAGINAS = {
+    "inicio": "Inicio", "precios": "Precios", "primera-sesion": "Primera sesión", "reformer": "Reformer",
+    "sauna": "Sauna", "luz-roja": "Luz roja", "legal": "Legal",
+}
+
+
+def nombre_apartado(clave):
+    return APARTADOS.get(clave) or clave.replace("-", " ").capitalize()
+
+
 # ─── Páginas ────────────────────────────────────────────────────
 
 ESTILOS = """
@@ -313,6 +480,49 @@ background:var(--verde-claro);color:var(--verde)}
 .acceso form{display:grid;gap:1rem}
 .acceso label{display:grid;gap:.375rem;font-size:.8125rem;font-weight:500}
 .acceso .boton{margin-top:.25rem;width:100%}
+.periodo{display:inline-flex;padding:2px;border:1px solid var(--borde-fuerte);border-radius:var(--r);background:var(--blanco)}
+.periodo a{padding:.3125rem .75rem;border-radius:4px;color:var(--suave);font-weight:500;text-decoration:none;white-space:nowrap}
+.periodo a[aria-current=true]{background:var(--naranja-claro);color:var(--texto)}
+.cifra strong{display:flex;align-items:baseline;gap:.5rem}
+.cambio{font-size:.75rem;font-weight:600;padding:.0625rem .375rem;border-radius:4px}
+.cambio--sube{background:var(--verde-claro);color:var(--verde)}
+.cambio--baja{background:var(--rojo-claro);color:var(--rojo)}
+.cifra__nota{margin-top:.25rem;font-size:.75rem;color:var(--suave)}
+.rejilla{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:1.5rem;margin-top:1.5rem;align-items:start}
+.rejilla--tres{grid-template-columns:repeat(3,minmax(0,1fr))}
+.grafico-envoltura{overflow-x:auto}
+.rejilla .tarjeta+.tarjeta{margin-top:0}
+.leyenda{display:flex;gap:1rem;font-size:.8125rem;color:var(--suave)}
+.leyenda span{display:inline-flex;align-items:center;gap:.375rem}
+.leyenda i{display:inline-block;width:.75rem;height:.1875rem;border-radius:2px;background:var(--naranja)}
+.leyenda i.vistas{background:none;border-top:2px dashed #98a2b3;height:0}
+.grafico{display:block;width:100%;height:auto}
+.g-rejilla{stroke:var(--borde);stroke-width:1}
+.g-eje{font-size:11px;fill:var(--suave);font-variant-numeric:tabular-nums}
+.g-area{fill:rgb(255 130 53/.14)}
+.g-linea{fill:none;stroke:var(--naranja);stroke-width:2;stroke-linejoin:round;stroke-linecap:round}
+.g-linea--vistas{stroke:#98a2b3;stroke-width:1.5;stroke-dasharray:4 4}
+.g-punto{fill:var(--blanco);stroke:var(--naranja);stroke-width:2}
+.g-zona{fill:transparent}
+.g-zona:hover{fill:rgb(29 41 57/.04)}
+.barras{list-style:none;padding:.5rem .75rem .75rem;display:grid;gap:2px}
+.barra{position:relative;display:flex;align-items:center;justify-content:space-between;gap:1rem;min-height:2.25rem;
+padding:.375rem .625rem;border-radius:var(--r);overflow:hidden}
+.barra__relleno{position:absolute;inset:0 auto 0 0;background:var(--naranja-claro);border-radius:var(--r)}
+.barra__texto,.barra__valor{position:relative}
+.barra__texto{display:flex;flex-wrap:wrap;align-items:baseline;gap:.25rem .5rem;min-width:0}
+.barra__nombre{overflow-wrap:anywhere}
+.barra__detalle{font-size:.75rem;color:var(--suave)}
+.barra__valor{font-weight:500;font-variant-numeric:tabular-nums;white-space:nowrap}
+.marca-reserva{font-size:.6875rem;font-weight:600;padding:0 .375rem;border-radius:4px;background:var(--naranja);color:var(--texto)}
+.vacio--corto{padding:1.5rem 1rem}
+.embudo{display:grid;gap:1rem;padding:1.25rem}
+.embudo__paso{display:grid;gap:.375rem}
+.embudo__fila{display:flex;justify-content:space-between;gap:1rem;font-size:.8125rem}
+.embudo__fila strong{font-variant-numeric:tabular-nums}
+.embudo__pista{height:.625rem;border-radius:999px;background:var(--fondo);overflow:hidden}
+.embudo__pista span{display:block;height:100%;border-radius:999px;background:var(--naranja)}
+.nota-privacidad{margin-top:1.5rem;font-size:.75rem;color:var(--suave)}
 @media (max-width:52rem){.marco{grid-template-columns:minmax(0,1fr)}
 .lateral{position:sticky;top:0;z-index:5;height:auto;display:grid;grid-template-columns:1fr auto;border-right:0;
 border-bottom:1px solid var(--borde)}
@@ -331,6 +541,10 @@ border-top:1px solid var(--borde)}
 .tarjeta__cabeza,.tarjeta__cuerpo{padding:1rem}
 .tarjeta__cabeza.herramientas input{max-width:none!important}
 .campos{grid-template-columns:1fr}
+.rejilla,.rejilla--tres{grid-template-columns:minmax(0,1fr);gap:1rem;margin-top:1rem}
+.grafico{min-width:36rem}
+.cabeza .periodo{width:100%}.periodo a{flex:1;text-align:center}
+.nav{grid-template-columns:repeat(4,1fr)}
 /* Tablas como fichas: una por registro, con la etiqueta de cada dato */
 .tabla-envoltura{overflow:visible}
 table,tbody,tr,td{display:block}
@@ -350,6 +564,7 @@ td a{overflow-wrap:anywhere}}
 
 ICONOS = {
     "resumen": '<path d="M3 13h6V3H3zM11 17h6V9h-6zM3 17h6v-2H3zM11 7h6V3h-6z"/>',
+    "analitica": '<path d="M3 16.5h14M5.5 13.5V9.5M9 13.5V5M12.5 13.5v-3.5M16 13.5V7"/>',
     "registros": '<path d="M4 3h12v14H4zM7 7h6M7 10h6M7 13h4"/>',
     "usuarios": '<circle cx="10" cy="7" r="3.25"/><path d="M3.5 17a6.5 6.5 0 0 1 13 0"/>',
 }
@@ -375,6 +590,7 @@ def marco(actual, admin, titulo, sub, contenido, acciones=""):
         '<a href="{}"{}>{}{}</a>'.format(ruta, ' aria-current="page"' if clave == actual else "", icono(clave), texto)
         for clave, ruta, texto in (
             ("resumen", "/panel", "Resumen"),
+            ("analitica", "/panel/analitica", "Analítica"),
             ("registros", "/panel/registros", "Registros"),
             ("usuarios", "/panel/usuarios", "Usuarios"),
         )
@@ -489,6 +705,11 @@ class Panel(BaseHTTPRequestHandler):
             self.send_header("Set-Cookie", cookie)
         self.end_headers()
 
+    def sin_contenido(self):
+        self.send_response(204)
+        self.send_header("Cache-Control", "no-store")
+        self.end_headers()
+
     def json(self, codigo, datos):
         self.responder(codigo, json.dumps(datos), "application/json; charset=utf-8")
 
@@ -539,6 +760,8 @@ class Panel(BaseHTTPRequestHandler):
 
             if ruta == "/panel":
                 return self.responder(200, self.vista_resumen(admin))
+            if ruta == "/panel/analitica":
+                return self.responder(200, self.vista_analitica(admin, consulta))
             if ruta == "/panel/registros":
                 return self.responder(200, self.vista_registros(admin, consulta, csrf))
             if ruta == "/panel/registros.csv":
@@ -555,6 +778,8 @@ class Panel(BaseHTTPRequestHandler):
         try:
             if ruta == "/api/registro":
                 return self.registrar()
+            if ruta == "/api/evento":
+                return self.evento()
             if ruta == "/panel/entrar":
                 return self.entrar()
 
@@ -580,6 +805,8 @@ class Panel(BaseHTTPRequestHandler):
             self.log_message("error: %r", error)
             if ruta == "/api/registro":
                 return self.json(500, {"ok": False})
+            if ruta == "/api/evento":
+                return self.sin_contenido()
             return self.responder(500, "Error del servidor", "text/plain; charset=utf-8")
 
     # Acciones
@@ -631,6 +858,46 @@ class Panel(BaseHTTPRequestHandler):
         )
         return self.json(200, {"ok": True})
 
+    def evento(self):
+        """Analítica de la web (sin cookies). Siempre responde 204: la web no espera nada."""
+        ip = ip_cliente(self)
+        agente = self.headers.get("User-Agent") or ""
+        if not agente or BOTS.search(agente) or limitar(eventos, ip, MAX_EVENTOS):
+            return self.sin_contenido()
+        try:
+            datos = json.loads(self.leer_cuerpo(2048) or "{}")
+        except ValueError:
+            return self.sin_contenido()
+        if not isinstance(datos, dict):
+            return self.sin_contenido()
+        tipo = datos.get("t")
+        ruta = recortar(datos.get("ruta"), 200).split("?")[0].split("#")[0]
+        vista = str(datos.get("v") or "")
+        if tipo not in TIPOS_EVENTO or not ruta.startswith("/") or not ID_VISTA.match(vista):
+            return self.sin_contenido()
+        anotar(eventos, ip)
+        pagina = str(datos.get("pagina") or "")
+        idioma = str(datos.get("idioma") or "es")
+        self.bd.ejecutar(
+            "INSERT INTO eventos (tipo, vista, visitante, ruta, pagina, idioma, dispositivo, fuente, nombre, etiqueta, "
+            "zona, objetivo, segundos, profundidad) VALUES (%s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s)",
+            (
+                tipo, vista, huella(ip, agente), ruta,
+                pagina if PAGINA.match(pagina) else "",
+                idioma if idioma in IDIOMAS else "es",
+                dispositivo_de(agente),
+                # La fuente solo en la página de entrada; las de dentro de la web van vacías
+                fuente_de(datos.get("fuente")) if tipo == "vista" and datos.get("interna") is not True else "",
+                recortar(datos.get("nombre"), 120),
+                recortar(datos.get("etiqueta"), 80),
+                recortar(datos.get("zona"), 40),
+                tipo == "clic" and datos.get("objetivo") is True,
+                entero(datos.get("segundos"), 0, 7200) if tipo == "salida" else None,
+                entero(datos.get("profundidad"), 0, 100) if tipo == "salida" else None,
+            ),
+        )
+        return self.sin_contenido()
+
     def crear_admin(self, campos):
         usuario = campos.get("usuario", "").strip()
         password = campos.get("password", "")
@@ -675,6 +942,8 @@ class Panel(BaseHTTPRequestHandler):
             "count(*) FILTER (WHERE creado > date_trunc('day', now())) FROM registros"
         )
         admins = self.bd.uno("SELECT count(*) FROM administradores")[0]
+        visitantes = self.bd.uno(
+            "SELECT count(DISTINCT visitante) FROM eventos WHERE tipo = 'vista' AND creado > now() - interval '7 days'")[0]
         por_idioma = dict(self.bd.todos("SELECT idioma, count(*) FROM registros GROUP BY idioma"))
         ultimos = self.bd.todos(
             "SELECT id, nombre, email, telefono, idioma, creado FROM registros ORDER BY creado DESC LIMIT 6"
@@ -684,11 +953,136 @@ class Panel(BaseHTTPRequestHandler):
 <div class="cifra cifra--destacada"><p class="etiqueta">Registros totales</p><strong>{}</strong></div>
 <div class="cifra"><p class="etiqueta">Últimos 7 días</p><strong>{}</strong></div>
 <div class="cifra"><p class="etiqueta">Hoy</p><strong>{}</strong></div>
-<div class="cifra"><p class="etiqueta">Administradores</p><strong>{}</strong></div></div>""".format(total, semana, hoy, admins)
+<div class="cifra"><p class="etiqueta">Visitantes · 7 días</p><strong>{}</strong><p class="cifra__nota"><a href="/panel/analitica">Ver analítica</a></p></div>
+<div class="cifra"><p class="etiqueta">Administradores</p><strong>{}</strong></div></div>""".format(total, semana, hoy, numero(visitantes), admins)
         ultimos_html = """<section class="tarjeta"><div class="tarjeta__cabeza"><h2>Últimos registros</h2>
 <a class="boton boton--claro boton--pequeno" href="/panel/registros">Ver todos</a></div>{}<div class="tarjeta__pie">Por idioma: {}</div></section>""".format(
             tabla_registros(ultimos), idiomas)
         return marco("resumen", admin, "Resumen", "Registros de la lista de espera y socios fundadores.", cifras + ultimos_html)
+
+    def vista_analitica(self, admin, consulta):
+        dias = (consulta.get("dias") or ["30"])[0]
+        dias = int(dias) if dias in ("7", "30", "90") else 30
+        # Periodo en hora de Canarias: desde el principio del día de hace (dias - 1) días hasta ahora,
+        # y el periodo anterior de la misma duración para comparar
+        desde, antes, ahora = self.bd.uno(
+            "SELECT d, d - %s * interval '1 day', now() FROM (SELECT ((now() AT TIME ZONE %s)::date - %s)::timestamp "
+            "AT TIME ZONE %s AS d) t", (dias, ZONA_HORARIA, dias - 1, ZONA_HORARIA))
+
+        def cifras_de(inicio, fin):
+            v = self.bd.uno(
+                "SELECT count(DISTINCT visitante) FILTER (WHERE tipo = 'vista'), count(*) FILTER (WHERE tipo = 'vista'), "
+                "count(*) FILTER (WHERE tipo = 'clic' AND objetivo), "
+                "count(DISTINCT visitante) FILTER (WHERE tipo = 'clic' AND objetivo) "
+                "FROM eventos WHERE creado >= %s AND creado < %s", (inicio, fin))
+            t = self.bd.uno(
+                "SELECT avg(s), avg(p) FROM (SELECT max(segundos) s, max(profundidad) p FROM eventos "
+                "WHERE tipo = 'salida' AND creado >= %s AND creado < %s GROUP BY vista) x", (inicio, fin))
+            return {"visitantes": v[0], "vistas": v[1], "reservas": v[2], "convertidos": v[3],
+                    "conversion": 100.0 * v[3] / v[0] if v[0] else 0,
+                    "tiempo": float(t[0] or 0), "profundidad": float(t[1] or 0)}
+
+        hoy = cifras_de(desde, ahora + timedelta(seconds=1))
+        prev = cifras_de(antes, desde)
+        cifras = '<div class="cifras">{}{}{}{}{}</div>'.format(
+            cifra_comparada("Visitantes", hoy["visitantes"], prev["visitantes"], numero(hoy["visitantes"]), True),
+            cifra_comparada("Páginas vistas", hoy["vistas"], prev["vistas"], numero(hoy["vistas"]),
+                            nota="{:.1f} por visitante".format(hoy["vistas"] / hoy["visitantes"]) if hoy["visitantes"] else ""),
+            cifra_comparada("Clics para reservar", hoy["reservas"], prev["reservas"], numero(hoy["reservas"]),
+                            nota="Botones de reserva, WhatsApp y apps"),
+            cifra_comparada("Conversión", hoy["conversion"], prev["conversion"], "{:.1f}%".format(hoy["conversion"]),
+                            nota="Visitantes que pulsan para reservar"),
+            cifra_comparada("Tiempo medio", hoy["tiempo"], prev["tiempo"], duracion(hoy["tiempo"]),
+                            nota="Recorren el {:.0f}% de la página".format(hoy["profundidad"]) if hoy["profundidad"] else ""),
+        )
+
+        serie = self.bd.todos(
+            "SELECT d::date, coalesce(v.visitantes, 0), coalesce(v.vistas, 0) "
+            "FROM generate_series(((now() AT TIME ZONE %s)::date - %s)::timestamp, (now() AT TIME ZONE %s)::date::timestamp, "
+            "interval '1 day') d LEFT JOIN (SELECT (creado AT TIME ZONE %s)::date dia, count(DISTINCT visitante) visitantes, "
+            "count(*) vistas FROM eventos WHERE tipo = 'vista' AND creado >= %s GROUP BY 1) v ON v.dia = d::date ORDER BY 1",
+            (ZONA_HORARIA, dias - 1, ZONA_HORARIA, ZONA_HORARIA, desde))
+        grafico = ('<section class="tarjeta"><div class="tarjeta__cabeza"><h2>Visitas por día</h2>'
+                   '<div class="leyenda"><span><i></i>Visitantes</span><span><i class="vistas"></i>Páginas vistas</span></div></div>'
+                   '<div class="tarjeta__cuerpo grafico-envoltura">{}</div></section>').format(
+            grafico_dias(serie) if hoy["vistas"] else
+            '<p class="vacio">Aún no hay visitas en este periodo. La web empieza a medir en cuanto se publica con la analítica.</p>')
+
+        def tarjeta(titulo, cuerpo, pie=""):
+            return '<section class="tarjeta"><div class="tarjeta__cabeza"><h2>{}</h2></div>{}{}</section>'.format(
+                e(titulo), cuerpo, '<div class="tarjeta__pie">{}</div>'.format(e(pie)) if pie else "")
+
+        paginas = self.bd.todos(
+            "SELECT ruta, max(pagina), count(DISTINCT visitante), count(*) FROM eventos "
+            "WHERE tipo = 'vista' AND creado >= %s GROUP BY ruta ORDER BY 3 DESC, 4 DESC LIMIT 10", (desde,))
+        paginas_html = lista_barras([
+            (r, PAGINAS.get(pg, ""), vis, "{} · {} vistas".format(numero(vis), numero(vistas)), False)
+            for r, pg, vis, vistas in paginas], "Aún no hay páginas vistas.")
+
+        clics = self.bd.todos(
+            "SELECT nombre, mode() WITHIN GROUP (ORDER BY etiqueta), mode() WITHIN GROUP (ORDER BY zona), "
+            "count(*), bool_or(objetivo) FROM eventos "
+            "WHERE tipo = 'clic' AND creado >= %s GROUP BY nombre ORDER BY 4 DESC LIMIT 12", (desde,))
+        filas_clics = []
+        for nombre, etiqueta, zona, n, objetivo in clics:
+            detalle = [x for x in (nombre if etiqueta and etiqueta != nombre else "", nombre_apartado(zona) if zona else "") if x]
+            filas_clics.append((etiqueta or nombre, " · ".join(detalle), n, numero(n), objetivo))
+        clics_html = lista_barras(filas_clics, "Aún no se ha pulsado ningún botón.")
+
+        vistas_pagina = dict(self.bd.todos(
+            "SELECT pagina, count(DISTINCT vista) FROM eventos WHERE tipo = 'vista' AND creado >= %s GROUP BY 1", (desde,)))
+        apartados = self.bd.todos(
+            "SELECT pagina, nombre, count(DISTINCT vista) FROM eventos WHERE tipo = 'seccion' AND creado >= %s "
+            "GROUP BY 1, 2 ORDER BY 3 DESC LIMIT 14", (desde,))
+        filas_apartados = []
+        for pg, nombre, n in apartados:
+            alcance = min(100.0, 100.0 * n / (vistas_pagina.get(pg) or n))
+            filas_apartados.append((nombre_apartado(nombre), PAGINAS.get(pg, pg), alcance, "{:.0f}%".format(alcance), False))
+        filas_apartados.sort(key=lambda f: -f[2])
+        apartados_html = lista_barras(filas_apartados, "Aún no hay apartados vistos.")
+
+        def reparto(columna, nombres=None, filtro=""):
+            filas = self.bd.todos(
+                "SELECT {0}, count(DISTINCT visitante) FROM eventos WHERE tipo = 'vista' AND creado >= %s {1} "
+                "GROUP BY 1 ORDER BY 2 DESC LIMIT 8".format(columna, filtro), (desde,))
+            total = sum(f[1] for f in filas) or 1
+            return lista_barras([
+                ((nombres or {}).get(k, k) or "—", "", n, "{} · {:.0f}%".format(numero(n), 100.0 * n / total), False)
+                for k, n in filas])
+
+        fuentes_html = reparto("fuente", filtro="AND fuente <> ''")
+        dispositivos_html = reparto("dispositivo", {"movil": "Móvil", "tableta": "Tableta", "escritorio": "Ordenador"})
+        idiomas_html = reparto("idioma", {"es": "Castellano", "en": "English", "de": "Deutsch", "fr": "Français"})
+
+        interes = self.bd.uno(
+            "SELECT count(DISTINCT visitante) FROM eventos WHERE tipo = 'vista' AND creado >= %s "
+            "AND pagina IN ('precios', 'primera-sesion')", (desde,))[0]
+        pasos = (("Visitan la web", hoy["visitantes"]), ("Ven precios o la primera sesión", interes),
+                 ("Pulsan para reservar", hoy["convertidos"]))
+        base = hoy["visitantes"] or 1
+        embudo = '<div class="embudo">{}</div>'.format("".join(
+            '<div class="embudo__paso"><div class="embudo__fila"><span>{}</span><strong>{} · {:.0f}%</strong></div>'
+            '<div class="embudo__pista"><span style="width:{:.1f}%"></span></div></div>'.format(
+                e(t), numero(n), 100.0 * n / base, 100.0 * n / base) for t, n in pasos))
+
+        periodo = '<nav class="periodo" aria-label="Periodo">{}</nav>'.format("".join(
+            '<a href="/panel/analitica?dias={0}"{1}>{0} días</a>'.format(d, ' aria-current="true"' if d == dias else "")
+            for d in (7, 30, 90)))
+        contenido = (
+            cifras + grafico
+            + '<div class="rejilla">{}{}</div>'.format(
+                tarjeta("Páginas más vistas", paginas_html, "Visitantes únicos · páginas vistas"),
+                tarjeta("Botones y enlaces más pulsados", clics_html, "Clics en el periodo"))
+            + '<div class="rejilla">{}{}</div>'.format(
+                tarjeta("Apartados vistos", apartados_html, "Porcentaje de visitas a esa página que llegan a verlo"),
+                tarjeta("Embudo de reserva", embudo, "Sobre los visitantes del periodo"))
+            + '<div class="rejilla rejilla--tres">{}{}{}</div>'.format(
+                tarjeta("De dónde llegan", fuentes_html, "Solo la página por la que entran"),
+                tarjeta("Dispositivos", dispositivos_html), tarjeta("Idiomas", idiomas_html))
+            + '<p class="nota-privacidad">Analítica propia y sin cookies: no se guarda la IP y cada visitante es anónimo '
+              'y cambia cada día. No cuenta a quien pide no ser seguido (Do Not Track / GPC).</p>')
+        sub = "Últimos {} días, comparado con los {} anteriores.".format(dias, dias)
+        return marco("analitica", admin, "Analítica", sub, contenido, periodo)
 
     def vista_registros(self, admin, consulta, csrf):
         q = (consulta.get("q") or [""])[0].strip()[:100]

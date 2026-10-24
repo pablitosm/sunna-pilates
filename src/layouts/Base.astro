@@ -27,6 +27,8 @@ interface Props {
 const { titulo, descripcion, lang = 'es', indexar = true, alternos = false, pagina, sinBarraMovil = false } = Astro.props;
 const { ajustes, home } = await getSite(lang);
 
+// Página para la analítica: igual en los 4 idiomas (inicio, precios, sauna…); legales y 404 son «otra»
+const paginaAnalitica = pagina ?? (alternos ? 'inicio' : 'otra');
 const title = titulo ? `${sinAcento(titulo)} · SUNNA` : home.seo.titulo;
 const description = descripcion ?? home.seo.descripcion;
 const canonical = Astro.site ? new URL(Astro.url.pathname, Astro.site).href : undefined;
@@ -56,7 +58,7 @@ const negocio = {
 ---
 
 <!doctype html>
-<html lang={lang} data-paleta={ajustes.paleta}>
+<html lang={lang} data-paleta={ajustes.paleta} data-pagina={paginaAnalitica}>
   <head>
     <meta charset="utf-8" />
     <link rel="preload" href={fuenteTexto} as="font" type="font/woff2" crossorigin />
@@ -144,6 +146,112 @@ const negocio = {
           { rootMargin: '0px 0px -12% 0px' },
         );
         acentos.forEach((a) => io.observe(a));
+      }
+    </script>
+    <script>
+      // Analítica propia y sin cookies (panel → Analítica): vistas, clics, apartados vistos, tiempo y
+      // recorrido. Va a /api/evento; no guarda nada en el navegador. Solo en la web publicada, y nunca
+      // a quien pide no ser seguido (Do Not Track / Global Privacy Control).
+      const privado = navigator.doNotTrack === '1' || (navigator as Navigator & { globalPrivacyControl?: boolean }).globalPrivacyControl;
+      if (!import.meta.env.DEV && !privado) {
+        const html = document.documentElement;
+        const vista = Math.random().toString(36).slice(2, 12) + Date.now().toString(36).slice(-4);
+        const base = { v: vista, ruta: location.pathname, pagina: html.dataset.pagina ?? '', idioma: html.lang };
+        const enviar = (datos: Record<string, unknown>) => {
+          const cuerpo = JSON.stringify({ ...base, ...datos });
+          if (!navigator.sendBeacon?.('/api/evento', new Blob([cuerpo], { type: 'text/plain' }))) {
+            fetch('/api/evento', { method: 'POST', body: cuerpo, keepalive: true }).catch(() => {});
+          }
+        };
+
+        // La vista y de dónde llega (utm_source o el dominio que la trae). Si viene de otra
+        // página de la propia web no es una entrada: no cuenta como fuente.
+        const utm = new URLSearchParams(location.search).get('utm_source');
+        let fuente = utm ?? '';
+        let interna = false;
+        if (!fuente && document.referrer) {
+          try {
+            const desde = new URL(document.referrer).hostname;
+            if (desde === location.hostname) interna = true;
+            else fuente = desde;
+          } catch {}
+        }
+        enviar({ t: 'vista', fuente, interna });
+
+        // Clics en enlaces y botones: a dónde llevan, qué ponen y en qué parte de la página están
+        const externos: [RegExp, string][] = [
+          [/(^|\.)wa\.me$|whatsapp/, 'whatsapp'],
+          [/instagram\.com$/, 'instagram'],
+          [/google\.[a-z.]+$|goo\.gl$|maps\.app/, 'mapa'],
+          [/apps\.apple\.com$/, 'app-store'],
+          [/play\.google\.com$/, 'google-play'],
+          [/bsport/, 'bsport'],
+        ];
+        const destino = (el: Element) => {
+          const propio = (el as HTMLElement).dataset.evento;
+          if (propio) return propio;
+          if (!(el instanceof HTMLAnchorElement)) return (el.closest('details')?.querySelector('summary') === el && 'desplegable') || 'boton';
+          if (el.protocol === 'mailto:') return 'email';
+          if (el.protocol === 'tel:') return 'telefono';
+          if (el.hostname && el.hostname !== location.hostname) {
+            return externos.find(([r]) => r.test(el.hostname))?.[1] ?? el.hostname.replace(/^www\./, '');
+          }
+          return el.pathname + el.hash;
+        };
+        document.addEventListener(
+          'click',
+          (e) => {
+            const el = (e.target as Element | null)?.closest('a[href], button, summary');
+            if (!el) return;
+            const nombre = destino(el);
+            // El texto tal y como se ve (innerText separa título y descripción de las opciones del menú)
+            const etiqueta = (el.getAttribute('aria-label') || (el as HTMLElement).innerText || '').replace(/\s+/g, ' ').trim().slice(0, 80);
+            const zona = el.closest('header') ? 'cabecera' : el.closest('footer') ? 'pie' : el.closest('section[id], aside[id]')?.id ?? '';
+            // Botones de reservar: los principales (sol), WhatsApp, las apps y bsport
+            const objetivo =
+              el.matches('.cta, .boton-sol, [data-objetivo]') || ['whatsapp', 'app-store', 'google-play', 'bsport'].includes(nombre);
+            enviar({ t: 'clic', nombre, etiqueta, zona, objetivo });
+          },
+          { capture: true },
+        );
+
+        // Apartados que llegan a verse, una vez por visita: cuando ocupan media pantalla
+        // (o el 40 % de su alto si son más bajos; los muy altos nunca llegan a ese porcentaje)
+        const vistos = new Set<string>();
+        const apartados = new IntersectionObserver(
+          (entradas) => {
+            for (const en of entradas) {
+              const id = en.target.id;
+              const basta = Math.min(en.boundingClientRect.height * 0.4, innerHeight * 0.5);
+              if (!en.isIntersecting || vistos.has(id) || en.intersectionRect.height < basta) continue;
+              vistos.add(id);
+              enviar({ t: 'seccion', nombre: id });
+              apartados.unobserve(en.target);
+            }
+          },
+          { threshold: [0, 0.1, 0.2, 0.3, 0.4, 0.6, 0.8, 1] },
+        );
+        document.querySelectorAll('main section[id], main aside[id]').forEach((s) => apartados.observe(s));
+
+        // Al salir o cambiar de pestaña: tiempo con la página visible y hasta dónde ha bajado
+        let visible = document.visibilityState === 'visible' ? performance.now() : 0;
+        let acumulado = 0;
+        let profundidad = 0;
+        const medir = () => {
+          const alto = document.documentElement.scrollHeight - innerHeight;
+          profundidad = Math.max(profundidad, alto > 0 ? Math.round((100 * scrollY) / alto) : 100);
+        };
+        addEventListener('scroll', medir, { passive: true });
+        medir();
+        document.addEventListener('visibilitychange', () => {
+          if (document.visibilityState === 'hidden') {
+            if (visible) acumulado += performance.now() - visible;
+            visible = 0;
+            enviar({ t: 'salida', segundos: Math.round(acumulado / 1000), profundidad });
+          } else {
+            visible = performance.now();
+          }
+        });
       }
     </script>
   </body>
