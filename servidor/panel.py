@@ -8,7 +8,7 @@ de la analítica propia (sin cookies) en POST /api/evento.
 Los datos viven en PostgreSQL (esquema en panel.sql).
 
 Apartados:
-  /panel             Resumen: cifras y últimos registros.
+  /panel             Resumen: cómo va la web esta semana (cifras, visitas y botones).
   /panel/analitica   Analítica de la web: visitas, clics, apartados vistos, fuentes y embudo.
   /panel/registros   Quién se ha registrado; búsqueda, CSV y borrado.
   /panel/usuarios    Administradores: crear, cambiar contraseña, borrar.
@@ -327,8 +327,10 @@ def grafico_dias(serie):
     puntos_vistas = " ".join("{:.1f},{:.1f}".format(x(i), y(f[2])) for i, f in enumerate(serie))
     area = "M{:.1f},{:.1f} L{} L{:.1f},{:.1f} Z".format(x(0), y(0), puntos_vis, x(n - 1), y(0))
     cada = max(1, int(round(n / 7)))
+    # La primera y la última fecha se alinean al borde para que no se corten
     etiquetas = "".join(
-        '<text x="{:.1f}" y="{}" class="g-eje" text-anchor="middle">{}</text>'.format(x(i), alto - 8, f[0].strftime("%d/%m"))
+        '<text x="{:.1f}" y="{}" class="g-eje" text-anchor="{}">{}</text>'.format(
+            x(i), alto - 8, "start" if i == 0 else "end" if i == n - 1 else "middle", f[0].strftime("%d/%m"))
         for i, f in enumerate(serie) if i % cada == 0 or i == n - 1 and n - 1 - (i // cada) * cada > cada // 2
     )
     puntos = "" if n > 31 else "".join(
@@ -370,6 +372,37 @@ def cifra_comparada(titulo, valor, anterior, mostrado, destacada=False, nota="")
     return ('<div class="cifra{}"><p class="etiqueta">{}</p><strong>{}{}</strong>{}</div>').format(
         " cifra--destacada" if destacada else "", e(titulo), e(mostrado), cambio,
         '<p class="cifra__nota">{}</p>'.format(e(nota)) if nota else "")
+
+
+def cifras_html(hoy, prev):
+    """Las cinco cifras de la analítica, comparadas con el periodo anterior."""
+    return '<div class="cifras">{}{}{}{}{}</div>'.format(
+        cifra_comparada("Visitantes", hoy["visitantes"], prev["visitantes"], numero(hoy["visitantes"]), True),
+        cifra_comparada("Páginas vistas", hoy["vistas"], prev["vistas"], numero(hoy["vistas"]),
+                        nota="{:.1f} por visitante".format(hoy["vistas"] / hoy["visitantes"]) if hoy["visitantes"] else ""),
+        cifra_comparada("Clics para reservar", hoy["reservas"], prev["reservas"], numero(hoy["reservas"]),
+                        nota="Botones de reserva, WhatsApp y apps"),
+        cifra_comparada("Conversión", hoy["conversion"], prev["conversion"], "{:.1f}%".format(hoy["conversion"]),
+                        nota="Visitantes que pulsan para reservar"),
+        cifra_comparada("Tiempo medio", hoy["tiempo"], prev["tiempo"], duracion(hoy["tiempo"]),
+                        nota="Recorren el {:.0f}% de la página".format(hoy["profundidad"]) if hoy["profundidad"] else ""),
+    )
+
+
+def tarjeta_grafico(serie, hay_datos, titulo="Visitas por día"):
+    return ('<section class="tarjeta"><div class="tarjeta__cabeza"><h2>{}</h2>'
+            '<div class="leyenda"><span><i></i>Visitantes</span><span><i class="vistas"></i>Páginas vistas</span></div></div>'
+            '<div class="tarjeta__cuerpo grafico-envoltura">{}</div></section>').format(
+        e(titulo), grafico_dias(serie) if hay_datos else
+        '<p class="vacio">Aún no hay visitas en este periodo. La web empieza a medir en cuanto se publica con la analítica.</p>')
+
+
+def filas_clics(clics):
+    filas = []
+    for nombre, etiqueta, zona, n, objetivo in clics:
+        detalle = [x for x in (nombre if etiqueta and etiqueta != nombre else "", nombre_apartado(zona) if zona else "") if x]
+        filas.append((etiqueta or nombre, " · ".join(detalle), n, numero(n), objetivo))
+    return filas
 
 
 # Nombres legibles de los apartados (id del <section> en la web)
@@ -876,6 +909,8 @@ class Panel(BaseHTTPRequestHandler):
         if tipo not in TIPOS_EVENTO or not ruta.startswith("/") or not ID_VISTA.match(vista):
             return self.sin_contenido()
         anotar(eventos, ip)
+        if secrets.randbelow(500) == 0:
+            self.bd.ejecutar("DELETE FROM eventos WHERE creado < now() - interval '13 months'")
         pagina = str(datos.get("pagina") or "")
         idioma = str(datos.get("idioma") or "es")
         self.bd.ejecutar(
@@ -934,79 +969,68 @@ class Panel(BaseHTTPRequestHandler):
         self.responder(200, "﻿" + salida.getvalue(), "text/csv; charset=utf-8",
                        {"Content-Disposition": 'attachment; filename="{}"'.format(nombre)})
 
-    # Vistas
+    # Consultas de la analítica
 
-    def vista_resumen(self, admin):
-        total, semana, hoy = self.bd.uno(
-            "SELECT count(*), count(*) FILTER (WHERE creado > now() - interval '7 days'), "
-            "count(*) FILTER (WHERE creado > date_trunc('day', now())) FROM registros"
-        )
-        admins = self.bd.uno("SELECT count(*) FROM administradores")[0]
-        visitantes = self.bd.uno(
-            "SELECT count(DISTINCT visitante) FROM eventos WHERE tipo = 'vista' AND creado > now() - interval '7 days'")[0]
-        por_idioma = dict(self.bd.todos("SELECT idioma, count(*) FROM registros GROUP BY idioma"))
-        ultimos = self.bd.todos(
-            "SELECT id, nombre, email, telefono, idioma, creado FROM registros ORDER BY creado DESC LIMIT 6"
-        )
-        idiomas = " · ".join("{} {}".format(i.upper(), por_idioma.get(i, 0)) for i in IDIOMAS)
-        cifras = """<div class="cifras">
-<div class="cifra cifra--destacada"><p class="etiqueta">Registros totales</p><strong>{}</strong></div>
-<div class="cifra"><p class="etiqueta">Últimos 7 días</p><strong>{}</strong></div>
-<div class="cifra"><p class="etiqueta">Hoy</p><strong>{}</strong></div>
-<div class="cifra"><p class="etiqueta">Visitantes · 7 días</p><strong>{}</strong><p class="cifra__nota"><a href="/panel/analitica">Ver analítica</a></p></div>
-<div class="cifra"><p class="etiqueta">Administradores</p><strong>{}</strong></div></div>""".format(total, semana, hoy, numero(visitantes), admins)
-        ultimos_html = """<section class="tarjeta"><div class="tarjeta__cabeza"><h2>Últimos registros</h2>
-<a class="boton boton--claro boton--pequeno" href="/panel/registros">Ver todos</a></div>{}<div class="tarjeta__pie">Por idioma: {}</div></section>""".format(
-            tabla_registros(ultimos), idiomas)
-        return marco("resumen", admin, "Resumen", "Registros de la lista de espera y socios fundadores.", cifras + ultimos_html)
-
-    def vista_analitica(self, admin, consulta):
-        dias = (consulta.get("dias") or ["30"])[0]
-        dias = int(dias) if dias in ("7", "30", "90") else 30
-        # Periodo en hora de Canarias: desde el principio del día de hace (dias - 1) días hasta ahora,
-        # y el periodo anterior de la misma duración para comparar
-        desde, antes, ahora = self.bd.uno(
+    def periodo(self, dias):
+        """(desde, antes, ahora) en hora de Canarias: desde el principio del día de hace (dias - 1) días,
+        y el inicio del periodo anterior de la misma duración, para comparar."""
+        return self.bd.uno(
             "SELECT d, d - %s * interval '1 day', now() FROM (SELECT ((now() AT TIME ZONE %s)::date - %s)::timestamp "
             "AT TIME ZONE %s AS d) t", (dias, ZONA_HORARIA, dias - 1, ZONA_HORARIA))
 
-        def cifras_de(inicio, fin):
-            v = self.bd.uno(
-                "SELECT count(DISTINCT visitante) FILTER (WHERE tipo = 'vista'), count(*) FILTER (WHERE tipo = 'vista'), "
-                "count(*) FILTER (WHERE tipo = 'clic' AND objetivo), "
-                "count(DISTINCT visitante) FILTER (WHERE tipo = 'clic' AND objetivo) "
-                "FROM eventos WHERE creado >= %s AND creado < %s", (inicio, fin))
-            t = self.bd.uno(
-                "SELECT avg(s), avg(p) FROM (SELECT max(segundos) s, max(profundidad) p FROM eventos "
-                "WHERE tipo = 'salida' AND creado >= %s AND creado < %s GROUP BY vista) x", (inicio, fin))
-            return {"visitantes": v[0], "vistas": v[1], "reservas": v[2], "convertidos": v[3],
-                    "conversion": 100.0 * v[3] / v[0] if v[0] else 0,
-                    "tiempo": float(t[0] or 0), "profundidad": float(t[1] or 0)}
+    def cifras(self, inicio, fin):
+        v = self.bd.uno(
+            "SELECT count(DISTINCT visitante) FILTER (WHERE tipo = 'vista'), count(*) FILTER (WHERE tipo = 'vista'), "
+            "count(*) FILTER (WHERE tipo = 'clic' AND objetivo), "
+            "count(DISTINCT visitante) FILTER (WHERE tipo = 'clic' AND objetivo) "
+            "FROM eventos WHERE creado >= %s AND creado < %s", (inicio, fin))
+        t = self.bd.uno(
+            "SELECT avg(s), avg(p) FROM (SELECT max(segundos) s, max(profundidad) p FROM eventos "
+            "WHERE tipo = 'salida' AND creado >= %s AND creado < %s GROUP BY vista) x", (inicio, fin))
+        return {"visitantes": v[0], "vistas": v[1], "reservas": v[2], "convertidos": v[3],
+                "conversion": 100.0 * v[3] / v[0] if v[0] else 0,
+                "tiempo": float(t[0] or 0), "profundidad": float(t[1] or 0)}
 
-        hoy = cifras_de(desde, ahora + timedelta(seconds=1))
-        prev = cifras_de(antes, desde)
-        cifras = '<div class="cifras">{}{}{}{}{}</div>'.format(
-            cifra_comparada("Visitantes", hoy["visitantes"], prev["visitantes"], numero(hoy["visitantes"]), True),
-            cifra_comparada("Páginas vistas", hoy["vistas"], prev["vistas"], numero(hoy["vistas"]),
-                            nota="{:.1f} por visitante".format(hoy["vistas"] / hoy["visitantes"]) if hoy["visitantes"] else ""),
-            cifra_comparada("Clics para reservar", hoy["reservas"], prev["reservas"], numero(hoy["reservas"]),
-                            nota="Botones de reserva, WhatsApp y apps"),
-            cifra_comparada("Conversión", hoy["conversion"], prev["conversion"], "{:.1f}%".format(hoy["conversion"]),
-                            nota="Visitantes que pulsan para reservar"),
-            cifra_comparada("Tiempo medio", hoy["tiempo"], prev["tiempo"], duracion(hoy["tiempo"]),
-                            nota="Recorren el {:.0f}% de la página".format(hoy["profundidad"]) if hoy["profundidad"] else ""),
-        )
+    def cifras_periodo(self, dias):
+        """Cifras del periodo actual y del anterior, y su comienzo."""
+        desde, antes, ahora = self.periodo(dias)
+        return self.cifras(desde, ahora + timedelta(seconds=1)), self.cifras(antes, desde), desde
 
-        serie = self.bd.todos(
+    def serie_dias(self, dias, desde):
+        return self.bd.todos(
             "SELECT d::date, coalesce(v.visitantes, 0), coalesce(v.vistas, 0) "
             "FROM generate_series(((now() AT TIME ZONE %s)::date - %s)::timestamp, (now() AT TIME ZONE %s)::date::timestamp, "
             "interval '1 day') d LEFT JOIN (SELECT (creado AT TIME ZONE %s)::date dia, count(DISTINCT visitante) visitantes, "
             "count(*) vistas FROM eventos WHERE tipo = 'vista' AND creado >= %s GROUP BY 1) v ON v.dia = d::date ORDER BY 1",
             (ZONA_HORARIA, dias - 1, ZONA_HORARIA, ZONA_HORARIA, desde))
-        grafico = ('<section class="tarjeta"><div class="tarjeta__cabeza"><h2>Visitas por día</h2>'
-                   '<div class="leyenda"><span><i></i>Visitantes</span><span><i class="vistas"></i>Páginas vistas</span></div></div>'
-                   '<div class="tarjeta__cuerpo grafico-envoltura">{}</div></section>').format(
-            grafico_dias(serie) if hoy["vistas"] else
-            '<p class="vacio">Aún no hay visitas en este periodo. La web empieza a medir en cuanto se publica con la analítica.</p>')
+
+    def top_clics(self, desde, limite):
+        return self.bd.todos(
+            "SELECT nombre, mode() WITHIN GROUP (ORDER BY etiqueta), mode() WITHIN GROUP (ORDER BY zona), "
+            "count(*), bool_or(objetivo) FROM eventos "
+            "WHERE tipo = 'clic' AND creado >= %s GROUP BY nombre ORDER BY 4 DESC LIMIT %s", (desde, limite))
+
+    # Vistas
+
+    def vista_resumen(self, admin):
+        hoy, prev, desde = self.cifras_periodo(7)
+        botones = ('<section class="tarjeta"><div class="tarjeta__cabeza"><h2>Botones más pulsados</h2>'
+                   '<a class="boton boton--claro boton--pequeno" href="/panel/analitica?dias=7">Ver analítica</a></div>'
+                   '{}</section>').format(
+            lista_barras(filas_clics(self.top_clics(desde, 5)), "Aún no se ha pulsado ningún botón esta semana."))
+        contenido = (cifras_html(hoy, prev) + tarjeta_grafico(self.serie_dias(7, desde), hoy["vistas"], "Visitas esta semana")
+                     + botones)
+        acciones = '<a class="boton" href="/panel/analitica">Analítica completa</a>'
+        return marco("resumen", admin, "Resumen", "Cómo va la web estos 7 días, comparado con los 7 anteriores.",
+                     contenido, acciones)
+
+    def vista_analitica(self, admin, consulta):
+        dias = (consulta.get("dias") or ["30"])[0]
+        dias = int(dias) if dias in ("7", "30", "90") else 30
+        hoy, prev, desde = self.cifras_periodo(dias)
+
+        cifras = cifras_html(hoy, prev)
+        grafico = tarjeta_grafico(self.serie_dias(dias, desde), hoy["vistas"])
 
         def tarjeta(titulo, cuerpo, pie=""):
             return '<section class="tarjeta"><div class="tarjeta__cabeza"><h2>{}</h2></div>{}{}</section>'.format(
@@ -1019,15 +1043,7 @@ class Panel(BaseHTTPRequestHandler):
             (r, PAGINAS.get(pg, ""), vis, "{} · {} vistas".format(numero(vis), numero(vistas)), False)
             for r, pg, vis, vistas in paginas], "Aún no hay páginas vistas.")
 
-        clics = self.bd.todos(
-            "SELECT nombre, mode() WITHIN GROUP (ORDER BY etiqueta), mode() WITHIN GROUP (ORDER BY zona), "
-            "count(*), bool_or(objetivo) FROM eventos "
-            "WHERE tipo = 'clic' AND creado >= %s GROUP BY nombre ORDER BY 4 DESC LIMIT 12", (desde,))
-        filas_clics = []
-        for nombre, etiqueta, zona, n, objetivo in clics:
-            detalle = [x for x in (nombre if etiqueta and etiqueta != nombre else "", nombre_apartado(zona) if zona else "") if x]
-            filas_clics.append((etiqueta or nombre, " · ".join(detalle), n, numero(n), objetivo))
-        clics_html = lista_barras(filas_clics, "Aún no se ha pulsado ningún botón.")
+        clics_html = lista_barras(filas_clics(self.top_clics(desde, 12)), "Aún no se ha pulsado ningún botón.")
 
         vistas_pagina = dict(self.bd.todos(
             "SELECT pagina, count(DISTINCT vista) FROM eventos WHERE tipo = 'vista' AND creado >= %s GROUP BY 1", (desde,)))
