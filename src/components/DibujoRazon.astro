@@ -1,0 +1,248 @@
+---
+/*
+ * Dibujos de «Por qué SUNNA»: una escena pequeña por razón, sobre un fondo melocotón.
+ * horario: el sol recorre su arco sobre el horizonte, de la mañana a la tarde.
+ * autonomo: la puerta en arco se abre con la señal del móvil y sale la luz.
+ * ritmo: el temporizador se llena alrededor del play y las barras siguen el ritmo.
+ */
+interface Props {
+  tipo: 'horario' | 'autonomo' | 'ritmo';
+  class?: string;
+}
+const { tipo, class: className } = Astro.props;
+const id = `dibujo-${tipo}`;
+---
+
+<svg
+  class:list={['dibujo', `dibujo--${tipo}`, className]}
+  viewBox="0 0 240 150"
+  fill="none"
+  stroke-linecap="round"
+  stroke-linejoin="round"
+  aria-hidden="true"
+  focusable="false"
+>
+  {
+    tipo === 'horario' && (
+      <>
+        <defs>
+          <clipPath id={`${id}-cielo`}>
+            <rect x="0" y="0" width="240" height="112" />
+          </clipPath>
+        </defs>
+        <path class="d-guia" d="M40 112a80 80 0 0 1 160 0" stroke-dasharray="1 7" />
+        <g clip-path={`url(#${id}-cielo)`}>
+          <g class="horario__sol">
+            <circle class="d-halo" cx="40" cy="112" r="22" />
+            <circle class="d-sol" cx="40" cy="112" r="11" />
+          </g>
+        </g>
+        <path class="d-traza" d="M22 112h196" />
+        <path class="d-suave" d="M54 124h40M120 124h66M78 134h84" />
+      </>
+    )
+  }
+
+  {
+    tipo === 'autonomo' && (
+      <>
+        <defs>
+          <linearGradient id={`${id}-luz`} x1="0" y1="0" x2="0" y2="1">
+            <stop offset="0" stop-color="var(--n300)" />
+            <stop offset="1" stop-color="var(--n200)" />
+          </linearGradient>
+          <linearGradient id={`${id}-suelo`} x1="0" y1="0" x2="0" y2="1">
+            <stop offset="0" stop-color="var(--n200)" stop-opacity="0.9" />
+            <stop offset="1" stop-color="var(--n200)" stop-opacity="0" />
+          </linearGradient>
+        </defs>
+        <path d="M88 122h48l30 22H58z" fill={`url(#${id}-suelo)`} />
+        <path d="M88 122V70a24 24 0 0 1 48 0v52z" fill={`url(#${id}-luz)`} />
+        <path class="d-traza" d="M88 122V70a24 24 0 0 1 48 0v52" />
+        <path class="d-traza" d="M30 122h164" />
+        <g class="autonomo__hoja">
+          <path class="d-papel" d="M88 122V70l-18-7v66z" />
+          <circle class="d-tinta" cx="75" cy="98" r="1.6" />
+        </g>
+        <rect class="d-papel" x="172" y="66" width="24" height="42" rx="6" />
+        <circle class="d-sol" cx="184" cy="84" r="5" />
+        <path class="d-suave" d="M180 100h8" />
+        <path class="d-onda" d="M163 80a8 8 0 0 0 0 12" />
+        <path class="d-onda d-onda--2" d="M156 75a15 15 0 0 0 0 22" />
+        <path class="d-onda d-onda--3" d="M149 70a22 22 0 0 0 0 32" />
+      </>
+    )
+  }
+
+  {
+    tipo === 'ritmo' && (
+      <>
+        <circle class="d-pista" cx="120" cy="72" r="44" />
+        <path
+          class="d-guia"
+          d="M120 18v4M120 122v4M66 72h4M170 72h4M81.8 33.8l2.8 2.8M155.4 107.4l2.8 2.8M81.8 110.2l2.8-2.8M155.4 36.6l2.8-2.8"
+        />
+        <circle class="ritmo__avance" cx="120" cy="72" r="44" pathLength="100" transform="rotate(-90 120 72)" />
+        <circle class="d-papel" cx="120" cy="72" r="26" />
+        <path class="d-sol" d="M114 61.5v21l18-10.5z" />
+        <g class="ritmo__barras">
+          <rect x="26" y="62" width="4" height="20" rx="2" />
+          <rect x="36" y="54" width="4" height="36" rx="2" />
+          <rect x="46" y="64" width="4" height="16" rx="2" />
+        </g>
+        <g class="ritmo__barras">
+          <rect x="190" y="64" width="4" height="16" rx="2" />
+          <rect x="200" y="54" width="4" height="36" rx="2" />
+          <rect x="210" y="62" width="4" height="20" rx="2" />
+        </g>
+        <path class="d-suave" d="M92 138h56" />
+      </>
+    )
+  }
+</svg>
+
+<style>
+  .dibujo {
+    display: block;
+    width: 100%;
+    height: auto;
+    stroke-width: 1.5;
+    overflow: visible;
+  }
+
+  .d-traza {
+    stroke: var(--tinta);
+  }
+
+  .d-suave {
+    stroke: var(--n300);
+  }
+
+  .d-guia {
+    stroke: var(--n700);
+    stroke-width: 2;
+    opacity: 0.55;
+  }
+
+  .d-pista {
+    stroke: var(--n200);
+    stroke-width: 6;
+  }
+
+  .d-papel {
+    fill: var(--crema);
+    stroke: var(--tinta);
+  }
+
+  .d-tinta {
+    fill: var(--tinta);
+  }
+
+  .d-sol {
+    fill: var(--n500);
+  }
+
+  .d-halo {
+    fill: var(--n200);
+    opacity: 0.7;
+  }
+
+  /* Horario: el sol sube por el arco de izquierda a derecha y vuelve, muy despacio */
+  .horario__sol {
+    transform-box: view-box;
+    transform-origin: 120px 112px;
+    animation: sol-arco 14s ease-in-out infinite alternate;
+  }
+
+  @keyframes sol-arco {
+    from {
+      transform: rotate(28deg);
+    }
+    to {
+      transform: rotate(152deg);
+    }
+  }
+
+  /* Autónomo: la hoja de la puerta respira abierta y las ondas salen del móvil */
+  .autonomo__hoja {
+    transform-box: view-box;
+    transform-origin: 88px 96px;
+    animation: puerta 6s ease-in-out infinite alternate;
+  }
+
+  @keyframes puerta {
+    from {
+      transform: scaleX(0.75);
+    }
+    to {
+      transform: scaleX(1);
+    }
+  }
+
+  .d-onda {
+    stroke: var(--n500);
+    stroke-width: 2;
+    animation: onda 2.4s ease-out infinite;
+  }
+
+  .d-onda--2 {
+    animation-delay: 0.3s;
+  }
+
+  .d-onda--3 {
+    animation-delay: 0.6s;
+  }
+
+  @keyframes onda {
+    0%,
+    100% {
+      opacity: 1;
+    }
+    50% {
+      opacity: 0.25;
+    }
+  }
+
+  /* Ritmo: el anillo se llena (de 10 a 45 minutos) y las barras laten */
+  .ritmo__avance {
+    fill: none;
+    stroke: var(--n500);
+    stroke-width: 6;
+    stroke-dasharray: 72 100;
+    animation: avance 9s ease-in-out infinite alternate;
+  }
+
+  @keyframes avance {
+    from {
+      stroke-dasharray: 22 100;
+    }
+    to {
+      stroke-dasharray: 72 100;
+    }
+  }
+
+  .ritmo__barras rect {
+    fill: var(--n300);
+    transform-box: fill-box;
+    transform-origin: center;
+    animation: barra 1.6s ease-in-out infinite alternate;
+  }
+
+  .ritmo__barras rect:nth-of-type(2) {
+    fill: var(--n500);
+    animation-delay: -0.5s;
+  }
+
+  .ritmo__barras rect:nth-of-type(3) {
+    animation-delay: -1s;
+  }
+
+  @keyframes barra {
+    from {
+      transform: scaleY(0.45);
+    }
+    to {
+      transform: scaleY(1);
+    }
+  }
+</style>
