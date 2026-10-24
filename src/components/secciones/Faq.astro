@@ -1,4 +1,5 @@
 ---
+import { acentuar } from '../../lib/acento';
 import ContactoDudas from '../ContactoDudas.astro';
 import type { Ajustes, Home } from '../../lib/content';
 
@@ -24,7 +25,7 @@ const grupos = faq.grupos
 <section id="preguntas" class="faq seccion" aria-labelledby="faq-titulo" data-faq>
   <div class="envoltura faq__rejilla">
     <div class="faq__cabeza">
-      <h2 id="faq-titulo" class="t-h2 faq__titulo">{faq.titulo}</h2>
+      <h2 id="faq-titulo" class="t-h2 faq__titulo" set:html={acentuar(faq.titulo)} />
       {faq.contacto && <ContactoDudas ajustes={ajustes} titulo={faq.contacto.titulo} texto={faq.contacto.texto} class="faq__contacto" />}
     </div>
 
@@ -212,7 +213,7 @@ const grupos = faq.grupos
   }
 
   .pregunta summary:focus-visible {
-    border-radius: 16px;
+    border-radius: var(--r);
     outline-offset: -3px;
   }
 

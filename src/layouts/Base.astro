@@ -6,7 +6,11 @@ import Footer from '../components/Footer.astro';
 import MobileBar from '../components/MobileBar.astro';
 import BookingPanel from '../components/vue/BookingPanel.vue';
 import CookieConsent from '../components/vue/CookieConsent.vue';
-import { getSite, idiomas, localeOg, mapsUrl, urlPagina, whatsappUrl, type Lang, type Pagina } from '../lib/content';
+import { sinAcento } from '../lib/acento';
+// Las dos letras de los títulos, precargadas: llegan antes de pintar y el texto no salta al cambiar de letra
+import fuenteTexto from '@fontsource-variable/dm-sans/files/dm-sans-latin-opsz-normal.woff2?url';
+import fuenteAcento from '@fontsource/ephesis/files/ephesis-latin-400-normal.woff2?url';
+import { colorTema, getSite, idiomas, localeOg, mapsUrl, urlPagina, whatsappUrl, type Lang, type Pagina } from '../lib/content';
 
 interface Props {
   titulo?: string;
@@ -23,7 +27,7 @@ interface Props {
 const { titulo, descripcion, lang = 'es', indexar = true, alternos = false, pagina, sinBarraMovil = false } = Astro.props;
 const { ajustes, home } = await getSite(lang);
 
-const title = titulo ? `${titulo} · SUNNA` : home.seo.titulo;
+const title = titulo ? `${sinAcento(titulo)} · SUNNA` : home.seo.titulo;
 const description = descripcion ?? home.seo.descripcion;
 const canonical = Astro.site ? new URL(Astro.url.pathname, Astro.site).href : undefined;
 const wa = whatsappUrl(ajustes.contacto.whatsapp, home.ui.whatsappMensaje);
@@ -52,11 +56,17 @@ const negocio = {
 ---
 
 <!doctype html>
-<html lang={lang}>
+<html lang={lang} data-paleta={ajustes.paleta}>
   <head>
     <meta charset="utf-8" />
+    <link rel="preload" href={fuenteTexto} as="font" type="font/woff2" crossorigin />
+    <link rel="preload" href={fuenteAcento} as="font" type="font/woff2" crossorigin />
     <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
     <title>{title}</title>
+    <!-- Antes de pintar: los acentos esperan su pasada de rotulador (ver el script del final) -->
+    <script is:inline>
+      if ('IntersectionObserver' in window) document.documentElement.classList.add('con-acentos');
+    </script>
     <meta name="description" content={description} />
     {canonical && <link rel="canonical" href={canonical} />}
     {!indexar && <meta name="robots" content="noindex" />}
@@ -71,7 +81,7 @@ const negocio = {
           />
         ))
     }
-    <meta name="theme-color" content="#fdf6ee" />
+    <meta name="theme-color" content={colorTema[ajustes.paleta]} />
     <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
     <meta property="og:type" content="website" />
     <meta property="og:locale" content={localeOg[lang]} />
@@ -81,7 +91,7 @@ const negocio = {
     {canonical && <meta property="og:url" content={canonical} />}
     <meta name="geo.region" content="ES-TF" />
     <meta name="geo.placename" content={ajustes.direccion.ciudad} />
-    <script type="application/ld+json" set:html={JSON.stringify(negocio)} />
+    <script type="application/ld+json" set:html={JSON.stringify(negocio).replace(/</g, '\\u003c')} />
   </head>
   <body>
     <a class="saltar" href="#contenido">{home.ui.saltar}</a>
@@ -120,6 +130,21 @@ const negocio = {
       )
     }
     <script>
+      // Acentos de los títulos: la pasada de rotulador cruza la palabra al entrar en pantalla
+      const acentos = document.querySelectorAll('.acento');
+      if (acentos.length && 'IntersectionObserver' in window) {
+        const io = new IntersectionObserver(
+          (entradas) => {
+            for (const e of entradas) {
+              if (!e.isIntersecting) continue;
+              e.target.classList.add('visto');
+              io.unobserve(e.target);
+            }
+          },
+          { rootMargin: '0px 0px -12% 0px' },
+        );
+        acentos.forEach((a) => io.observe(a));
+      }
     </script>
   </body>
 </html>

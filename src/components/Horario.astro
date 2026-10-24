@@ -110,9 +110,9 @@ const { horariosUrl, appUrl } = ajustes.reservas;
     width: 0.75rem;
     height: 0.75rem;
     margin-left: 0.25rem;
-    border-radius: 999px;
+    border-radius: var(--r-pill);
     background: var(--n500);
-    box-shadow: 0 0 0 5px rgb(255 130 53 / 0.22);
+    box-shadow: 0 0 0 5px rgb(var(--n500-rgb) / 0.22);
     animation: horario-respira 4.5s ease-in-out infinite;
   }
 
@@ -121,11 +121,11 @@ const { horariosUrl, appUrl } = ajustes.reservas;
     0%,
     100% {
       transform: scale(1);
-      box-shadow: 0 0 0 4px rgb(255 130 53 / 0.24);
+      box-shadow: 0 0 0 4px rgb(var(--n500-rgb) / 0.24);
     }
     50% {
       transform: scale(1.12);
-      box-shadow: 0 0 0 9px rgb(255 130 53 / 0.08);
+      box-shadow: 0 0 0 9px rgb(var(--n500-rgb) / 0.08);
     }
   }
 
@@ -161,7 +161,7 @@ const { horariosUrl, appUrl } = ajustes.reservas;
 
   .franja {
     padding: 1.125rem 1.25rem;
-    border-radius: var(--r-s);
+    border-radius: var(--r);
     background: var(--n50);
   }
 

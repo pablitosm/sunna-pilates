@@ -16,6 +16,7 @@ const ajustes = defineCollection({
   loader: glob({ pattern: '*/ajustes.yaml', base: './src/content' }),
   schema: z.object({
     estado: z.enum(['preapertura', 'abierto']),
+    paleta: z.enum(['naranja', 'salvia', 'arena', 'oliva', 'cacao']).default('naranja'),
     // Qué horario se muestra: el de las primeras semanas o el ampliado.
     horario: z.enum(['inicial', 'ampliado']).default('inicial'),
     fechaApertura: opcional,

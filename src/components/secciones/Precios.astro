@@ -1,5 +1,7 @@
 ---
 import ContactoDudas from '../ContactoDudas.astro';
+import DibujoRazon from '../DibujoRazon.astro';
+import { acentuar } from '../../lib/acento';
 import { ctaEsFundador, type Ajustes, type Home } from '../../lib/content';
 
 interface Props {
@@ -10,17 +12,21 @@ interface Props {
 }
 const { ajustes, home, pagina = false } = Astro.props;
 const Titulo = pagina ? 'h1' : 'h2';
+// El nombre de cada plan, un nivel por debajo del título de la sección
+const Nombre = pagina ? 'h2' : 'h3';
 const { precios } = home;
 const euros = (n: number) => new Intl.NumberFormat('es-ES').format(n);
 const g = precios.graficos;
 const intro = (ctaEsFundador(ajustes) && precios.introFundador) || precios.intro;
+// Basic al alba, Standard por la mañana, Pro por la tarde y Premium a mediodía
+const momentos = ['alba', 'manana', 'tarde', 'mediodia'] as const;
 ---
 
 <section id="precios" class:list={['precios', { 'precios--pagina': pagina }]} aria-labelledby="precios-titulo">
   <div class="envoltura precios__cabeza">
     <div class="cabeza-seccion">
       <div>
-        <Titulo id="precios-titulo" class="t-h2 precios__titulo">{precios.titulo}</Titulo>
+        <Titulo id="precios-titulo" class="t-h2 precios__titulo" set:html={acentuar(precios.titulo)} />
         {intro && <p class="t-lead precios__intro">{intro}</p>}
       </div>
       {precios.subtitulo && <span class="etiqueta">{precios.subtitulo}</span>}
@@ -30,10 +36,14 @@ const intro = (ctaEsFundador(ajustes) && precios.introFundador) || precios.intro
   <div class="envoltura precios__tarjetas">
     <ul role="list" class="membresias">
       {
-        precios.membresias.map((m) => (
-          <li class:list={['membresia', { 'membresia--destacada': m.destacada }]}>
+        precios.membresias.map((m, i) => (
+          <li class:list={['membresia', 'grano', `membresia--${momentos[i % momentos.length]}`, { 'membresia--destacada': m.destacada }]}>
+            <!-- Cada plan, un momento del día con su papel y su paisaje -->
+            <div class="membresia__escena">
+              <DibujoRazon tipo={momentos[i % momentos.length]} />
+            </div>
             {m.etiqueta && <span class="membresia__etiqueta">{m.etiqueta}</span>}
-            <h3 class="etiqueta membresia__nombre">{m.nombre}</h3>
+            <Nombre class="etiqueta membresia__nombre">{m.nombre}</Nombre>
             <p class="membresia__precio">
               <span class="membresia__cifra">
                 {euros(m.precio)} €
@@ -121,31 +131,76 @@ const intro = (ctaEsFundador(ajustes) && precios.introFundador) || precios.intro
     display: grid;
     grid-template-columns: repeat(4, minmax(0, 1fr));
     gap: 1rem;
-    align-items: start;
+    align-items: stretch;
   }
 
   .membresia {
+    --borde: 1.875rem;
     position: relative;
+    isolation: isolate;
     display: flex;
     flex-direction: column;
     gap: 1.125rem;
-    min-height: 22rem;
-    padding: 2.125rem 1.875rem;
-    border-radius: var(--r-l);
-    background: var(--n50);
+    padding: 0 var(--borde) 2rem;
+    border-radius: var(--r);
+    background: var(--papel);
+    color: var(--tinta-t);
+    overflow: hidden;
   }
 
-  .membresia--destacada {
-    min-height: 23.75rem;
-    box-shadow:
-      inset 0 0 0 1.5px var(--n500),
-      0 24px 60px rgb(255 130 53 / 0.18);
+  /* Cada plan con su papel y su tinta: alba, salvia, terracota y cacao */
+  .membresia--alba {
+    --papel: color-mix(in srgb, var(--sol-100) 55%, var(--crema));
+    --tinta-t: var(--tinta);
+    --suave-t: var(--tinta-60);
+    --linea-t: var(--linea);
+  }
+
+  .membresia--manana {
+    --papel: color-mix(in srgb, var(--oliva) 28%, var(--crema));
+    --tinta-t: var(--oliva-tinta);
+    --suave-t: color-mix(in srgb, var(--oliva-tinta) 72%, var(--crema));
+    --linea-t: color-mix(in srgb, var(--oliva-tinta) 15%, transparent);
+  }
+
+  .membresia--tarde {
+    --papel: color-mix(in srgb, var(--sol-300) 55%, var(--sol-100));
+    --tinta-t: var(--tinta);
+    --suave-t: var(--n900);
+    --linea-t: rgb(var(--tinta-rgb) / 0.16);
+  }
+
+  .membresia--mediodia {
+    --papel: var(--cacao);
+    --tinta-t: var(--crema);
+    --suave-t: color-mix(in srgb, var(--crema) 78%, var(--sol-200));
+    --linea-t: rgb(var(--crema-rgb) / 0.18);
+  }
+
+
+  /* El grano va encima del contenido; en el papel oscuro aclara en vez de oscurecer */
+  .membresia {
+    --grano-capa: 1;
+    --grano-opacidad: 0.18;
+  }
+
+  .membresia--mediodia {
+    --grano-mezcla: screen;
+    --grano-opacidad: 0.08;
+  }
+
+  /* La escena del sol, a sangre arriba de la tarjeta */
+  .membresia__escena {
+    margin: 0 calc(-1 * var(--borde)) 0.5rem;
+    aspect-ratio: 12 / 7;
+    max-width: none;
   }
 
   .membresia__etiqueta {
     position: absolute;
-    left: 1.875rem;
-    top: -0.8125rem;
+    z-index: 2;
+    left: var(--borde);
+    top: 1rem;
     padding: 0.375rem 0.875rem;
     border-radius: var(--r-pill);
     background: var(--n500);
@@ -156,6 +211,7 @@ const intro = (ctaEsFundador(ajustes) && precios.introFundador) || precios.intro
 
   .membresia__nombre {
     margin-bottom: -0.25rem;
+    color: var(--suave-t);
   }
 
   .membresia__precio {
@@ -171,7 +227,7 @@ const intro = (ctaEsFundador(ajustes) && precios.introFundador) || precios.intro
   }
 
   .membresia__mes {
-    color: var(--tinta-60);
+    color: var(--suave-t);
   }
 
   /* Precio por sesión: dato secundario bajo el precio mensual, visible sin competir con él */
@@ -181,14 +237,14 @@ const intro = (ctaEsFundador(ajustes) && precios.introFundador) || precios.intro
     gap: 0.375rem;
     margin-top: -0.375rem;
     font-size: 0.9375rem;
-    color: var(--n900);
+    color: var(--suave-t);
   }
 
   .membresia__sesion strong {
     font-size: 1.25rem;
     font-weight: 500;
     letter-spacing: -0.015em;
-    color: var(--tinta);
+    color: var(--tinta-t);
   }
 
   /* Gráficos de cada tarjeta: la semana y el recovery del mes */
@@ -196,16 +252,12 @@ const intro = (ctaEsFundador(ajustes) && precios.introFundador) || precios.intro
     display: grid;
     gap: 0.625rem;
     padding-top: 1.125rem;
-    border-top: 1px solid var(--linea);
-  }
-
-  .grafico__titulo {
-    font-size: 0.6875rem;
+    border-top: 1px solid var(--linea-t);
   }
 
   .grafico__pie {
     font-size: 0.875rem;
-    color: var(--tinta-60);
+    color: var(--suave-t);
   }
 
   /* Sesiones de reformer: el dato principal de cada plan */
@@ -218,7 +270,7 @@ const intro = (ctaEsFundador(ajustes) && precios.introFundador) || precios.intro
     display: block;
     margin-top: 0.125rem;
     font-size: 0.8125rem;
-    color: var(--tinta-60);
+    color: var(--suave-t);
   }
 
   /* Luz roja y sauna: nombre y cantidad en dos columnas; las cantidades
@@ -236,19 +288,20 @@ const intro = (ctaEsFundador(ajustes) && precios.introFundador) || precios.intro
   }
 
   .recovery__fila dd {
-    color: var(--tinta);
+    color: var(--tinta-t);
   }
 
   .recovery__fila--no dt,
   .recovery__fila--no dd {
-    color: var(--tinta-60);
+    color: var(--suave-t);
   }
 
   .membresia__extra {
     margin-top: auto;
     padding: 0.625rem 0.875rem;
-    border-radius: 12px;
-    background: var(--crema);
+    border-radius: var(--r);
+    background: var(--sol-500);
+    color: var(--cacao);
     font-size: 0.875rem;
     text-align: center;
   }
@@ -268,10 +321,6 @@ const intro = (ctaEsFundador(ajustes) && precios.introFundador) || precios.intro
   @media (max-width: 36rem) {
     .membresias {
       grid-template-columns: 1fr;
-    }
-    .membresia,
-    .membresia--destacada {
-      min-height: 0;
     }
   }
 </style>

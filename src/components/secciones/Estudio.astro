@@ -1,4 +1,5 @@
 ---
+import { acentuar } from '../../lib/acento';
 import Horario from '../Horario.astro';
 import MapaEstudio from '../MapaEstudio.astro';
 import { mapsUrl, type Ajustes, type Home } from '../../lib/content';
@@ -16,11 +17,11 @@ const d = ajustes.direccion;
 <section id="estudio" class="estudio seccion" aria-labelledby="estudio-titulo">
   <div class="envoltura">
     <div class="cabeza-seccion">
-      <h2 id="estudio-titulo" class="t-h2">{estudio.titulo}</h2>
+      <h2 id="estudio-titulo" class="t-h2" set:html={acentuar(estudio.titulo)} />
     </div>
 
     <!-- El mapa entero lleva a Google Maps -->
-    <a class="mapa" href={mapsUrl(ajustes)} target="_blank" rel="noopener" aria-label={`${estudio.mapa.abrir}: ${d.calle}, ${d.codigoPostal} ${d.ciudad}`}>
+    <a class="mapa grano" href={mapsUrl(ajustes)} target="_blank" rel="noopener" aria-label={`${estudio.mapa.abrir}: ${d.calle}, ${d.codigoPostal} ${d.ciudad}`}>
       <!-- Dibujado con datos reales de OpenStreetMap (scripts/mapa-estudio.mjs) -->
       <MapaEstudio />
       <span class="mapa__credito">© OpenStreetMap</span>
@@ -63,17 +64,19 @@ const d = ajustes.direccion;
     display: block;
     position: relative;
     height: clamp(20rem, 14rem + 18vw, 32rem);
-    border-radius: var(--r-l);
+    /* Esquinas de papel, como los recortes de «Por qué SUNNA» */
+    border-radius: var(--r);
     overflow: hidden;
     background: var(--n100);
   }
+
 
   /* Atribución obligatoria de los datos (licencia ODbL) */
   .mapa__credito {
     position: absolute;
     right: 0.875rem;
     bottom: 0.625rem;
-    font-size: 0.6875rem;
+    font-size: var(--t-label);
     color: var(--tinta-60);
   }
 

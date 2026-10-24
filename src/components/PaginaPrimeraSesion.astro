@@ -3,10 +3,12 @@
  * Página de la primera sesión gratis (a ella lleva el botón principal).
  * Explica la sesión y da tres caminos para reservarla: la web de bsport
  * (cuando haya enlace), WhatsApp con un mensaje ya escrito y la app.
- * Debajo, qué se hace en esos 45 minutos y las dudas en una línea.
+ * Debajo, qué se hace en esos 45 minutos (una franja de 0′ a 45′ partida en los
+ * cuatro pasos, cada uno con su recorte) y las dudas en una línea.
  */
+import { acentuar, sinAcento } from '../lib/acento';
 import Base from '../layouts/Base.astro';
-import Glifo from './Glifo.astro';
+import DibujoRazon from './DibujoRazon.astro';
 import Icon from './Icon.astro';
 import PhotoSlot from './PhotoSlot.astro';
 import Seguir from './Seguir.astro';
@@ -22,7 +24,7 @@ const { ajustes, home } = await getSite(lang);
 const ps = home.primeraSesion!;
 const web = ajustes.reservas.primeraSesionUrl;
 const wa = whatsappUrl(ajustes.contacto.whatsapp, ps.whatsappMensaje);
-const glifos = ['arco', 'anillo', 'pantalla', 'punto'] as const;
+const dibujos = ['reformer', 'app', 'entrada', 'ipad'] as const;
 ---
 
 <Base lang={lang} titulo={home.botones.principalCorto.abierto} descripcion={ps.texto} pagina="primera-sesion" alternos sinBarraMovil>
@@ -37,16 +39,16 @@ const glifos = ['arco', 'anillo', 'pantalla', 'punto'] as const;
     }
     <div class="envoltura prueba__rejilla">
       <div class="prueba__texto">
-        <h1 id="prueba-titulo" class="t-display prueba__titulo">{ps.titulo}</h1>
+        <h1 id="prueba-titulo" class="t-display prueba__titulo" set:html={acentuar(ps.titulo)} />
         <p class="t-lead prueba__intro">{ps.texto}</p>
 
-        <div class="reservar" aria-labelledby="reservar-titulo">
+        <section class="reservar" aria-labelledby="reservar-titulo">
           <h2 id="reservar-titulo" class="reservar__titulo">{ps.reservarTitulo}</h2>
           {ps.reservarTexto && <p class="reservar__texto">{ps.reservarTexto}</p>}
           <div class="reservar__botones">
             {
               web && (
-                <a class="boton boton--principal" href={web} target="_blank" rel="noopener">
+                <a class="boton boton-sol" href={web} target="_blank" rel="noopener">
                   {ps.web}
                   <Icon name="flecha" size={20} />
                 </a>
@@ -54,7 +56,7 @@ const glifos = ['arco', 'anillo', 'pantalla', 'punto'] as const;
             }
             {
               wa && (
-                <a class:list={['boton', web ? 'boton--secundario' : 'boton--principal']} href={wa} target="_blank" rel="noopener">
+                <a class:list={['boton', web ? 'boton--secundario' : 'boton-sol']} href={wa} target="_blank" rel="noopener">
                   <Icon name="whatsapp" size={20} />
                   {ps.whatsapp}
                 </a>
@@ -62,26 +64,39 @@ const glifos = ['arco', 'anillo', 'pantalla', 'punto'] as const;
             }
           </div>
           {home.porQue && <TiendasApp ajustes={ajustes} textos={home.porQue.app} class="reservar__tiendas" />}
-        </div>
+        </section>
       </div>
 
     </div>
 
     <!-- Invita a bajar: lleva a lo que se hace en la sesión -->
     <div class="envoltura">
-      <Seguir href="#incluye" texto={ps.incluyeTitulo} class="prueba__seguir" />
+      <Seguir href="#incluye" texto={sinAcento(ps.incluyeTitulo)} class="prueba__seguir" />
     </div>
   </section>
 
   <section id="incluye" class="incluye seccion" aria-labelledby="incluye-titulo">
     <div class="envoltura">
-      <h2 id="incluye-titulo" class="t-h2 incluye__titulo">{ps.incluyeTitulo}</h2>
+      <h2 id="incluye-titulo" class="t-h2 incluye__titulo" set:html={acentuar(ps.incluyeTitulo)} />
+
+      <!-- Los 45 minutos como una franja: cada paso, un tramo que se calienta como el sol al subir -->
+      <div class="tramos" aria-hidden="true">
+        {ps.incluye.map((_, i) => <span class="tramo" style={`--tramo: var(--tramo-${(i % 4) + 1})`}>{i + 1}</span>)}
+        <span class="tramos__marca tramos__marca--inicio">0′</span>
+        <span class="tramos__marca tramos__marca--fin">45′</span>
+      </div>
+
       <ol role="list" class="incluye__lista">
         {
           ps.incluye.map((x, i) => (
-            <li class="incluye__item">
-              <Glifo forma={glifos[i % glifos.length]} tamano={56} />
-              <p>{x}</p>
+            <li class="paso" style={`--tramo: var(--tramo-${(i % 4) + 1})`}>
+              <div class="paso__lamina grano">
+                <DibujoRazon tipo={dibujos[i % dibujos.length]} />
+              </div>
+              <p class="paso__texto">
+                <span class="paso__num">{i + 1}</span>
+                {x}
+              </p>
             </li>
           ))
         }
@@ -121,7 +136,7 @@ const glifos = ['arco', 'anillo', 'pantalla', 'punto'] as const;
     z-index: -1;
     inset: auto 0 0;
     height: 18%;
-    background: linear-gradient(180deg, rgb(253 246 238 / 0), var(--crema));
+    background: linear-gradient(180deg, rgb(var(--crema-rgb) / 0), var(--crema));
     pointer-events: none;
   }
 
@@ -181,25 +196,16 @@ const glifos = ['arco', 'anillo', 'pantalla', 'punto'] as const;
     border-radius: var(--r-pill);
     font-size: 1.0625rem;
     text-decoration: none;
-    transition:
-      background-color 0.3s var(--ease),
-      transform 0.3s var(--ease);
   }
 
-  .boton--principal {
-    background: var(--n500);
-    color: var(--tinta);
-    box-shadow: var(--sombra-boton);
-  }
-
-  .boton--principal:hover {
-    background: var(--n300);
-  }
-
+  /* El principal (reservar) es un .boton-sol, con su color y su animación en global.css */
   .boton--secundario {
     background: var(--crema);
     color: var(--tinta);
     box-shadow: inset 0 0 0 1px var(--n200);
+    transition:
+      background-color 0.3s var(--ease),
+      transform 0.3s var(--ease);
   }
 
   .boton--secundario:hover {
@@ -208,11 +214,6 @@ const glifos = ['arco', 'anillo', 'pantalla', 'punto'] as const;
 
   .boton:active {
     transform: translateY(1px);
-  }
-
-  .boton:focus-visible {
-    outline: 3px solid var(--n500);
-    outline-offset: 4px;
   }
 
   .reservar :global(.reservar__tiendas) {
@@ -225,30 +226,118 @@ const glifos = ['arco', 'anillo', 'pantalla', 'punto'] as const;
     margin-bottom: var(--titulo-contenido);
   }
 
+  /* Cuatro columnas, y encima la franja con las mismas columnas para que cada tramo caiga sobre su paso */
+  .incluye {
+    --tramo-1: var(--sol-100);
+    --tramo-2: var(--sol-200);
+    --tramo-3: var(--sol-300);
+    --tramo-4: var(--sol-500);
+    --hueco: clamp(1.25rem, 0.5rem + 2vw, 2.25rem);
+  }
+
+  .tramos,
   .incluye__lista {
     display: grid;
     grid-template-columns: repeat(4, minmax(0, 1fr));
-    gap: 2rem 1.75rem;
+    column-gap: var(--hueco);
   }
 
-  .incluye__item {
+  .tramos {
+    position: relative;
+    margin-bottom: 2.75rem;
+  }
+
+  /* Cada tramo tapa el hueco hasta el siguiente: la franja se lee de un tirón */
+  .tramo {
+    display: flex;
+    align-items: center;
+    height: 2.25rem;
+    margin-right: calc(-1 * var(--hueco));
+    padding-left: 0.875rem;
+    background: var(--tramo);
+    color: var(--tinta);
+    font-size: 0.875rem;
+    font-variant-numeric: tabular-nums;
+  }
+
+  .tramo:first-child {
+    border-radius: var(--r-pill) 0 0 var(--r-pill);
+  }
+
+  .tramo:nth-child(4) {
+    margin-right: 0;
+    border-radius: 0 var(--r-pill) var(--r-pill) 0;
+  }
+
+  .tramos__marca {
+    position: absolute;
+    top: calc(100% + 0.5rem);
+    color: var(--tinta-60);
+    font-size: 0.875rem;
+    font-variant-numeric: tabular-nums;
+  }
+
+  .tramos__marca--inicio {
+    left: 0;
+  }
+
+  .tramos__marca--fin {
+    right: 0;
+  }
+
+  .paso {
     display: grid;
     align-content: start;
     gap: 1.25rem;
-    padding-top: 1.5rem;
-    border-top: 1px solid var(--linea-fuerte);
-    color: var(--n700);
   }
 
-  .incluye__item p {
+  .paso__lamina {
+    position: relative;
+    max-width: 100%;
+    aspect-ratio: 24 / 17;
+    border-radius: var(--r);
+    overflow: hidden;
+  }
+
+
+  .paso__texto {
     font-size: 1.0625rem;
     line-height: 1.55;
     color: var(--tinta);
   }
 
+  /* El número solo hace falta cuando no está la franja */
+  .paso__num {
+    display: none;
+  }
+
+  /* Tableta y móvil: la franja se reparte entre los pasos, como un canto de color a la izquierda */
   @media (max-width: 64rem) {
+    .tramos {
+      display: none;
+    }
+
     .incluye__lista {
       grid-template-columns: repeat(2, minmax(0, 1fr));
+      row-gap: 2.5rem;
+    }
+
+    .paso {
+      padding-left: 1.25rem;
+      border-left: 0.5rem solid var(--tramo);
+    }
+
+    .paso__num {
+      display: inline-grid;
+      place-items: center;
+      width: 1.75rem;
+      height: 1.75rem;
+      margin-right: 0.5rem;
+      border-radius: 50%;
+      background: var(--tramo);
+      font-size: 0.875rem;
+      font-variant-numeric: tabular-nums;
+      vertical-align: 0.05em;
     }
   }
 

@@ -1,4 +1,5 @@
 @import '@fontsource-variable/dm-sans/opsz.css';
+@import '@fontsource/ephesis/400.css';
 
 /* ───────── Tokens · Crema, naranja y vidrio ───────── */
 :root {
@@ -7,29 +8,54 @@
   /* Oliva: detalle del diseño de referencia (la franja tranquila del horario) */
   --oliva: #9daf7c;
   --oliva-tinta: #26350f;
-  --n50: #fff1e6;
-  --n100: #ffe0c9;
-  --n200: #ffc49a;
-  --n300: #ffa76b;
-  --n500: #ff8235; /* firma: píldora y sol */
+  /* El sol: naranja de SUNNA en cualquier paleta (una sola definición) */
+  --sol-50: #fff1e6;
+  --sol-100: #ffe0c9;
+  --sol-200: #ffc49a;
+  --sol-300: #ffa76b;
+  --sol-500: #ff8235;
+  --sol-50-rgb: 255 241 230;
+  --sol-100-rgb: 255 224 201;
+  --sol-200-rgb: 255 196 154;
+  --sol-300-rgb: 255 167 107;
+  --sol-500-rgb: 255 130 53;
+  /* Escala de la paleta: en la naranja es el propio sol; las otras paletas la cambian */
+  --n50: var(--sol-50);
+  --n100: var(--sol-100);
+  --n200: var(--sol-200);
+  --n300: var(--sol-300);
+  --n500: var(--sol-500); /* firma: píldora y sol */
   --n700: #d95e1e; /* forma, nunca texto */
   --n900: #8c3a12; /* único naranja que puede ser texto */
   --tinta: #3b1d0e;
   /* Rojo de la sala de luz roja: pariente cálido del naranja, nunca neón.
      Solo vive en ese apartado (y su arco en El estudio). 900 puede ser texto. */
-  --rojo-50: #fff0ed;
   --rojo-100: #ffdcd5;
-  --rojo-200: #ffb8aa;
   --rojo-300: #ff8f7a;
   --rojo-500: #ec4a32;
   --rojo-700: #bf3320;
   --rojo-900: #7d2114;
   --tinta-60: #7a5540;
+  --claro: #fffaf4;
+  --aviso-error: #fde8e0;
+  /* Los mismos colores en canales, para transparencias: rgb(var(--n500-rgb) / 0.2) */
+  --crema-rgb: 253 246 238;
+  --tinta-rgb: 59 29 14;
+  --n200-rgb: 255 196 154;
+  --n500-rgb: var(--sol-500-rgb);
+  --n700-rgb: 217 94 30;
+  --n900-rgb: 140 58 18;
+  --rojo-500-rgb: 236 74 50;
+  /* Chocolate del logo */
+  --cacao: #3b1d0e;
+  --cacao-rgb: 59 29 14;
 
-  --linea: rgb(59 29 14 / 0.12);
-  --linea-fuerte: rgb(59 29 14 / 0.22);
+  --linea: rgb(var(--tinta-rgb) / 0.12);
+  --linea-fuerte: rgb(var(--tinta-rgb) / 0.22);
 
   --font: 'DM Sans Variable', 'DM Sans', ui-sans-serif, system-ui, sans-serif;
+  /* Letra de acento: Ephesis, caligrafía limpia y ligera que casa con DM Sans */
+  --font-acento: 'Ephesis', 'Snell Roundhand', 'Apple Chancery', cursive;
 
   --t-display: clamp(2.75rem, 1.6rem + 5.2vw, 5.125rem);
   --t-h2: clamp(2.25rem, 1.55rem + 3vw, 3.5rem);
@@ -40,8 +66,12 @@
   --t-label: 0.6875rem;
 
   --r-pill: 999px;
-  --r-l: 28px;
-  --r-s: 14px;
+  /* Forma de la pasada de rotulador (hover del header y palabras acentuadas), como máscara */
+  --rotulador: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 20' preserveAspectRatio='none'%3E%3Cpath d='M2 4C20 2.6 50 2 80 2.4 90 2.5 96 2.2 98.5 3.4 99.6 7 99.4 12 98 16.6 80 17.6 50 18 20 17.6 12 17.5 5 17.8 1.6 16.4 .4 12 .6 7.6 2 4Z'/%3E%3C/svg%3E");
+  /* Grano del papel de los recortes (se pinta encima con multiply y poca opacidad) */
+  --grano-papel: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='160' height='160'%3E%3Cfilter id='g'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.9' numOctaves='2' stitchTiles='stitch'/%3E%3CfeColorMatrix values='0 0 0 0 .23 0 0 0 0 .11 0 0 0 0 .05 0 0 0 .55 0'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23g)'/%3E%3C/svg%3E");
+  /* Esquinas de papel en toda la web: tarjetas, paneles, menús y recortes (las píldoras siguen siendo píldoras) */
+  --r: 6px;
 
   --gutter: clamp(1.25rem, 0.2rem + 5vw, 8.75rem);
   --ancho: 100rem;
@@ -53,14 +83,164 @@
   --aviso-alto: 0px;
   --pagina-arriba: calc(clamp(8rem, 6rem + 4vw, 9.5rem) + var(--aviso-alto));
 
-  --sombra: 0 24px 60px rgb(59 29 14 / 0.1), 0 2px 6px rgb(59 29 14 / 0.04);
-  --sombra-s: 0 10px 28px rgb(59 29 14 / 0.08), 0 1px 3px rgb(59 29 14 / 0.05);
+  --sombra: 0 24px 60px rgb(var(--tinta-rgb) / 0.1), 0 2px 6px rgb(var(--tinta-rgb) / 0.04);
+  --sombra-s: 0 10px 28px rgb(var(--tinta-rgb) / 0.08), 0 1px 3px rgb(var(--tinta-rgb) / 0.05);
   /* Botones: relieve corto y neutro, sin resplandor */
-  --sombra-boton: 0 1px 2px rgb(59 29 14 / 0.1), 0 6px 14px -6px rgb(59 29 14 / 0.22);
+  --sombra-boton: 0 1px 2px rgb(var(--tinta-rgb) / 0.1), 0 6px 14px -6px rgb(var(--tinta-rgb) / 0.22);
 
   --ease: cubic-bezier(0.22, 1, 0.36, 1);
 
   color-scheme: light;
+}
+
+/* Naranja: el chocolate del logo en el pie y en los botones de formulario
+   (WhatsApp de la primera sesión, enviar del panel y login) */
+:root[data-paleta='naranja'] {
+  --pie-fondo: var(--cacao);
+  --boton: var(--cacao);
+  --boton-hover: #5a3424;
+  --boton-tinta: var(--crema);
+  --boton-circulo-tinta: var(--cacao);
+}
+
+/* ───────── Paletas alternativas ─────────
+   Se elige con `paleta:` en ajustes.yaml (pone data-paleta en <html>). Mismos nombres
+   de variable que la naranja: los componentes no cambian.
+   Regla común: el naranja queda solo para el sol (--sol-*); botones, fondos y
+   detalles usan el color principal de la paleta (n*). Cacao es la excepción: recupera el
+   naranja en botones y acentos. */
+
+/* Salvia · verde #b4bbb1, verde oliva en los parques y el horario, arena en la luz roja */
+:root[data-paleta='salvia'] {
+  --crema: #f6f2ea;
+  --tostado: #dfe4da;
+  --oliva: #9daf7c;
+  --oliva-tinta: #26350f;
+  --n50: #e8ece5;
+  --n100: #dbe1d7;
+  --n200: #ccd3c8;
+  --n300: #c0c7bc;
+  --n500: #b4bbb1;
+  --n700: #7e8879;
+  --n900: #4a5446;
+  --tinta: #2a2721;
+  --tinta-60: #625d53;
+  --rojo-100: #ebe3da;
+  --rojo-300: #bfa991;
+  --rojo-500: #9f8670;
+  --rojo-700: #7c6652;
+  --rojo-900: #4d3e31;
+  --claro: #fbf9f4;
+  --aviso-error: #ebe3da;
+  --crema-rgb: 246 242 234;
+  --tinta-rgb: 42 39 33;
+  --n200-rgb: 204 211 200;
+  --n500-rgb: 180 187 177;
+  --n700-rgb: 126 136 121;
+  --n900-rgb: 74 84 70;
+  --rojo-500-rgb: 159 134 112;
+}
+
+/* Arena · beige y tierra, tinta café como el logo. Análoga al naranja:
+   el sol se integra en lugar de chocar. Salvia en el horario, arcilla en la luz roja */
+:root[data-paleta='arena'] {
+  --crema: #f7f3ec;
+  --tostado: #ece4d7;
+  --oliva: #b4bbb1;
+  --oliva-tinta: #343c30;
+  --n50: #f2ece3;
+  --n100: #e8dfd1;
+  --n200: #dacdba;
+  --n300: #cdbca5;
+  --n500: #c2ad92;
+  --n700: #9f8670;
+  --n900: #5e4b3b;
+  --tinta: #2e221a;
+  --tinta-60: #6d6056;
+  --rojo-100: #efdcd4;
+  --rojo-300: #cc9884;
+  --rojo-500: #b0715e;
+  --rojo-700: #8c5544;
+  --rojo-900: #5a362b;
+  --claro: #fcfaf6;
+  --aviso-error: #efdcd4;
+  --crema-rgb: 247 243 236;
+  --tinta-rgb: 46 34 26;
+  --n200-rgb: 218 205 186;
+  --n500-rgb: 194 173 146;
+  --n700-rgb: 159 134 112;
+  --n900-rgb: 94 75 59;
+  --rojo-500-rgb: 176 113 94;
+}
+
+/* Oliva · verde oliva #a8b88a, más cálido e intenso que el salvia, con tinta
+   verde muy oscura. Salvia en los parques y el horario, arena en la luz roja */
+:root[data-paleta='oliva'] {
+  --crema: #f7f4ec;
+  --tostado: #e8ecdd;
+  --oliva: #b4bbb1;
+  --oliva-tinta: #343c30;
+  --n50: #f0f2e9;
+  --n100: #e3e8d6;
+  --n200: #d0d9bc;
+  --n300: #bcc9a2;
+  --n500: #a8b88a;
+  --n700: #6f7f52;
+  --n900: #3e4a2b;
+  --tinta: #262a1e;
+  --tinta-60: #62665a;
+  --rojo-100: #ebe3da;
+  --rojo-300: #bfa991;
+  --rojo-500: #9f8670;
+  --rojo-700: #7c6652;
+  --rojo-900: #4d3e31;
+  --claro: #fbfaf5;
+  --aviso-error: #ebe3da;
+  --crema-rgb: 247 244 236;
+  --tinta-rgb: 38 42 30;
+  --n200-rgb: 208 217 188;
+  --n500-rgb: 168 184 138;
+  --n700-rgb: 111 127 82;
+  --n900-rgb: 62 74 43;
+  --rojo-500-rgb: 159 134 112;
+}
+
+/* Cacao · el chocolate del logo (#3b1d0e) como secundario: texto, titulares
+   y pie. Salvia en las bandas; botones en naranja y chocolate, y la foto en la portada.
+   Verde oliva en los parques del mapa y el horario, arcilla en la luz roja */
+:root[data-paleta='cacao'] {
+  --crema: #f8f3ec;
+  --tostado: #e6e9e1;
+  --oliva: #9daf7c;
+  --oliva-tinta: #26350f;
+  --n50: #eef0ec;
+  --n100: #e2e6df;
+  --n200: #d0d6cc;
+  --n300: #c2c9be;
+  --n500: #b4bbb1;
+  --n700: #7e8879;
+  --n900: #3b1d0e;
+  --tinta: #3b1d0e;
+  --tinta-60: #7a5a48;
+  --rojo-100: #efdcd4;
+  --rojo-300: #cc9884;
+  --rojo-500: #b0715e;
+  --rojo-700: #8c5544;
+  --rojo-900: #5a362b;
+  --claro: #fcf9f5;
+  --aviso-error: #efdcd4;
+  --crema-rgb: 248 243 236;
+  --tinta-rgb: 59 29 14;
+  --n200-rgb: 208 214 204;
+  --n500-rgb: 180 187 177;
+  --n700-rgb: 126 136 121;
+  --n900-rgb: 59 29 14;
+  --rojo-500-rgb: 176 113 94;
+  /* Botones: píldora naranja con el círculo de la flecha en chocolate */
+  --boton: var(--sol-500);
+  --boton-hover: var(--sol-300);
+  --boton-circulo-fondo: var(--n900);
+  --boton-circulo-tinta: var(--crema);
 }
 
 /* ───────── Base ───────── */
@@ -167,7 +347,7 @@ input {
 :focus-visible {
   outline: 3px solid var(--n500);
   outline-offset: 3px;
-  border-radius: 6px;
+  border-radius: var(--r);
 }
 
 input,
@@ -225,7 +405,7 @@ textarea {
   letter-spacing: 0.16em;
   text-transform: uppercase;
   font-weight: 400;
-  color: rgb(59 29 14 / 0.75);
+  color: rgb(var(--tinta-rgb) / 0.75);
 }
 
 /* Enlace de texto con flecha (bsport, mapa…) */
@@ -289,4 +469,208 @@ textarea {
 
 html {
   background: var(--crema);
+}
+
+/* Paletas alternativas: titulares en el tono oscuro de la paleta. :where() deja la especificidad en la de
+   la etiqueta, así cualquier clase (pie, cierre, sobre fondos oscuros) manda */
+:where(:root:not([data-paleta='naranja'])) :is(h1, h2) {
+  color: var(--n900);
+}
+
+/* Cacao: el naranja corporativo como acento repetido en piezas pequeñas
+   (además de los soles) */
+:root[data-paleta='cacao'] {
+  --banda: var(--sol-500);
+}
+
+:root[data-paleta='cacao'] a:hover {
+  text-decoration-color: var(--sol-500);
+}
+
+:root[data-paleta='cacao'] .horario__texto--destacado::before {
+  background: var(--sol-500);
+  box-shadow: 0 0 0 5px rgb(var(--sol-500-rgb) / 0.22);
+}
+
+:root[data-paleta='cacao'] .pie__titulo {
+  color: var(--sol-300);
+}
+
+:root[data-paleta='cacao'] .glifo__punto {
+  fill: var(--sol-500);
+}
+
+:root[data-paleta='cacao'] .mapa-osm .punto {
+  fill: var(--sol-500);
+}
+
+:root[data-paleta='cacao'] .horario__texto--destacado::before {
+  animation-name: sol-respira;
+}
+
+@keyframes sol-respira {
+  0%,
+  100% {
+    transform: scale(1);
+    box-shadow: 0 0 0 4px rgb(var(--sol-500-rgb) / 0.24);
+  }
+  50% {
+    transform: scale(1.12);
+    box-shadow: 0 0 0 9px rgb(var(--sol-500-rgb) / 0.08);
+  }
+}
+
+/* ───────── Botón sol ─────────
+   Botones de reserva (primera sesión y WhatsApp): naranja con texto chocolate.
+   Al pasar por encima sale el sol: un disco de luz cálida sube y lo ilumina por
+   dentro. Al irse el ratón la luz se desvanece en su sitio, sin ponerse. */
+.boton-sol {
+  position: relative;
+  isolation: isolate;
+  overflow: hidden;
+  background: var(--sol-500);
+  color: var(--cacao);
+  box-shadow: 0 10px 26px -14px rgb(var(--cacao-rgb) / 0.6);
+  transition: box-shadow 1.2s var(--ease);
+  -webkit-tap-highlight-color: transparent;
+}
+
+.boton-sol::before {
+  content: '';
+  position: absolute;
+  z-index: -1;
+  pointer-events: none;
+}
+
+/* La luz del sol, esperando bajo el botón */
+.boton-sol::before {
+  left: 50%;
+  top: 100%;
+  width: 170%;
+  aspect-ratio: 1;
+  border-radius: 50%;
+  translate: -50% 0;
+  background: radial-gradient(
+    closest-side,
+    var(--claro) 0 34%,
+    var(--sol-100) 48%,
+    var(--sol-200) 62%,
+    rgb(var(--sol-500-rgb) / 0) 100%
+  );
+  opacity: 0;
+  /* Al salir: se apaga en su sitio y, ya invisible, vuelve abajo sin verse */
+  transition:
+    opacity 0.5s var(--ease),
+    top 0s linear 0.5s;
+}
+
+@media (hover: hover) {
+  .boton-sol:hover {
+    box-shadow:
+      0 0 0 6px rgb(var(--sol-500-rgb) / 0.18),
+      0 14px 40px -10px rgb(var(--sol-500-rgb) / 0.9);
+    transition-duration: 0.6s;
+  }
+  .boton-sol:hover::before {
+    top: -55%;
+    opacity: 1;
+    transition:
+      top 0.9s var(--ease),
+      opacity 0.9s var(--ease);
+  }
+}
+
+/* En táctil sale al pulsar; con teclado, al enfocar */
+.boton-sol:active,
+.boton-sol:focus-visible {
+  box-shadow:
+    0 0 0 6px rgb(var(--sol-500-rgb) / 0.18),
+    0 14px 40px -10px rgb(var(--sol-500-rgb) / 0.9);
+}
+
+.boton-sol:active::before,
+.boton-sol:focus-visible::before {
+  top: -55%;
+  opacity: 1;
+}
+
+.boton-sol:focus-visible {
+  outline: 3px solid var(--sol-500);
+  outline-offset: 4px;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .boton-sol,
+  .boton-sol::before {
+    transition: none;
+  }
+}
+
+/* ───────── Acento en los títulos ─────────
+   Las palabras marcadas con *asteriscos* en los textos (src/lib/acento.ts): la caligrafía
+   de Ephesis y, detrás, la misma pasada de rotulador que el hover del header.
+   Se pinta al entrar el título en pantalla; sin JS, o con movimiento reducido, ya está puesta. */
+.acento {
+  position: relative;
+  isolation: isolate;
+  display: inline-block;
+  padding-inline: 0.02em 0.1em;
+  /* Ephesis tiene la letra pequeña: más grande que el título para igualar su altura,
+     sin empujar el interlineado */
+  font-size: 1.3em;
+  line-height: 0.6;
+  font-family: var(--font-acento);
+  font-weight: 400;
+  letter-spacing: 0;
+}
+
+.acento::after {
+  content: '';
+  position: absolute;
+  z-index: -1;
+  left: -0.06em;
+  right: 0;
+  bottom: 0.02em;
+  height: 0.32em;
+  background: var(--n200);
+  -webkit-mask: var(--rotulador) center / 100% 100% no-repeat;
+  mask: var(--rotulador) center / 100% 100% no-repeat;
+  rotate: -1.2deg;
+  pointer-events: none;
+}
+
+/* Con JS: la pasada espera escondida y cruza la palabra cuando el título se ve */
+.con-acentos .acento::after {
+  clip-path: inset(-20% 100% -20% 0);
+  transition: clip-path 0.9s var(--ease) 0.25s;
+}
+
+.con-acentos .acento.visto::after {
+  clip-path: inset(-20% -2% -20% 0);
+}
+
+/* Con movimiento reducido o al imprimir, la pasada ya está puesta */
+@media (prefers-reduced-motion: reduce), print {
+  .con-acentos .acento::after {
+    clip-path: none;
+  }
+}
+
+/* ───────── Papel ─────────
+   El grano de los recortes (dibujos, mapa, tarjetas de precios): añade la clase .grano.
+   Se ajusta con --grano-opacidad, --grano-mezcla (multiply en papel claro, screen en oscuro)
+   y --grano-capa (z-index, para pintarlo encima del contenido). */
+.grano {
+  position: relative;
+}
+
+.grano::after {
+  content: '';
+  position: absolute;
+  z-index: var(--grano-capa, auto);
+  inset: 0;
+  background-image: var(--grano-papel);
+  mix-blend-mode: var(--grano-mezcla, multiply);
+  opacity: var(--grano-opacidad, 0.22);
+  pointer-events: none;
 }

@@ -1,5 +1,6 @@
 ---
 /* ¿Y si…?: pregunta y respuesta en una línea, sin tarjetas. */
+import { acentuar } from '../../lib/acento';
 import type { Home } from '../../lib/content';
 
 interface Props {
@@ -10,7 +11,7 @@ const { dudas } = Astro.props.home;
 
 <section class="dudas seccion" aria-labelledby="dudas-titulo">
   <div class="envoltura dudas__rejilla">
-    <h2 id="dudas-titulo" class="t-h2">{dudas.titulo}</h2>
+    <h2 id="dudas-titulo" class="t-h2" set:html={acentuar(dudas.titulo)} />
     <dl class="dudas__lista">
       {
         dudas.items.map((d) => (

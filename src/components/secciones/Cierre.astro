@@ -1,4 +1,5 @@
 ---
+import { acentuar } from '../../lib/acento';
 import CtaButton from '../CtaButton.astro';
 import Logo from '../Logo.astro';
 import { ctaEsFundador, type Ajustes, type Home } from '../../lib/content';
@@ -22,7 +23,7 @@ const texto = fundador?.texto ?? ((ajustes.estado === 'preapertura' && cierre.te
       <Logo label="SUNNA" />
     </div>
     <div class="cierre__texto">
-      <h2 id="cierre-titulo" class="t-h2">{titulo}</h2>
+      <h2 id="cierre-titulo" class="t-h2" set:html={acentuar(titulo)} />
       <p>{texto}</p>
     </div>
     <CtaButton ajustes={ajustes} home={home} />
@@ -51,14 +52,14 @@ const texto = fundador?.texto ?? ((ajustes.estado === 'preapertura' && cierre.te
     width: var(--sol);
     aspect-ratio: 1;
     translate: -50% 0;
-    border-radius: 999px;
+    border-radius: var(--r-pill);
     background: radial-gradient(
       closest-side,
-      rgb(255 241 230 / 0.95) 0%,
-      var(--n200) 38%,
-      var(--n300) 62%,
-      var(--n500) 84%,
-      var(--n500) 100%
+      rgb(var(--sol-50-rgb) / 0.95) 0%,
+      var(--sol-200) 38%,
+      var(--sol-300) 62%,
+      var(--sol-500) 84%,
+      var(--sol-500) 100%
     );
   }
 

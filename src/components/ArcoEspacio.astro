@@ -1,9 +1,9 @@
 ---
 /*
- * El arco de cada espacio (reformer, sauna, luz roja): fondo propio y un
- * dibujo de línea que se traza al entrar en pantalla. Con foto real, la foto.
- * Lo usan la página de cada espacio y los accesos de la home. El tamaño y
- * el radio los pone quien lo usa (clase).
+ * El dibujo de cada espacio (reformer, sauna, luz roja), en recortes de papel como el
+ * resto de la web: formas planas sin contorno, colores de la paleta y el grano del papel.
+ * Con foto real, la foto. Lo usan la página de cada espacio y los accesos de «Descubre
+ * SUNNA», siempre en 4:3. El tamaño y el radio los pone quien lo usa (clase).
  */
 import PhotoSlot from './PhotoSlot.astro';
 import type { ImageMetadata } from 'astro';
@@ -16,53 +16,96 @@ interface Props {
 }
 const { tipo, foto, sizes = '(min-width: 56rem) 40vw, 100vw', class: className } = Astro.props;
 
-// Rejilla de puntos de los paneles de luz roja (dos paneles de 72 × 148, 4 × 11 leds),
-// centrada en cada panel
-const panel = { y: 34, ancho: 72, alto: 148 };
-const columnas = 4;
-const filas = 11;
-const paso = { x: 14, y: 12.4 };
-const puntos = [74, 166].flatMap((x0) =>
+// Rejilla de leds de los dos paneles de luz roja (3 × 8 por panel), repartida en cada panel
+const panel = { y: 76, ancho: 32, alto: 70 };
+const columnas = 3;
+const filas = 8;
+const puntos = [122, 166].flatMap((x0) =>
   Array.from({ length: columnas * filas }, (_, i) => ({
-    x: x0 + (panel.ancho - (columnas - 1) * paso.x) / 2 + (i % columnas) * paso.x,
-    y: panel.y + (panel.alto - (filas - 1) * paso.y) / 2 + Math.floor(i / columnas) * paso.y,
+    x: x0 + (panel.ancho / (columnas + 1)) * ((i % columnas) + 1),
+    y: panel.y + (panel.alto / (filas + 1)) * (Math.floor(i / columnas) + 1),
   })),
 );
+// Tablas verticales de la sauna, a dos tonos
+const tablas = Array.from({ length: 10 }, (_, i) => i * 32);
 ---
 
 {
   foto ? (
     <PhotoSlot foto={foto} class={className} sizes={sizes} />
   ) : (
-    <div class:list={['arco', `arco--${tipo}`, className]} aria-hidden="true">
+    <div class:list={['arco', 'grano', `arco--${tipo}`, className]} aria-hidden="true">
       {tipo === 'reformer' && (
-        <svg class="dibujo" viewBox="0 0 320 200" fill="none">
-          <rect class="traza" x="24" y="120" width="272" height="22" rx="11" />
-          <path class="traza" d="M48 142v24M272 142v24" />
-          <rect class="traza" x="122" y="102" width="94" height="18" rx="5" />
-          <path class="traza" d="M196 102V90a5 5 0 0 1 10 0v12" />
-          <path class="traza" d="M84 111l4-5 4 10 4-10 4 10 4-10 4 10 4-10 4 10 4-5" />
-          <path class="traza" d="M60 120V76a10 10 0 0 1 10-10h8" />
-          <path class="traza" d="M216 108l66-10M286 103v17" />
-          <circle class="traza" cx="286" cy="98" r="5" />
+        <svg class="escena" viewBox="0 0 320 240" preserveAspectRatio="xMidYMid slice">
+          <rect class="ref-pared" width="320" height="240" />
+          {/* Un sol grande detrás de la máquina */}
+          <circle class="e-halo" cx="168" cy="104" r="76" />
+          <circle class="e-sol" cx="168" cy="104" r="52" />
+          <rect class="ref-suelo" y="196" width="320" height="44" />
+          <rect class="ref-zocalo" y="196" width="320" height="4" />
+          {/* El reformer de perfil: base de madera, carro de piel, barra de pies, muelles,
+              hombrera y reposacabezas, y al otro lado el poste con su polea y su cuerda */}
+          <g transform="translate(30 210)">
+            <rect class="ref-madera-osc" x="12" y="-14" width="10" height="14" />
+            <rect class="ref-madera-osc" x="236" y="-14" width="10" height="14" />
+            <rect class="ref-madera" x="0" y="-32" width="260" height="20" rx="4" />
+            <rect class="ref-madera-osc" x="0" y="-16" width="260" height="5" />
+            <path class="ref-muelles" d="M60 -38c3-4 6 4 9 0s6 4 9 0 6 4 9 0 6 4 9 0" />
+            <path class="ref-barra" d="M40 -32 L28 -84" />
+            <rect class="ref-piel" x="16" y="-92" width="26" height="12" rx="6" />
+            <rect class="ref-piel" x="98" y="-46" width="112" height="14" rx="4" />
+            <rect class="ref-piel-osc" x="98" y="-34" width="112" height="3" />
+            <rect class="ref-piel-osc" x="186" y="-54" width="28" height="9" rx="4" />
+            <rect class="ref-piel-osc" x="166" y="-64" width="9" height="20" rx="3" />
+            <rect class="ref-metal" x="243" y="-74" width="8" height="44" rx="2" />
+            <circle class="r-polea" cx="247" cy="-76" r="6" />
+            <path class="ref-cuerda" d="M247 -76 Q226 -66 206 -48" />
+          </g>
         </svg>
       )}
       {tipo === 'sauna' && (
-        <svg class="dibujo" viewBox="0 0 320 200" fill="none">
-          <path class="traza traza--suave" d="M80 30v170M120 30v170M160 30v170M200 30v170M240 30v170" />
-          <path class="traza" d="M36 104h248M36 114h248" />
-          <path class="traza" d="M60 114v28M260 114v28" />
-          <path class="traza" d="M24 142h272M24 152h272" />
-          <path class="traza" d="M48 152v32M272 152v32" />
+        <svg class="escena" viewBox="0 0 320 240" preserveAspectRatio="xMidYMid slice">
+          {/* Tablas de madera a dos tonos */}
+          {tablas.map((x, i) => (
+            <rect class:list={[i % 2 ? 'sau-tabla' : 'sau-tabla-clara']} x={x} width="32" height="240" />
+          ))}
+          {/* El calor del infrarrojo, como un sol detrás de los bancos */}
+          <circle class="sau-aura" cx="160" cy="96" r="78" />
+          <circle class="e-halo" cx="160" cy="96" r="50" />
+          <circle class="e-sol" cx="160" cy="96" r="34" />
+          {/* Banco alto y banco bajo */}
+          <rect class="sau-banco" x="24" y="122" width="272" height="16" rx="3" />
+          <rect class="sau-pata" x="44" y="138" width="12" height="40" />
+          <rect class="sau-pata" x="264" y="138" width="12" height="40" />
+          <rect class="sau-banco" x="0" y="176" width="320" height="16" rx="3" />
+          <rect class="sau-suelo" y="192" width="320" height="48" />
+          {/* Una toalla doblada */}
+          <rect class="sau-toalla" x="208" y="108" width="44" height="14" rx="4" />
+          <rect class="sau-toalla-raya" x="208" y="113" width="44" height="3" />
         </svg>
       )}
       {tipo === 'luz-roja' && (
-        <svg class="dibujo dibujo--paneles" viewBox="0 0 320 200" fill="none">
-          <rect class="traza" x="74" y={panel.y} width={panel.ancho} height={panel.alto} rx="8" />
-          <rect class="traza" x="166" y={panel.y} width={panel.ancho} height={panel.alto} rx="8" />
+        <svg class="escena" viewBox="0 0 320 240" preserveAspectRatio="xMidYMid slice">
+          <rect class="ref-pared" width="320" height="240" />
+          <rect class="ref-suelo" y="196" width="320" height="44" />
+          {/* La sala encendida, vista desde fuera por el arco */}
+          <path class="luz-sala" d="M96 196V86a64 64 0 0 1 128 0v110z" />
+          <path class="luz-suelo" d="M96 172h128v24H96z" />
+          <ellipse class="luz-brillo" cx="160" cy="112" rx="60" ry="58" />
+          <rect class="luz-panel" x="122" y={panel.y} width={panel.ancho} height={panel.alto} rx="3" />
+          <rect class="luz-panel" x="166" y={panel.y} width={panel.ancho} height={panel.alto} rx="3" />
           {puntos.map((p) => (
-            <circle class="led" cx={p.x} cy={p.y} r="2.2" />
+            <circle class="luz-led" cx={p.x} cy={p.y} r="1.9" />
           ))}
+          <rect class="luz-taburete" x="140" y="160" width="40" height="7" rx="3" />
+          <rect class="luz-taburete" x="145" y="166" width="5" height="10" />
+          <rect class="luz-taburete" x="170" y="166" width="5" height="10" />
+          {/* El arco de la puerta y la luz roja que sale al suelo de fuera */}
+          <path class="e-terracota" d="M86 196V84a74 74 0 0 1 148 0v112h-10V86a64 64 0 0 0-128 0v110z" />
+          <path class="luz-salida" d="M96 196h128l50 44H46z" />
+          {/* Un olivo junto a la puerta */}
+          <path class="e-hoja" d="M262 196c-6-30 0-58 18-74-1 30-6 54-18 74z" />
+          <path class="e-hoja-clara" d="M266 196c-12-18-22-26-38-28 8 16 20 24 38 28z" />
         </svg>
       )}
     </div>
@@ -71,53 +114,155 @@ const puntos = [74, 166].flatMap((x0) =>
 
 <style>
   .arco {
-    display: grid;
-    place-items: end center;
+    position: relative;
     overflow: hidden;
-    box-shadow: inset 0 0 0 1px var(--linea);
   }
 
-  .arco--reformer {
-    background:
-      radial-gradient(70% 45% at 50% 100%, rgb(255 167 107 / 0.35), rgb(255 167 107 / 0) 100%),
-      linear-gradient(180deg, var(--crema), var(--tostado) 55%, var(--n100));
+
+  .escena {
+    display: block;
+    width: 100%;
+    height: 100%;
   }
 
-  .arco--sauna {
-    background:
-      radial-gradient(90% 55% at 50% 100%, rgb(255 130 53 / 0.45), rgb(255 130 53 / 0) 100%),
-      linear-gradient(180deg, var(--n50), var(--n100) 45%, var(--n200) 80%, var(--n300));
+  /* Comunes */
+  .e-sol {
+    fill: var(--sol-500);
   }
 
-  .arco--luz-roja {
-    background:
-      radial-gradient(60% 50% at 50% 55%, var(--rojo-200) 0%, var(--rojo-300) 20%, var(--rojo-500) 52%, var(--rojo-700) 78%, var(--rojo-900) 100%);
+  .e-halo {
+    fill: var(--sol-200);
+    opacity: 0.7;
   }
 
-  .dibujo {
-    width: 88%;
-    height: auto;
-    margin-bottom: 8%;
-    stroke: var(--n700);
-    stroke-width: 1.1;
+  .e-terracota {
+    fill: var(--n700);
+  }
+
+  .e-hoja {
+    fill: color-mix(in srgb, var(--oliva) 60%, var(--oliva-tinta));
+  }
+
+  .e-hoja-clara {
+    fill: var(--oliva);
+  }
+
+  /* Reformer: la máquina de perfil delante del sol */
+  .ref-pared {
+    fill: color-mix(in srgb, var(--sol-100) 50%, var(--crema));
+  }
+
+  .ref-suelo {
+    fill: color-mix(in srgb, var(--sol-300) 30%, var(--tostado));
+  }
+
+  .ref-zocalo {
+    fill: color-mix(in srgb, var(--sol-300) 45%, var(--tostado));
+  }
+
+  .ref-madera {
+    fill: color-mix(in srgb, var(--n700) 30%, var(--tostado));
+  }
+
+  .ref-madera-osc {
+    fill: color-mix(in srgb, var(--n700) 45%, var(--tostado));
+  }
+
+  .ref-piel {
+    fill: color-mix(in srgb, var(--n700) 85%, var(--tostado));
+  }
+
+  .ref-piel-osc {
+    fill: color-mix(in srgb, var(--n700) 80%, var(--cacao));
+  }
+
+  .ref-metal {
+    fill: color-mix(in srgb, var(--cacao) 80%, var(--n700));
+  }
+
+  .ref-barra {
+    stroke: color-mix(in srgb, var(--cacao) 80%, var(--n700));
+    stroke-width: 6;
     stroke-linecap: round;
-    stroke-linejoin: round;
-    overflow: visible;
   }
 
-  .dibujo--paneles {
-    margin-bottom: 12%;
-    stroke: var(--rojo-100);
+  .ref-muelles,
+  .ref-cuerda {
+    fill: none;
+    stroke: color-mix(in srgb, var(--cacao) 80%, var(--n700));
+    stroke-width: 2;
   }
 
-  .traza--suave {
-    stroke: var(--n300);
-    opacity: 0.55;
+  .ref-cuerda {
+    stroke-width: 1.5;
   }
 
-  .led {
-    fill: var(--rojo-50);
-    opacity: 0.85;
+  .r-polea {
+    fill: var(--sol-300);
   }
 
+  /* Sauna: madera y el calor del infrarrojo */
+  .sau-tabla-clara {
+    fill: color-mix(in srgb, var(--sol-300) 40%, var(--tostado));
+  }
+
+  .sau-tabla {
+    fill: color-mix(in srgb, var(--sol-300) 55%, var(--tostado));
+  }
+
+  .sau-aura {
+    fill: var(--sol-300);
+    opacity: 0.35;
+  }
+
+  .sau-banco {
+    fill: color-mix(in srgb, var(--n700) 75%, var(--sol-300));
+  }
+
+  .sau-pata {
+    fill: color-mix(in srgb, var(--n700) 85%, var(--cacao));
+  }
+
+  .sau-suelo {
+    fill: color-mix(in srgb, var(--sol-300) 70%, var(--n700));
+  }
+
+  .sau-toalla {
+    fill: var(--crema);
+  }
+
+  .sau-toalla-raya {
+    fill: var(--oliva);
+  }
+
+  /* Luz roja: la sala encendida al otro lado del arco */
+  .luz-sala {
+    fill: var(--rojo-700);
+  }
+
+  .luz-suelo {
+    fill: color-mix(in srgb, var(--rojo-900) 90%, var(--rojo-700));
+  }
+
+  .luz-brillo {
+    fill: var(--rojo-300);
+    opacity: 0.4;
+  }
+
+  .luz-panel {
+    fill: var(--rojo-500);
+  }
+
+  .luz-led {
+    fill: var(--rojo-100);
+  }
+
+  .luz-taburete {
+    fill: var(--cacao);
+  }
+
+  .luz-salida {
+    fill: var(--rojo-300);
+    opacity: 0.45;
+  }
 </style>

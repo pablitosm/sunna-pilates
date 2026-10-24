@@ -4,7 +4,7 @@
  * mientras ajustes.yaml → fundadores.mostrar esté activo. Las ventajas se
  * despliegan hacia abajo; los enlaces a #fundadores las abren.
  */
-import type { Ajustes, Home } from '../lib/content';
+import { hayPlazasFundador, plazasFundador, type Ajustes, type Home } from '../lib/content';
 
 interface Props {
   ajustes: Ajustes;
@@ -12,12 +12,13 @@ interface Props {
 }
 const { ajustes, home } = Astro.props;
 const f = home.precios.fundadores;
-const { plazasTotales, plazasLibres, mostrar } = ajustes.fundadores;
-const libres = Math.min(plazasLibres, plazasTotales);
+const { plazasTotales } = ajustes.fundadores;
+const libres = plazasFundador(ajustes);
+// Sin plazas libres la barra no tiene nada que ofrecer
 ---
 
 {
-  mostrar && (
+  hayPlazasFundador(ajustes) && (
     <aside id="fundadores" class="fundadores" aria-labelledby="fundadores-titulo">
       <div class="envoltura fundadores__dentro">
         <details class="fundadores__mas">
@@ -86,7 +87,7 @@ const libres = Math.min(plazasLibres, plazasTotales);
   }
 
   .fundadores:has(.fundadores__mas[open]) {
-    box-shadow: 0 12px 40px rgb(66 28 8 / 0.22);
+    box-shadow: 0 12px 40px rgb(var(--tinta-rgb) / 0.22);
   }
 
   :global(body.panel-abierto) .fundadores {
@@ -132,7 +133,7 @@ const libres = Math.min(plazasLibres, plazasTotales);
 
   .fundadores__plazas {
     font-size: 0.875rem;
-    color: rgb(253 246 238 / 0.75);
+    color: rgb(var(--crema-rgb) / 0.75);
   }
 
   .fundadores__plazas strong {
@@ -148,9 +149,9 @@ const libres = Math.min(plazasLibres, plazasTotales);
     gap: 0.5rem;
     margin-left: auto;
     font-size: 0.9375rem;
-    color: rgb(253 246 238 / 0.85);
+    color: rgb(var(--crema-rgb) / 0.85);
     text-decoration: underline;
-    text-decoration-color: rgb(253 246 238 / 0.3);
+    text-decoration-color: rgb(var(--crema-rgb) / 0.3);
     text-underline-offset: 0.25em;
     transition:
       color 0.2s var(--ease),
@@ -194,10 +195,10 @@ const libres = Math.min(plazasLibres, plazasTotales);
     gap: 1.5rem;
     margin-block: 0 1.375rem;
     padding-top: 1rem;
-    border-top: 1px solid rgb(253 246 238 / 0.18);
+    border-top: 1px solid rgb(var(--crema-rgb) / 0.18);
     font-size: 0.875rem;
     line-height: 1.5;
-    color: rgb(253 246 238 / 0.85);
+    color: rgb(var(--crema-rgb) / 0.85);
   }
 
   .ventajas li {

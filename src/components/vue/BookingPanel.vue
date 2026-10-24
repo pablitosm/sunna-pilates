@@ -168,7 +168,7 @@ onBeforeUnmount(() => document.removeEventListener('click', alPulsarDocumento));
                   required
                   minlength="9"
                   maxlength="20"
-                  pattern="[0-9+ ()\-]{9,20}"
+                  pattern="[0-9+ \(\)\-]{9,20}"
                 />
               </span>
             </label>
@@ -242,7 +242,7 @@ onBeforeUnmount(() => document.removeEventListener('click', alPulsarDocumento));
 }
 
 .panel::backdrop {
-  background: rgb(59 29 14 / 0.28);
+  background: rgb(var(--tinta-rgb) / 0.28);
 }
 
 .panel__hoja {
@@ -251,9 +251,9 @@ onBeforeUnmount(() => document.removeEventListener('click', alPulsarDocumento));
   overflow-y: auto;
   overscroll-behavior: contain;
   padding: clamp(2rem, 1.5rem + 2vw, 3rem) clamp(1.5rem, 1rem + 2vw, 2.75rem) 2rem;
-  border-radius: var(--r-l);
+  border-radius: var(--r);
   background:
-    radial-gradient(90% 55% at 100% 0%, rgb(255 196 154 / 0.55), transparent 70%),
+    radial-gradient(90% 55% at 100% 0%, rgb(var(--n200-rgb) / 0.55), transparent 70%),
     var(--crema);
   border: 1px solid var(--n100);
   box-shadow: var(--sombra);
@@ -399,8 +399,8 @@ onBeforeUnmount(() => document.removeEventListener('click', alPulsarDocumento));
   padding: 0 0.3rem 0 1.5rem;
   border: 0;
   border-radius: var(--r-pill);
-  background: var(--n500);
-  color: var(--tinta);
+  background: var(--boton, var(--n500));
+  color: var(--boton-tinta, var(--tinta));
   font-weight: 500;
   text-decoration: none;
   cursor: pointer;
@@ -409,7 +409,7 @@ onBeforeUnmount(() => document.removeEventListener('click', alPulsarDocumento));
 }
 
 .enviar:hover {
-  background: var(--n300);
+  background: var(--boton-hover, var(--n300));
 }
 
 .enviar:disabled {
@@ -423,18 +423,19 @@ onBeforeUnmount(() => document.removeEventListener('click', alPulsarDocumento));
   width: 2.9rem;
   height: 2.9rem;
   border-radius: 50%;
-  background: radial-gradient(circle at 35% 30%, var(--n300), var(--n500) 70%);
+  background: var(--boton-circulo-fondo, radial-gradient(circle at 35% 30%, var(--n300), var(--n500) 70%));
+  color: var(--boton-circulo-tinta, inherit);
 }
 
 .aviso {
   padding: 0.875rem 1.125rem;
-  border-radius: var(--r-s);
+  border-radius: var(--r);
   background: var(--n50);
   font-size: var(--t-small);
 }
 
 .aviso--error {
-  background: #fde8e0;
+  background: var(--aviso-error);
   color: var(--n900);
 }
 
@@ -460,9 +461,9 @@ onBeforeUnmount(() => document.removeEventListener('click', alPulsarDocumento));
   height: 5rem;
   margin-bottom: 2rem;
   border-radius: 50%;
-  background: radial-gradient(circle at 50% 50%, var(--n300), var(--n500) 60%, transparent 72%);
+  background: radial-gradient(circle at 50% 50%, var(--sol-300), var(--sol-500) 60%, transparent 72%);
   filter: blur(0.5px);
-  box-shadow: 0 0 60px 20px rgb(255 130 53 / 0.35);
+  box-shadow: 0 0 60px 20px rgb(var(--sol-500-rgb) / 0.35);
 }
 
 
@@ -480,7 +481,7 @@ onBeforeUnmount(() => document.removeEventListener('click', alPulsarDocumento));
   padding: 1.5rem;
   min-height: 16rem;
   align-content: center;
-  border-radius: 16px;
+  border-radius: var(--r);
   background: var(--n50);
   border: 1px dashed var(--n200);
   color: var(--tinta-60);

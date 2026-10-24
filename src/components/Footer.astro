@@ -11,7 +11,7 @@ const lang = idiomaDe(Astro.currentLocale);
 const wa = whatsappUrl(ajustes.contacto.whatsapp, home.ui.whatsappMensaje);
 // Las páginas propias del menú (cada espacio y los precios)
 const paginas = home.menu
-  .flatMap((m) => [...(m.submenu ?? []), ...(m.pagina ? [{ texto: m.texto, pagina: m.pagina }] : [])])
+  .flatMap((m) => m.submenu ?? (m.pagina ? [{ texto: m.texto, pagina: m.pagina }] : []))
   .map((m) => ({ texto: m.texto, href: urlPagina(lang, m.pagina) }));
 const { contacto } = ajustes;
 const hayMedicion = Boolean(ajustes.medicion.googleAnalyticsId || ajustes.medicion.metaPixelId);
@@ -76,7 +76,7 @@ const anio = new Date().getFullYear();
 
 <style>
   .pie {
-    background: var(--n900);
+    background: var(--pie-fondo, var(--n900));
     color: var(--crema);
     padding: clamp(3.5rem, 2rem + 4vw, 5rem) 0 calc(3.5rem + env(safe-area-inset-bottom));
   }
@@ -96,7 +96,7 @@ const anio = new Date().getFullYear();
     grid-template-columns: repeat(auto-fit, minmax(10.5rem, 1fr));
     gap: 2rem;
     padding-bottom: 2.75rem;
-    border-bottom: 1px solid rgb(253 246 238 / 0.25);
+    border-bottom: 1px solid rgb(var(--crema-rgb) / 0.25);
   }
 
   .pie__col {
@@ -108,7 +108,7 @@ const anio = new Date().getFullYear();
   }
 
   .pie__titulo {
-    color: rgb(253 246 238 / 0.65);
+    color: rgb(var(--crema-rgb) / 0.65);
   }
 
   .pie a {
@@ -118,7 +118,7 @@ const anio = new Date().getFullYear();
 
   .pie a:hover {
     text-decoration: underline;
-    text-decoration-color: rgb(253 246 238 / 0.5);
+    text-decoration-color: rgb(var(--crema-rgb) / 0.5);
   }
 
   .pie__cookies {
@@ -138,7 +138,7 @@ const anio = new Date().getFullYear();
     gap: 0.5rem 2rem;
     padding-top: 1.75rem;
     font-size: 0.8125rem;
-    color: rgb(253 246 238 / 0.6);
+    color: rgb(var(--crema-rgb) / 0.6);
   }
 
   .pie :focus-visible {

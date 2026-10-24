@@ -65,7 +65,7 @@ enlaces:
 
 # 1 · PORTADA
 portada:
-  titular: "Reformer Pilates, wann es dir passt."
+  titular: "Reformer Pilates, wann es dir *passt*."
   subtitulo: "Dein Reformer, deine Klasse auf dem Bildschirm und das Studio für dich. Beim ersten Mal zeigen wir dir alles."
   abrimos: "Eröffnung am"
   foto:
@@ -107,7 +107,7 @@ explora:
     texto: "Vier Monatsmitgliedschaften, ab 55 € im Monat."
 
 primeraSesion:
-  titulo: "Deine erste Session ist gratis."
+  titulo: "Deine erste Session ist *gratis*."
   texto: "45 Minuten mit uns, bevor du allein trainierst. Sie ist Pflicht – und kostenlos."
   incluyeTitulo: "Was wir in diesen 45 Minuten machen"
   incluye:
@@ -169,7 +169,7 @@ comoFunciona:
 
 # 4 · LAS CLASES
 clases:
-  titulo: "Die Klassen"
+  titulo: "Die *Klassen*"
   tiposTitulo: "Arten"
   tipos: ["Full Body", "Beine", "Arme", "Core", "Mobilität", "Dehnen"]
   duraciones:
@@ -186,7 +186,7 @@ clases:
 # 5 · RECOVERY
 recovery:
   etiqueta: "Recovery"
-  titulo: "Reformer, Sauna und Rotlicht."
+  titulo: "Reformer, Sauna und *Rotlicht*."
   lineas:
     - "Sauna und Rotlicht gibt es ab der Eröffnung."
     - "In deiner Mitgliedschaft enthalten, je nach Plan."
@@ -399,7 +399,7 @@ cierre:
   textoPreapertura: "Trag dich in die Warteliste ein – wir schreiben dir vor der Eröffnung."
   # Mientras quedan plazas de socio fundador (web abierta) se muestran estos en su lugar.
   fundador:
-    titulo: "Werde eines der 40 Gründungsmitglieder."
+    titulo: "Werde eines der *40* Gründungsmitglieder."
     texto: "Ein Gründungspreis, der dauerhaft gilt, Vorrang beim Buchen zur Eröffnung und ein Willkommenspaket."
 
 # 11 · PIE (las páginas legales están en castellano)

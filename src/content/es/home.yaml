@@ -3,6 +3,8 @@
 #  Todos los textos salen del brief de SUNNA. Edita solo lo que está
 #  entre comillas y respeta los espacios del principio de cada línea.
 #  Las líneas que empiezan por # son notas y no se ven en la web.
+#  En los títulos grandes, una palabra entre asteriscos (*gratis*) sale
+#  destacada, en cursiva fina y con una pasada de rotulador detrás.
 # ─────────────────────────────────────────────────────────────
 
 # Título y descripción para Google y al compartir el enlace.
@@ -68,7 +70,7 @@ enlaces:
 
 # 1 · PORTADA
 portada:
-  titular: "Pilates reformer a tu hora."
+  titular: "Pilates reformer a tu *hora*."
   subtitulo: "Tu reformer, tu clase en pantalla y el estudio para ti. La primera vez, te lo enseñamos todo."
   # Antes de abrir se muestra la fecha de apertura (ajustes.yaml → fechaApertura) cuando esté cerrada.
   abrimos: "abrimos el"
@@ -116,7 +118,7 @@ explora:
 
 # PÁGINA DE LA PRIMERA SESIÓN GRATIS (a ella lleva el botón principal)
 primeraSesion:
-  titulo: "Tu primera sesión es gratis."
+  titulo: "Tu primera sesión es *gratis*."
   texto: "45 minutos con nosotros antes de entrenar por tu cuenta. Es obligatoria, y es gratis."
   incluyeTitulo: "Qué hacemos en esos 45 minutos"
   incluye:
@@ -180,7 +182,7 @@ comoFunciona:
 
 # 4 · LAS CLASES
 clases:
-  titulo: "Las clases"
+  titulo: "Las *clases*"
   tiposTitulo: "Tipos"
   tipos: ["Full Body", "Pierna", "Brazo", "Core", "Movilidad", "Estiramientos"]
   duraciones:
@@ -198,7 +200,7 @@ clases:
 # Sin promesas de salud: describe qué es y cómo se usa, nunca qué "cura" o "mejora".
 recovery:
   etiqueta: "Recovery"
-  titulo: "Reformer, sauna y luz roja."
+  titulo: "Reformer, sauna y *luz roja*."
   lineas:
     - "Sauna y luz roja entran en la apertura."
     - "Incluidas en tu membresía, según el plan."
@@ -432,7 +434,7 @@ cierre:
   textoPreapertura: "Apúntate a la lista de espera y te escribiremos antes de la apertura."
   # Mientras quedan plazas de socio fundador (web abierta) se muestran estos en su lugar.
   fundador:
-    titulo: "Sé uno de los 40 socios fundadores."
+    titulo: "Sé uno de los *40* socios fundadores."
     texto: "Precio de fundador protegido para siempre, prioridad para reservar en la apertura y pack de bienvenida."
 
 # 11 · PIE

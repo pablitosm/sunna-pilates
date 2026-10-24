@@ -12,8 +12,8 @@ const { class: className } = Astro.props;
 <svg class:list={['mapa-osm', className]} viewBox="0 0 1200 520" preserveAspectRatio="xMidYMid slice" aria-hidden="true">
   <defs>
     <radialGradient id="mapa-osm-halo">
-      <stop offset="0" stop-color="#ff8235" stop-opacity="0.5" />
-      <stop offset="1" stop-color="#ff8235" stop-opacity="0" />
+      <stop offset="0" style="stop-color: var(--sol-500)" stop-opacity="0.5" />
+      <stop offset="1" style="stop-color: var(--sol-500)" stop-opacity="0" />
     </radialGradient>
     <path id="mapa-osm-san-francisco-javier" d="M455 110L458 110L461 111L489 131L497 137L500 139L504 142L506 144L507 144L548 174L561 183L587 202L623 228L659 253L662 256L666 259L668 260L693 278L717 296L719 298L722 300L724 303L726 305L731 309L745 319" />
     <path id="mapa-osm-la-rosa" d="M592 402L593 397L598 388L599 385L600 384L616 351L617 349L628 326L630 322L640 302L641 299L662 256L664 252L682 214L684 211L712 154L713 151L737 101L738 98L746 82L751 73L759 56L777 17L787 -3L801 -31L804 -36L803 -38L803 -44" />
@@ -55,25 +55,25 @@ const { class: className } = Astro.props;
   }
 
   .tierra {
-    fill: var(--crema);
+    fill: color-mix(in srgb, var(--sol-200) 30%, var(--tostado));
   }
 
   .mar {
-    fill: var(--n100);
+    fill: color-mix(in srgb, var(--sol-300) 65%, var(--sol-100));
   }
 
   .plaza {
-    fill: var(--n50);
+    fill: color-mix(in srgb, var(--sol-300) 32%, var(--tostado));
   }
 
   .verde {
     fill: var(--oliva);
-    opacity: 0.38;
+    opacity: 0.85;
   }
 
   .muelle {
     fill: none;
-    stroke: var(--crema);
+    stroke: color-mix(in srgb, var(--sol-300) 32%, var(--tostado));
     stroke-width: 6;
   }
 
@@ -90,38 +90,38 @@ const { class: className } = Astro.props;
   }
 
   .menor {
-    stroke: var(--n100);
+    stroke: var(--sol-50);
     stroke-width: 1.5;
   }
 
   .calle-borde {
-    stroke: var(--n100);
+    stroke: none;
     stroke-width: 9;
   }
 
   .calle {
-    stroke: #fffaf4;
+    stroke: var(--sol-50);
     stroke-width: 6.5;
   }
 
   .media-borde {
-    stroke: var(--n200);
+    stroke: none;
     stroke-width: 11;
   }
 
   .media {
-    stroke: #fffaf4;
+    stroke: var(--sol-50);
     stroke-width: 8;
   }
 
   .principal-borde {
-    stroke: var(--n300);
+    stroke: none;
     stroke-width: 14;
   }
 
   .principal {
-    stroke: var(--n100);
-    stroke-width: 10.5;
+    stroke: var(--crema);
+    stroke-width: 12;
   }
 
   .nombres {
@@ -130,20 +130,20 @@ const { class: className } = Astro.props;
     text-transform: uppercase;
     fill: var(--tinta-60);
     paint-order: stroke;
-    stroke: var(--crema);
+    stroke: color-mix(in srgb, var(--sol-200) 30%, var(--tostado));
     stroke-width: 4;
     stroke-linejoin: round;
   }
 
   .punto {
     fill: var(--n500);
-    stroke: var(--crema);
+    stroke: var(--sol-200);
     stroke-width: 4;
   }
 
   .marca path,
   .marca rect {
-    fill: var(--tinta);
+    fill: var(--n700);
   }
 
   .marca text {

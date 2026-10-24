@@ -1,0 +1,348 @@
+---
+/*
+ * Recortes de «Por qué SUNNA»: formas planas de papel, sin contornos, una por razón.
+ * horario: díptico de mañana y tarde, un sol que sale y otro que se pone.
+ * autonomo: un arco terracota que se abre a la luz, con una planta al lado.
+ * ritmo: tres semicírculos con el tamaño de cada clase (10, 25 y 45 minutos).
+ * Y los cuatro pasos de la primera sesión: reformer, app, entrada e ipad.
+ * Y un momento del día por membresía: alba (mar), manana (olivos), tarde (arco) y mediodia (cacao).
+ * Los colores salen de la paleta (sol, arena, terracota, oliva), así siguen al tema.
+ */
+interface Props {
+  tipo: 'horario' | 'autonomo' | 'ritmo' | 'reformer' | 'app' | 'entrada' | 'ipad' | 'alba' | 'manana' | 'tarde' | 'mediodia';
+  class?: string;
+}
+const { tipo, class: className } = Astro.props;
+// Los momentos del día de las membresías son más apaisados
+const momento = ['alba', 'manana', 'tarde', 'mediodia'].includes(tipo);
+---
+
+<svg
+  class:list={['recorte', `recorte--${tipo}`, className]}
+  viewBox={momento ? '0 0 240 140' : '0 0 240 170'}
+  preserveAspectRatio="xMidYMid slice"
+  aria-hidden="true"
+  focusable="false"
+>
+  {
+    tipo === 'horario' && (
+      <>
+        <rect class="r-cielo" width="119" height="170" />
+        <rect class="r-cielo-tarde" x="121" width="119" height="170" />
+        <circle class="r-sol horario__sube" cx="44" cy="102" r="24" />
+        <circle class="r-terracota horario__baja" cx="196" cy="102" r="24" />
+        <path class="r-arena" d="M0 116c22-4 52-5 119-2v56H0z" />
+        <path class="r-arena-tostada" d="M121 114c48-3 84-1 119 3v53H121z" />
+        <text class="r-texto" x="12" y="156">08:00</text>
+        <text class="r-texto" x="228" y="156" text-anchor="end">22:00</text>
+      </>
+    )
+  }
+
+  {
+    tipo === 'autonomo' && (
+      <>
+        <rect class="r-arena" width="240" height="170" />
+        <rect class="r-arena-tostada" y="146" width="240" height="24" />
+        <path class="r-terracota" d="M78 146V80a42 42 0 0 1 84 0v66z" />
+        <path class="r-luz" d="M93 146V84a27 27 0 0 1 54 0v62z" />
+        <circle class="r-sol" cx="120" cy="94" r="13" />
+        <path class="r-luz autonomo__suelo" d="M93 146h54l26 24H67z" />
+        <path class="r-hoja" d="M40 170c-2-26 6-44 22-56-2 22-8 40-22 56z" />
+        <path class="r-hoja-clara" d="M46 170c6-18 18-28 34-32-8 16-20 26-34 32z" />
+      </>
+    )
+  }
+
+  {
+    tipo === 'ritmo' && (
+      <>
+        <rect class="r-fondo" width="240" height="170" />
+        <path class="r-luz" d="M30 136a90 90 0 0 1 180 0z" />
+        <path class="r-medio" d="M70 136a50 50 0 0 1 100 0z" />
+        <path class="r-sol" d="M100 136a20 20 0 0 1 40 0z" />
+        <rect class="r-arena" y="136" width="240" height="34" />
+        <text class="r-texto" x="120" y="62" text-anchor="middle">45′</text>
+        <text class="r-texto" x="120" y="102" text-anchor="middle">25′</text>
+        <text class="r-texto" x="120" y="155" text-anchor="middle">10′</text>
+      </>
+    )
+  }
+
+  {
+    tipo === 'alba' && (
+      <>
+        <rect class="m-alba-cielo" width="240" height="140" />
+        <circle class="r-luz r-halo" cx="120" cy="100" r="34" />
+        <circle class="r-medio" cx="120" cy="100" r="22" />
+        <rect class="m-alba-mar" y="98" width="240" height="42" />
+        <path class="m-alba-ola" d="M0 112c30-4 56-4 80 0s52 4 80 0 56-4 80 0v28H0z" />
+        <path class="m-alba-brillo" d="M40 104h34M150 108h44M96 122h40" />
+      </>
+    )
+  }
+
+  {
+    tipo === 'manana' && (
+      <>
+        <rect class="m-manana-cielo" width="240" height="140" />
+        <circle class="r-luz r-halo" cx="160" cy="58" r="30" />
+        <circle class="r-sol" cx="160" cy="58" r="19" />
+        <path class="m-manana-loma" d="M0 104c40-22 92-26 140-12 40 12 70 10 100 0v48H0z" />
+        <path class="r-hoja-clara" d="M0 120c60-10 140-12 240-2v22H0z" />
+        <path class="m-manana-hoja" d="M48 104c-2-24 8-40 26-50-2 22-10 38-26 50z" />
+        <path class="m-manana-hoja-clara" d="M54 104c8-16 20-24 36-26-8 14-20 22-36 26z" />
+      </>
+    )
+  }
+
+  {
+    tipo === 'tarde' && (
+      <>
+        <rect class="m-tarde-cielo" width="240" height="140" />
+        <path class="r-terracota" d="M72 140V70a48 48 0 0 1 96 0v70z" />
+        <path class="m-tarde-dentro" d="M88 140V74a32 32 0 0 1 64 0v66z" />
+        <circle class="r-sol" cx="120" cy="96" r="15" />
+        <rect class="m-tarde-suelo" y="124" width="240" height="16" />
+        <path class="m-tarde-dentro autonomo__suelo" d="M88 124h64l20 16H68z" />
+      </>
+    )
+  }
+
+  {
+    tipo === 'mediodia' && (
+      <>
+        <rect class="m-mediodia-cielo" width="240" height="140" />
+        <circle class="r-sol m-mediodia-aura" cx="120" cy="52" r="44" />
+        <circle class="r-medio m-mediodia-halo" cx="120" cy="52" r="34" />
+        <circle class="r-sol" cx="120" cy="52" r="26" />
+        <path class="m-mediodia-loma" d="M0 112c40-6 92-8 130-6 46 2 82 0 110-4v38H0z" />
+        <path class="m-mediodia-suelo" d="M0 124c60-4 140-5 240 0v16H0z" />
+      </>
+    )
+  }
+
+  {
+    tipo === 'reformer' && (
+      <>
+        <rect class="r-fondo" width="240" height="170" />
+        <circle class="r-luz" cx="62" cy="50" r="24" />
+        <circle class="r-sol" cx="62" cy="50" r="14" />
+        <rect class="r-arena" y="132" width="240" height="38" />
+        <rect class="r-terracota" x="36" y="108" width="168" height="12" rx="6" />
+        <rect class="r-terracota" x="48" y="118" width="8" height="16" rx="2" />
+        <rect class="r-terracota" x="184" y="118" width="8" height="16" rx="2" />
+        <rect class="r-medio" x="70" y="98" width="70" height="12" rx="5" />
+        <rect class="r-luz" x="84" y="88" width="8" height="12" rx="3" />
+        <rect class="r-luz" x="100" y="88" width="8" height="12" rx="3" />
+        <path class="r-terracota" d="M186 110V72a6 6 0 0 1 12 0v38z" />
+        <rect class="r-sol" x="176" y="66" width="32" height="8" rx="4" />
+      </>
+    )
+  }
+
+  {
+    tipo === 'app' && (
+      <>
+        <rect class="r-cielo" width="240" height="170" />
+        <circle class="r-luz" cx="52" cy="48" r="22" />
+        <rect class="r-terracota" x="88" y="22" width="64" height="160" rx="14" />
+        <rect class="r-fondo" x="95" y="34" width="50" height="140" rx="8" />
+        <rect class="r-luz" x="102" y="46" width="36" height="12" rx="6" />
+        <rect class="r-sol" x="102" y="64" width="36" height="12" rx="6" />
+        <rect class="r-luz" x="102" y="82" width="36" height="12" rx="6" />
+        <rect class="r-luz" x="102" y="100" width="36" height="12" rx="6" />
+        <rect class="r-arena" y="146" width="88" height="24" />
+        <rect class="r-arena" x="152" y="146" width="88" height="24" />
+        <path class="r-hoja" d="M196 146c-2-22 4-36 18-46-1 18-6 34-18 46z" />
+        <path class="r-hoja-clara" d="M200 146c5-14 14-22 28-26-6 13-16 21-28 26z" />
+      </>
+    )
+  }
+
+  {
+    tipo === 'entrada' && (
+      <>
+        <rect class="r-arena" width="240" height="170" />
+        <rect class="r-arena-tostada" y="146" width="240" height="24" />
+        <path class="r-terracota" d="M60 146V84a38 38 0 0 1 76 0v62z" />
+        <path class="r-luz" d="M74 146V88a24 24 0 0 1 48 0v58z" />
+        <path class="r-luz autonomo__suelo" d="M74 146h48l24 24H50z" />
+        <rect class="r-terracota" x="158" y="70" width="34" height="60" rx="8" />
+        <rect class="r-fondo" x="163" y="77" width="24" height="46" rx="4" />
+        <circle class="r-sol" cx="175" cy="96" r="8" />
+        <circle class="r-medio" cx="148" cy="98" r="3" />
+        <circle class="r-medio" cx="140" cy="98" r="2.4" />
+      </>
+    )
+  }
+
+  {
+    tipo === 'ipad' && (
+      <>
+        <rect class="r-fondo" width="240" height="170" />
+        <rect class="r-arena" y="136" width="240" height="34" />
+        <rect class="r-terracota" x="46" y="28" width="148" height="104" rx="14" />
+        <rect class="r-luz" x="56" y="38" width="128" height="84" rx="6" />
+        <circle class="r-medio" cx="120" cy="33" r="1.6" />
+        <circle class="r-sol" cx="120" cy="74" r="18" />
+        <path class="r-fondo" d="M114 64v20l16-10z" />
+        <rect class="r-medio" x="66" y="108" width="108" height="4" rx="2" />
+        <rect class="r-sol" x="66" y="108" width="40" height="4" rx="2" />
+      </>
+    )
+  }
+</svg>
+
+<style>
+  .recorte {
+    display: block;
+    width: 100%;
+    height: 100%;
+  }
+
+  .r-fondo {
+    fill: var(--sol-50);
+  }
+
+  .r-cielo {
+    fill: var(--sol-100);
+  }
+
+  .r-cielo-tarde {
+    fill: color-mix(in srgb, var(--sol-300) 65%, var(--sol-100));
+  }
+
+  .r-sol {
+    fill: var(--sol-500);
+  }
+
+  .r-terracota {
+    fill: var(--n700);
+  }
+
+  .r-luz {
+    fill: var(--sol-200);
+  }
+
+  .r-medio {
+    fill: var(--sol-300);
+  }
+
+  .r-arena {
+    fill: color-mix(in srgb, var(--sol-200) 30%, var(--tostado));
+  }
+
+  .r-arena-tostada {
+    fill: color-mix(in srgb, var(--sol-300) 32%, var(--tostado));
+  }
+
+  .r-hoja {
+    fill: color-mix(in srgb, var(--oliva) 80%, var(--tinta));
+  }
+
+  .r-hoja-clara {
+    fill: var(--oliva);
+  }
+
+  .autonomo__suelo {
+    opacity: 0.75;
+  }
+
+  .r-halo {
+    opacity: 0.6;
+  }
+
+  /* Momentos del día de las membresías */
+  .m-alba-cielo {
+    fill: color-mix(in srgb, var(--sol-100) 45%, var(--crema));
+  }
+
+  .m-alba-mar {
+    fill: color-mix(in srgb, var(--sol-200) 70%, var(--sol-100));
+  }
+
+  .m-alba-ola {
+    fill: color-mix(in srgb, var(--sol-300) 45%, var(--sol-200));
+  }
+
+  .m-alba-brillo {
+    fill: none;
+    stroke: color-mix(in srgb, var(--sol-100) 45%, var(--crema));
+    stroke-width: 2.5;
+    stroke-linecap: round;
+  }
+
+  .m-manana-cielo {
+    fill: color-mix(in srgb, var(--oliva) 14%, var(--crema));
+  }
+
+  .m-manana-loma {
+    fill: color-mix(in srgb, var(--oliva) 62%, var(--crema));
+  }
+
+  .m-manana-hoja {
+    fill: color-mix(in srgb, var(--oliva) 60%, var(--oliva-tinta));
+  }
+
+  .m-manana-hoja-clara {
+    fill: color-mix(in srgb, var(--oliva) 82%, var(--oliva-tinta));
+  }
+
+  .m-tarde-cielo {
+    fill: color-mix(in srgb, var(--sol-300) 45%, var(--sol-100));
+  }
+
+  .m-tarde-dentro {
+    fill: color-mix(in srgb, var(--sol-100) 70%, var(--crema));
+  }
+
+  .m-tarde-suelo {
+    fill: color-mix(in srgb, var(--sol-300) 75%, var(--n700));
+  }
+
+  .m-mediodia-cielo {
+    fill: color-mix(in srgb, var(--cacao) 88%, var(--sol-500));
+  }
+
+  .m-mediodia-aura {
+    opacity: 0.22;
+  }
+
+  .m-mediodia-halo {
+    opacity: 0.35;
+  }
+
+  .m-mediodia-loma {
+    fill: color-mix(in srgb, var(--cacao) 72%, var(--n700));
+  }
+
+  .m-mediodia-suelo {
+    fill: var(--cacao);
+  }
+
+  .r-texto {
+    fill: var(--tinta);
+    font-size: 11px;
+    letter-spacing: 0.02em;
+  }
+
+  /* Los dos soles suben y bajan muy despacio, uno a la contra del otro */
+  .horario__sube,
+  .horario__baja {
+    animation: recorte-sol 7s ease-in-out infinite alternate;
+  }
+
+  .horario__baja {
+    animation-direction: alternate-reverse;
+  }
+
+  @keyframes recorte-sol {
+    from {
+      translate: 0 10px;
+    }
+    to {
+      translate: 0 -4px;
+    }
+  }
+</style>

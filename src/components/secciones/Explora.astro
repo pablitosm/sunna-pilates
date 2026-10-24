@@ -4,6 +4,7 @@
  * cada una lleva a su página. En la portada van todos;
  * en la página de un espacio, los demás (excluir).
  */
+import { acentuar } from '../../lib/acento';
 import ArcoEspacio from '../ArcoEspacio.astro';
 import Icon from '../Icon.astro';
 import { idiomaDe, urlPagina, type Home, type Pagina } from '../../lib/content';
@@ -28,7 +29,7 @@ const espacios = orden
   ex && (
     <section id={excluir ? undefined : 'descubre'} class="explora seccion" aria-labelledby="explora-titulo">
       <div class="envoltura">
-        <h2 id="explora-titulo" class="t-h2 explora__titulo">{ex.titulo}</h2>
+        <h2 id="explora-titulo" class="t-h2 explora__titulo" set:html={acentuar(ex.titulo)} />
       </div>
       <ul role="list" class="explora__lista">
         {espacios.map((e) => (
@@ -73,7 +74,8 @@ const espacios = orden
 
   .acceso :global(.acceso__arco) {
     aspect-ratio: 4 / 3;
-    border-radius: 14px;
+    /* Esquinas de papel, como los recortes de «Por qué SUNNA» y el mapa */
+    border-radius: var(--r);
     overflow: hidden;
   }
 

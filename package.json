@@ -16,6 +16,7 @@
     "@astrojs/sitemap": "^3.7.4",
     "@astrojs/vue": "^7.0.3",
     "@fontsource-variable/dm-sans": "^5.3.0",
+    "@fontsource/ephesis": "^5.3.0",
     "astro": "^7.3.5",
     "vue": "^3.5.43"
   },

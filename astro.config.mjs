@@ -11,7 +11,15 @@ const site = process.env.SITE_URL;
 export default defineConfig({
   site,
   output: 'static',
-  integrations: [vue(), ...(site ? [sitemap({ filter: (url) => !url.includes('/login') })] : [])],
+  // El CSS va dentro de cada página: el navegador no espera a otros archivos para pintar
+  build: { inlineStylesheets: 'always' },
+  // El sitemap deja fuera el acceso y las páginas legales (que no se indexan)
+  integrations: [
+    vue(),
+    ...(site
+      ? [sitemap({ filter: (url) => !/\/(login|aviso-legal|privacidad|cookies|condiciones-membresia)\/?$/.test(url) })]
+      : []),
+  ],
   i18n: {
     // Castellano en la raíz (/); inglés, alemán y francés en /en/, /de/ y /fr/.
     // Los textos de cada idioma viven en src/content/<idioma>/home.yaml.

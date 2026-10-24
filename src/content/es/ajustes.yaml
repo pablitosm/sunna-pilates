@@ -13,6 +13,15 @@
 #                 sesión y enlaza a la app, a bsport y a WhatsApp.
 estado: abierto
 
+# Paleta de colores de toda la web:
+#   naranja → crema y naranja, con la foto en la portada (la original)
+#   salvia  → verde salvia, con el sol en naranja y la portada en verde liso
+#   arena   → beige y tierra, con el sol en naranja y la portada en arena lisa
+#   oliva   → verde oliva, con el sol en naranja y la portada en oliva liso
+#   cacao   → el chocolate del logo como secundario (titulares, texto y pie),
+#             botones naranja y chocolate, salvia en las bandas y la foto en la portada
+paleta: naranja
+
 # Fecha de apertura en texto libre, p. ej. "15 de noviembre".
 # Mientras esté vacía (""), la web no muestra ninguna fecha.
 fechaApertura: ""
@@ -67,7 +76,7 @@ formulario:
 
 fundadores:
   # Muestra u oculta el bloque de Socios Fundadores.
-  mostrar: true
+  mostrar: false
   plazasTotales: 40
   # Actualiza este número a mano cuando se ocupen plazas.
   plazasLibres: 40

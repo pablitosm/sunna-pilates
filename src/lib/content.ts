@@ -36,6 +36,9 @@ export const idiomaDe = (locale: string | undefined): Lang =>
 
 export const localeOg: Record<Lang, string> = { es: 'es_ES', en: 'en_GB', de: 'de_DE', fr: 'fr_FR' };
 export type Ajustes = CollectionEntry<'ajustes'>['data'];
+
+// Color del navegador en móvil (theme-color): el fondo crema de cada paleta
+export const colorTema: Record<Ajustes['paleta'], string> = { naranja: '#fdf6ee', salvia: '#f6f2ea', arena: '#f7f3ec', oliva: '#f7f4ec', cacao: '#f8f3ec' };
 export type Home = CollectionEntry<'home'>['data'];
 export type Estado = Ajustes['estado'];
 
@@ -79,14 +82,14 @@ export function mapsUrl(a: Ajustes) {
   );
 }
 
-/**
- * Destino del botón principal. Abierto: la página de la primera sesión gratis,
- * que explica la sesión y lleva a la app, a bsport o a WhatsApp. Preapertura:
- * abre el panel de lista de espera (sin JavaScript, el bloque de fundadores).
- */
+/** Plazas de socio fundador libres (nunca más que las totales). */
+export function plazasFundador(a: Ajustes) {
+  return Math.min(a.fundadores.plazasLibres, a.fundadores.plazasTotales);
+}
+
 /** Quedan plazas de socio fundador y la oferta está a la vista (ajustes.yaml → fundadores). */
 export function hayPlazasFundador(a: Ajustes) {
-  return a.fundadores.mostrar && Math.min(a.fundadores.plazasLibres, a.fundadores.plazasTotales) > 0;
+  return a.fundadores.mostrar && plazasFundador(a) > 0;
 }
 
 /** Botón principal abierto: mientras quedan plazas de fundador, lleva a la oferta de fundadores. */
@@ -94,6 +97,11 @@ export function ctaEsFundador(a: Ajustes) {
   return a.estado === 'abierto' && hayPlazasFundador(a);
 }
 
+/**
+ * Destino del botón principal. Abierto: la página de la primera sesión gratis,
+ * que explica la sesión y lleva a la app, a bsport o a WhatsApp. Preapertura:
+ * abre el panel de lista de espera (sin JavaScript, el bloque de fundadores).
+ */
 export function ctaHref(a: Ajustes, lang: Lang = 'es') {
   if (ctaEsFundador(a)) return `${urlPagina(lang, 'precios')}#fundadores`;
   if (a.estado === 'abierto') return urlPagina(lang, 'primera-sesion');

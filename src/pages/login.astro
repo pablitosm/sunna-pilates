@@ -6,16 +6,19 @@
 import '../styles/global.css';
 import Logo from '../components/Logo.astro';
 import Icon from '../components/Icon.astro';
+import { colorTema, getSite } from '../lib/content';
+
+const { ajustes } = await getSite('es');
 ---
 
 <!doctype html>
-<html lang="es">
+<html lang="es" data-paleta={ajustes.paleta}>
   <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
     <title>Acceso · SUNNA</title>
     <meta name="robots" content="noindex, nofollow" />
-    <meta name="theme-color" content="#fdf6ee" />
+    <meta name="theme-color" content={colorTema[ajustes.paleta]} />
     <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
   </head>
   <body class="acceso">
@@ -65,7 +68,8 @@ import Icon from '../components/Icon.astro';
       const q = new URLSearchParams(location.search);
       const next = q.get('next');
       const campoNext = document.querySelector<HTMLInputElement>('[data-next]');
-      if (campoNext && next && next.startsWith('/') && !next.startsWith('//')) campoNext.value = next;
+      // Solo rutas internas: «//sitio» y «/\sitio» los navegadores los leen como otro dominio
+      if (campoNext && next && next.startsWith('/') && !/^\/[\/\\]/.test(next) && !next.includes('\\')) campoNext.value = next;
       const error = q.get('error');
       const aviso = document.querySelector<HTMLElement>('[data-error]');
       if (aviso && error) {
@@ -104,10 +108,10 @@ import Icon from '../components/Icon.astro';
     pointer-events: none;
     background: radial-gradient(
       closest-side,
-      rgb(255 130 53 / 0.5) 0%,
-      rgb(255 167 107 / 0.32) 34%,
-      rgb(255 196 154 / 0.16) 58%,
-      rgb(253 246 238 / 0) 100%
+      rgb(var(--sol-500-rgb) / 0.5) 0%,
+      rgb(var(--sol-300-rgb) / 0.32) 34%,
+      rgb(var(--sol-200-rgb) / 0.16) 58%,
+      rgb(var(--crema-rgb) / 0) 100%
     );
   }
 
@@ -119,7 +123,7 @@ import Icon from '../components/Icon.astro';
     bottom: 0;
     width: clamp(20rem, 30vw, 30rem);
     height: min(82%, 44rem);
-    border-radius: 999px 999px 0 0;
+    border-radius: var(--r-pill) var(--r-pill) 0 0;
     background: linear-gradient(180deg, var(--n50) 0%, var(--n100) 55%, var(--n200) 100%);
     overflow: hidden;
   }
@@ -131,14 +135,14 @@ import Icon from '../components/Icon.astro';
     width: 62%;
     aspect-ratio: 1;
     translate: -50% 0;
-    border-radius: 999px;
+    border-radius: var(--r-pill);
     background: radial-gradient(
       closest-side,
-      rgb(255 241 230 / 0.95) 0%,
-      var(--n200) 40%,
-      var(--n300) 64%,
-      var(--n500) 86%,
-      var(--n500) 100%
+      rgb(var(--sol-50-rgb) / 0.95) 0%,
+      var(--sol-200) 40%,
+      var(--sol-300) 64%,
+      var(--sol-500) 86%,
+      var(--sol-500) 100%
     );
   }
 
@@ -160,10 +164,10 @@ import Icon from '../components/Icon.astro';
     gap: 0.75rem;
     width: min(100%, 28rem);
     padding: clamp(1.75rem, 1rem + 3vw, 2.75rem);
-    border-radius: var(--r-l);
+    border-radius: var(--r);
     background: var(--crema);
     border: 1px solid var(--n100);
-    box-shadow: 0 24px 48px -28px rgb(140 58 18 / 0.4);
+    box-shadow: 0 24px 48px -28px rgb(var(--n900-rgb) / 0.4);
   }
 
   .tarjeta__logo {
@@ -180,7 +184,7 @@ import Icon from '../components/Icon.astro';
 
   .tarjeta__error {
     padding: 0.75rem 1rem;
-    border-radius: var(--r-s);
+    border-radius: var(--r);
     background: var(--n50);
     border: 1px solid var(--n200);
     font-size: 0.9375rem;
@@ -248,8 +252,8 @@ import Icon from '../components/Icon.astro';
     padding: 0 0.3rem 0 1.5rem;
     border: 0;
     border-radius: var(--r-pill);
-    background: var(--n500);
-    color: var(--tinta);
+    background: var(--boton, var(--n500));
+    color: var(--boton-tinta, var(--tinta));
     font: 400 1.0625rem var(--font);
     cursor: pointer;
     box-shadow: var(--sombra-boton);
@@ -257,7 +261,7 @@ import Icon from '../components/Icon.astro';
   }
 
   .enviar:hover {
-    background: var(--n300);
+    background: var(--boton-hover, var(--n300));
   }
 
   .enviar[aria-busy='true'] {
@@ -271,8 +275,8 @@ import Icon from '../components/Icon.astro';
     width: 3.75rem;
     height: 3.75rem;
     border-radius: 50%;
-    background: var(--n500);
-    box-shadow: inset 0 0 0 1px rgb(59 29 14 / 0.1);
+    background: var(--boton-circulo-fondo, radial-gradient(circle at 35% 30%, var(--n300), var(--n500) 70%));
+    box-shadow: inset 0 0 0 1px rgb(var(--tinta-rgb) / 0.1);
     transition: transform 0.22s var(--ease);
   }
 

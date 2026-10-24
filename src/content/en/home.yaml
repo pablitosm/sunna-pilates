@@ -65,7 +65,7 @@ enlaces:
 
 # 1 · PORTADA
 portada:
-  titular: "Reformer Pilates on your time."
+  titular: "Reformer Pilates on your *time*."
   subtitulo: "Your reformer, your class on screen and the studio to yourself. The first time, we show you everything."
   abrimos: "opening on"
   foto:
@@ -107,7 +107,7 @@ explora:
     texto: "Four monthly memberships, from €55 a month."
 
 primeraSesion:
-  titulo: "Your first session is free."
+  titulo: "Your first session is *free*."
   texto: "45 minutes with us before you train on your own. It's required, and it's free."
   incluyeTitulo: "What we do in those 45 minutes"
   incluye:
@@ -169,7 +169,7 @@ comoFunciona:
 
 # 4 · LAS CLASES
 clases:
-  titulo: "The classes"
+  titulo: "The *classes*"
   tiposTitulo: "Types"
   tipos: ["Full Body", "Legs", "Arms", "Core", "Mobility", "Stretching"]
   duraciones:
@@ -186,7 +186,7 @@ clases:
 # 5 · RECOVERY
 recovery:
   etiqueta: "Recovery"
-  titulo: "Reformer, sauna and red light."
+  titulo: "Reformer, sauna and *red light*."
   lineas:
     - "Sauna and red light are there from opening day."
     - "Included in your membership, depending on the plan."
@@ -399,7 +399,7 @@ cierre:
   textoPreapertura: "Join the waiting list and we'll write to you before opening."
   # Mientras quedan plazas de socio fundador (web abierta) se muestran estos en su lugar.
   fundador:
-    titulo: "Be one of SUNNA's 40 founding members."
+    titulo: "Be one of SUNNA's *40* founding members."
     texto: "A founding price protected for good, priority booking at opening and a welcome pack."
 
 # 11 · PIE (las páginas legales están en castellano)

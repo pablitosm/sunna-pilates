@@ -1,8 +1,9 @@
 ---
+import { acentuar } from '../../lib/acento';
 import CtaButton from '../CtaButton.astro';
 import PhotoSlot from '../PhotoSlot.astro';
 import Seguir from '../Seguir.astro';
-import { idiomaDe, urlPagina, type Ajustes, type Home } from '../../lib/content';
+import { hayPlazasFundador, idiomaDe, plazasFundador, urlPagina, type Ajustes, type Home } from '../../lib/content';
 
 interface Props {
   ajustes: Ajustes;
@@ -10,6 +11,9 @@ interface Props {
 }
 const { ajustes, home } = Astro.props;
 const { portada } = home;
+// Naranja y cacao llevan la foto del estudio; las demás paletas, un fondo liso del color principal
+const liso = !['naranja', 'cacao'].includes(ajustes.paleta);
+const foto = liso ? undefined : portada.foto;
 // Secundario: los precios (página propia) si hay texto; si no, cómo funciona
 const secundario = home.botones.precios
   ? { texto: home.botones.precios, href: urlPagina(idiomaDe(Astro.currentLocale), 'precios') }
@@ -21,30 +25,30 @@ const lugar = conFecha
 
 // Antes de abrir, la oferta de fundadores asoma ya en la portada y lleva a su bloque
 const f = ajustes.fundadores;
-const libres = Math.min(f.plazasLibres, f.plazasTotales);
+const libres = plazasFundador(ajustes);
 const plazas =
-  ajustes.estado === 'preapertura' && f.mostrar
+  ajustes.estado === 'preapertura' && hayPlazasFundador(ajustes)
     ? libres < f.plazasTotales
       ? `${libres} ${home.precios.fundadores.plazas} ${f.plazasTotales}`
       : home.precios.fundadores.etiqueta
     : '';
 ---
 
-<section id="portada" class:list={['portada', { 'portada--foto': portada.foto }]} aria-labelledby="portada-titulo">
+<section id="portada" class:list={['portada', { 'portada--foto': foto, 'portada--liso': liso }]} aria-labelledby="portada-titulo">
   <!-- La foto del estudio se funde con el papel crema: sin marco ni tarjeta -->
   {
-    portada.foto ? (
+    foto ? (
       <div class="portada__foto">
-        <PhotoSlot foto={portada.foto} loading="eager" sizes="(min-width: 56.25rem) 65vw, 100vw" class="portada__imagen" />
+        <PhotoSlot foto={foto} loading="eager" sizes="(min-width: 56.25rem) 65vw, 100vw" class="portada__imagen" />
       </div>
     ) : (
-      <div class="portada__halo" aria-hidden="true" />
+      !liso && <div class="portada__halo" aria-hidden="true" />
     )
   }
 
   <div class="envoltura portada__texto">
     {conFecha && <p class="portada__fecha">{lugar}</p>}
-    <h1 id="portada-titulo" class="portada__titulo">{portada.titular}</h1>
+    <h1 id="portada-titulo" class="portada__titulo" set:html={acentuar(portada.titular)} />
     <p class="portada__subtitulo">{portada.subtitulo}</p>
     <div class="portada__acciones">
       <CtaButton ajustes={ajustes} home={home} />
@@ -104,7 +108,7 @@ const plazas =
     z-index: -1;
     inset: auto 0 0;
     height: 18%;
-    background: linear-gradient(180deg, rgb(253 246 238 / 0), var(--crema));
+    background: linear-gradient(180deg, rgb(var(--crema-rgb) / 0), var(--crema));
     pointer-events: none;
   }
 
@@ -120,11 +124,46 @@ const plazas =
     pointer-events: none;
     background: radial-gradient(
       closest-side,
-      rgb(255 130 53 / 0.45) 0%,
-      rgb(255 167 107 / 0.28) 34%,
-      rgb(255 196 154 / 0.14) 58%,
-      rgb(253 246 238 / 0) 100%
+      rgb(var(--sol-500-rgb) / 0.45) 0%,
+      rgb(var(--sol-300-rgb) / 0.28) 34%,
+      rgb(var(--sol-200-rgb) / 0.14) 58%,
+      rgb(var(--crema-rgb) / 0) 100%
     );
+  }
+
+  /* Paletas alternativas: portada lisa en el color principal. Encima, texto en tinta plena
+     (los grises no llegan a contraste); la píldora en crema la pone global.css */
+  .portada--liso {
+    --texto: var(--tinta-rgb);
+    background: var(--n500);
+  }
+
+  .portada--liso .portada__titulo {
+    color: rgb(var(--texto));
+  }
+
+  .portada--liso .portada__fecha,
+  .portada--liso .portada__subtitulo,
+  .portada--liso .portada__plazas {
+    color: rgb(var(--texto) / 0.82);
+  }
+
+  .portada--liso .portada__secundario {
+    color: rgb(var(--texto));
+    text-decoration-color: rgb(var(--texto) / 0.4);
+  }
+
+  .portada--liso .portada__secundario:hover {
+    text-decoration-color: rgb(var(--texto));
+  }
+
+  .portada--liso .portada__abajo :global(.seguir) {
+    color: rgb(var(--texto));
+  }
+
+  .portada--liso .portada__plazas-punto {
+    background: var(--crema);
+    box-shadow: 0 0 0 4px rgb(var(--crema-rgb) / 0.35);
   }
 
   .portada__fecha {
@@ -194,9 +233,9 @@ const plazas =
   .portada__plazas-punto {
     width: 0.5rem;
     height: 0.5rem;
-    border-radius: 999px;
+    border-radius: var(--r-pill);
     background: var(--n500);
-    box-shadow: 0 0 0 4px rgb(255 130 53 / 0.2);
+    box-shadow: 0 0 0 4px rgb(var(--n500-rgb) / 0.2);
   }
 
   /* Móvil: la foto arriba, de borde a borde, fundida en crema por abajo;

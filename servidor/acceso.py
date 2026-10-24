@@ -81,7 +81,8 @@ def leer_cookie(cabecera, nombre):
 
 def destino_seguro(ruta):
     # Solo rutas internas de la propia web (evita redirecciones abiertas).
-    if not ruta or not ruta.startswith("/") or ruta.startswith("//") or ruta.startswith("/login"):
+    # «//sitio» y «/\sitio» los navegadores los leen como otro dominio.
+    if not ruta or not ruta.startswith("/") or ruta.startswith("//") or "\\" in ruta or ruta.startswith("/login"):
         return "/"
     return ruta
 

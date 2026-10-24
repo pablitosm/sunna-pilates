@@ -159,8 +159,8 @@ const { class: className } = Astro.props;
 <svg class:list={['mapa-osm', className]} viewBox="0 0 ${ANCHO} ${ALTO}" preserveAspectRatio="xMidYMid slice" aria-hidden="true">
   <defs>
     <radialGradient id="mapa-osm-halo">
-      <stop offset="0" stop-color="#ff8235" stop-opacity="0.5" />
-      <stop offset="1" stop-color="#ff8235" stop-opacity="0" />
+      <stop offset="0" style="stop-color: var(--sol-500)" stop-opacity="0.5" />
+      <stop offset="1" style="stop-color: var(--sol-500)" stop-opacity="0" />
     </radialGradient>
 ${nombres.map((n) => `    <path id="mapa-osm-${n.id}" d="${n.d}" />`).join('\n')}
   </defs>
@@ -197,25 +197,25 @@ ${lugares.map(([t, [x, y]]) => `    <text x="${x}" y="${y}" text-anchor="middle"
   }
 
   .tierra {
-    fill: var(--crema);
+    fill: color-mix(in srgb, var(--sol-200) 30%, var(--tostado));
   }
 
   .mar {
-    fill: var(--n100);
+    fill: color-mix(in srgb, var(--sol-300) 65%, var(--sol-100));
   }
 
   .plaza {
-    fill: var(--n50);
+    fill: color-mix(in srgb, var(--sol-300) 32%, var(--tostado));
   }
 
   .verde {
     fill: var(--oliva);
-    opacity: 0.38;
+    opacity: 0.85;
   }
 
   .muelle {
     fill: none;
-    stroke: var(--crema);
+    stroke: color-mix(in srgb, var(--sol-300) 32%, var(--tostado));
     stroke-width: 6;
   }
 
@@ -232,38 +232,38 @@ ${lugares.map(([t, [x, y]]) => `    <text x="${x}" y="${y}" text-anchor="middle"
   }
 
   .menor {
-    stroke: var(--n100);
+    stroke: var(--sol-50);
     stroke-width: 1.5;
   }
 
   .calle-borde {
-    stroke: var(--n100);
+    stroke: none;
     stroke-width: 9;
   }
 
   .calle {
-    stroke: #fffaf4;
+    stroke: var(--sol-50);
     stroke-width: 6.5;
   }
 
   .media-borde {
-    stroke: var(--n200);
+    stroke: none;
     stroke-width: 11;
   }
 
   .media {
-    stroke: #fffaf4;
+    stroke: var(--sol-50);
     stroke-width: 8;
   }
 
   .principal-borde {
-    stroke: var(--n300);
+    stroke: none;
     stroke-width: 14;
   }
 
   .principal {
-    stroke: var(--n100);
-    stroke-width: 10.5;
+    stroke: var(--crema);
+    stroke-width: 12;
   }
 
   .nombres {
@@ -272,20 +272,20 @@ ${lugares.map(([t, [x, y]]) => `    <text x="${x}" y="${y}" text-anchor="middle"
     text-transform: uppercase;
     fill: var(--tinta-60);
     paint-order: stroke;
-    stroke: var(--crema);
+    stroke: color-mix(in srgb, var(--sol-200) 30%, var(--tostado));
     stroke-width: 4;
     stroke-linejoin: round;
   }
 
   .punto {
     fill: var(--n500);
-    stroke: var(--crema);
+    stroke: var(--sol-200);
     stroke-width: 4;
   }
 
   .marca path,
   .marca rect {
-    fill: var(--tinta);
+    fill: var(--n700);
   }
 
   .marca text {

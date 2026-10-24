@@ -1,5 +1,6 @@
 ---
 /* Las clases: tipografía y líneas finas, sin tarjetas. */
+import { acentuar } from '../../lib/acento';
 import type { Home } from '../../lib/content';
 
 interface Props {
@@ -10,7 +11,7 @@ const { clases } = Astro.props.home;
 
 <section id="clases" class="clases seccion" aria-labelledby="clases-titulo">
   <div class="envoltura clases__rejilla">
-    <h2 id="clases-titulo" class="t-h2">{clases.titulo}</h2>
+    <h2 id="clases-titulo" class="t-h2" set:html={acentuar(clases.titulo)} />
 
     <div class="clases__cuerpo">
       <dl class="duraciones">

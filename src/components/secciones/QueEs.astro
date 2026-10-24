@@ -1,4 +1,5 @@
 ---
+import { acentuar } from '../../lib/acento';
 import Glifo from '../Glifo.astro';
 import type { Home } from '../../lib/content';
 
@@ -11,7 +12,7 @@ const { queEs } = Astro.props.home;
 <section class="que-es seccion" aria-labelledby="que-es-titulo">
   <div class="envoltura">
     <div class="cabeza-seccion">
-      <h2 id="que-es-titulo" class="t-h2">{queEs.titulo}</h2>
+      <h2 id="que-es-titulo" class="t-h2" set:html={acentuar(queEs.titulo)} />
     </div>
 
     <ul role="list" class="ideas">
@@ -34,8 +35,8 @@ const { queEs } = Astro.props.home;
     grid-template-columns: repeat(3, minmax(0, 1fr));
     gap: 1.25rem 2.5rem;
     padding-block: 2.75rem;
-    border-top: 1px solid rgb(255 196 154 / 0.9);
-    border-bottom: 1px solid rgb(255 196 154 / 0.9);
+    border-top: 1px solid rgb(var(--n200-rgb) / 0.9);
+    border-bottom: 1px solid rgb(var(--n200-rgb) / 0.9);
   }
 
   .idea {

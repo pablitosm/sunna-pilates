@@ -33,13 +33,14 @@ const { href, texto, class: className } = Astro.props;
   .seguir__circulo {
     display: grid;
     place-items: center;
+    color: var(--n900);
     width: 2.75rem;
     height: 2.75rem;
     border-radius: 50%;
     background: var(--crema);
     box-shadow:
       inset 0 0 0 1px var(--n200),
-      0 8px 20px -12px rgb(140 58 18 / 0.5);
+      0 8px 20px -12px rgb(var(--n900-rgb) / 0.5);
     transition: background-color 0.3s var(--ease);
   }
 

@@ -6,6 +6,7 @@
  * explicación y lo que incluye cada membresía. La luz roja lleva su propio
  * rojo (--rojo-*); el resto vive en la escala naranja.
  */
+import { acentuar } from '../../lib/acento';
 import ArcoEspacio from '../ArcoEspacio.astro';
 import type { Home } from '../../lib/content';
 
@@ -32,7 +33,7 @@ const Titulo = pagina ? 'h1' : 'h3';
     <header class="recovery__cabeza">
       <div>
         <p class="etiqueta recovery__etiqueta">{recovery.etiqueta}</p>
-        <h2 id="recovery-titulo" class="t-h2">{recovery.titulo}</h2>
+        <h2 id="recovery-titulo" class="t-h2" set:html={acentuar(recovery.titulo)} />
       </div>
       <div class="recovery__lineas">
         {recovery.lineas.map((l, i) => <p class:list={['recovery__linea', { 'recovery__linea--suave': i > 0 }]}>{l}</p>)}
@@ -152,12 +153,12 @@ const Titulo = pagina ? 'h1' : 'h3';
     inset: -18% -10% -18% -30%;
     z-index: 0;
     pointer-events: none;
-    background: radial-gradient(45% 55% at 30% 50%, rgb(236 74 50 / 0.2), rgb(236 74 50 / 0) 70%);
+    background: radial-gradient(45% 55% at 30% 50%, rgb(var(--rojo-500-rgb) / 0.2), rgb(var(--rojo-500-rgb) / 0) 70%);
   }
 
   .apartado--luz-roja:nth-child(even)::before {
     inset: -18% -30% -18% -10%;
-    background: radial-gradient(45% 55% at 70% 50%, rgb(236 74 50 / 0.2), rgb(236 74 50 / 0) 70%);
+    background: radial-gradient(45% 55% at 70% 50%, rgb(var(--rojo-500-rgb) / 0.2), rgb(var(--rojo-500-rgb) / 0) 70%);
   }
 
   .apartado__visual,
@@ -169,7 +170,7 @@ const Titulo = pagina ? 'h1' : 'h3';
   /* El arco: 180 px arriba, 28 px abajo */
   .apartado :global(.apartado__arco) {
     aspect-ratio: 4 / 3;
-    border-radius: 14px;
+    border-radius: var(--r);
     overflow: hidden;
   }
 
@@ -258,7 +259,7 @@ const Titulo = pagina ? 'h1' : 'h3';
   .recovery__aviso {
     margin-top: clamp(3rem, 2rem + 3vw, 5rem);
     padding: 1.25rem 1.5rem;
-    border-radius: var(--r-s);
+    border-radius: var(--r);
     border: 1px solid var(--linea-fuerte);
     font-size: 0.8125rem;
     line-height: 1.7;
@@ -278,7 +279,7 @@ const Titulo = pagina ? 'h1' : 'h3';
     .apartado--luz-roja::before,
     .apartado--luz-roja:nth-child(even)::before {
       inset: -10% -20% 40% -20%;
-      background: radial-gradient(60% 50% at 50% 50%, rgb(236 74 50 / 0.18), rgb(236 74 50 / 0) 70%);
+      background: radial-gradient(60% 50% at 50% 50%, rgb(var(--rojo-500-rgb) / 0.18), rgb(var(--rojo-500-rgb) / 0) 70%);
     }
 
     .apartado :global(.apartado__arco) {

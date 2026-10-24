@@ -139,14 +139,14 @@ onBeforeUnmount(() => document.removeEventListener('click', abrirPreferencias));
 
     <div class="cookies__botones">
       <template v-if="detalle">
-        <button type="button" class="boton" @click="guardar(eleccion.analitica, eleccion.marketing)">
+        <button type="button" class="cookies__boton" @click="guardar(eleccion.analitica, eleccion.marketing)">
           {{ props.textos.guardar }}
         </button>
       </template>
       <template v-else>
-        <button type="button" class="boton" @click="guardar(false, false)">{{ props.textos.rechazar }}</button>
-        <button type="button" class="boton" @click="guardar(true, true)">{{ props.textos.aceptar }}</button>
-        <button type="button" class="boton boton--texto" @click="detalle = true">{{ props.textos.configurar }}</button>
+        <button type="button" class="cookies__boton" @click="guardar(false, false)">{{ props.textos.rechazar }}</button>
+        <button type="button" class="cookies__boton" @click="guardar(true, true)">{{ props.textos.aceptar }}</button>
+        <button type="button" class="cookies__boton cookies__boton--texto" @click="detalle = true">{{ props.textos.configurar }}</button>
       </template>
     </div>
   </section>
@@ -160,7 +160,7 @@ onBeforeUnmount(() => document.removeEventListener('click', abrirPreferencias));
   z-index: 50;
   width: min(calc(100% - 2rem), 27rem);
   padding: 1.25rem;
-  border-radius: 20px;
+  border-radius: var(--r);
   background: var(--n50);
   border: 1px solid var(--n200);
   box-shadow: var(--sombra);
@@ -207,7 +207,7 @@ onBeforeUnmount(() => document.removeEventListener('click', abrirPreferencias));
   margin-top: 1rem;
 }
 
-.boton {
+.cookies__boton {
   flex: 1 1 auto;
   min-height: 2.75rem;
   padding: 0 1.25rem;
@@ -219,7 +219,7 @@ onBeforeUnmount(() => document.removeEventListener('click', abrirPreferencias));
   cursor: pointer;
 }
 
-.boton--texto {
+.cookies__boton--texto {
   flex: 0 0 auto;
   background: none;
   color: var(--tinta);
