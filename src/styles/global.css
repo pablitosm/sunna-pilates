@@ -273,6 +273,12 @@ body {
   overflow-x: clip;
 }
 
+/* El contenido ocupa al menos una pantalla: en las páginas cortas (404, textos legales)
+   el pie empieza debajo, no a media pantalla. Las largas ya la superan y no cambian. */
+#contenido {
+  min-height: 100svh;
+}
+
 /* Grano de lámina, 3,5 % en multiplicar */
 body::after {
   content: '';

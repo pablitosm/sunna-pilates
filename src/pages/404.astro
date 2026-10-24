@@ -11,10 +11,13 @@ import Base from '../layouts/Base.astro';
 </Base>
 
 <style>
+  /* Toda la primera pantalla, con el mensaje centrado en vertical; el pie queda debajo */
   .no-encontrada {
     display: grid;
     gap: 1.5rem;
     justify-items: start;
+    align-content: center;
+    min-height: 100svh;
     padding-block: var(--pagina-arriba) var(--seccion);
   }
 </style>
