@@ -154,8 +154,8 @@ const plazas =
     box-shadow: 0 0 0 4px rgb(var(--n500-rgb) / 0.2);
   }
 
-  /* Móvil: la foto arriba, de borde a borde, fundida en crema por abajo;
-     el titular empieza sobre ese degradado */
+  /* Móvil: la foto arriba, de borde a borde, fundida en crema por abajo; las colinas
+     terminan de fundirse justo encima del titular, que no queda cortado por su borde */
   @media (max-width: 56.25rem) {
     .portada {
       display: block;
@@ -174,7 +174,7 @@ const plazas =
 
     .portada__foto {
       inset: 0 0 auto;
-      height: min(60svh, 34rem);
+      height: min(50svh, 28rem);
       -webkit-mask-image: linear-gradient(180deg, #000 45%, rgb(0 0 0 / 0.5) 72%, transparent 100%);
       mask-image: linear-gradient(180deg, #000 45%, rgb(0 0 0 / 0.5) 72%, transparent 100%);
     }
