@@ -1,9 +1,8 @@
 ---
 import { acentuar } from '../../lib/acento';
 import CtaButton from '../CtaButton.astro';
-import PhotoSlot from '../PhotoSlot.astro';
-import Seguir from '../Seguir.astro';
-import { hayPlazasFundador, idiomaDe, plazasFundador, urlPagina, type Ajustes, type Home } from '../../lib/content';
+import DibujoPortada from '../DibujoPortada.astro';
+import { hayPlazasFundador, plazasFundador, type Ajustes, type Home } from '../../lib/content';
 
 interface Props {
   ajustes: Ajustes;
@@ -11,13 +10,8 @@ interface Props {
 }
 const { ajustes, home } = Astro.props;
 const { portada } = home;
-// Naranja y cacao llevan la foto del estudio; las demás paletas, un fondo liso del color principal
+// Naranja y cacao llevan el dibujo del amanecer; las demás paletas, un fondo liso del color principal
 const liso = !['naranja', 'cacao'].includes(ajustes.paleta);
-const foto = liso ? undefined : portada.foto;
-// Secundario: los precios (página propia) si hay texto; si no, cómo funciona
-const secundario = home.botones.precios
-  ? { texto: home.botones.precios, href: urlPagina(idiomaDe(Astro.currentLocale), 'precios') }
-  : { texto: home.botones.secundario, href: '#como-funciona' };
 const conFecha = ajustes.estado === 'preapertura' && ajustes.fechaApertura;
 const lugar = conFecha
   ? `${ajustes.direccion.ciudad} · ${portada.abrimos} ${ajustes.fechaApertura}`
@@ -34,25 +28,21 @@ const plazas =
     : '';
 ---
 
-<section id="portada" class:list={['portada', { 'portada--foto': foto, 'portada--liso': liso }]} aria-labelledby="portada-titulo">
-  <!-- La foto del estudio se funde con el papel crema: sin marco ni tarjeta -->
+<section id="portada" class:list={['portada', { 'portada--foto': !liso, 'portada--liso': liso }]} aria-labelledby="portada-titulo">
+  <!-- El dibujo ocupa el sitio de la foto y se funde igual con el papel crema -->
   {
-    foto ? (
+    !liso && (
       <div class="portada__foto">
-        <PhotoSlot foto={foto} loading="eager" sizes="(min-width: 56.25rem) 65vw, 100vw" class="portada__imagen" />
+        <DibujoPortada />
       </div>
-    ) : (
-      !liso && <div class="portada__halo" aria-hidden="true" />
     )
   }
 
   <div class="envoltura portada__texto">
     {conFecha && <p class="portada__fecha">{lugar}</p>}
     <h1 id="portada-titulo" class="portada__titulo" set:html={acentuar(portada.titular)} />
-    <p class="portada__subtitulo">{portada.subtitulo}</p>
     <div class="portada__acciones">
       <CtaButton ajustes={ajustes} home={home} />
-      <a class="portada__secundario" href={secundario.href}>{secundario.texto}</a>
     </div>
     {
       plazas && (
@@ -63,15 +53,6 @@ const plazas =
       )
     }
   </div>
-
-  <!-- Invita a bajar hacia «Por qué SUNNA» -->
-  {
-    home.porQue && (
-      <div class="envoltura portada__abajo">
-        <Seguir href="#por-que" texto={home.porQue.titulo} />
-      </div>
-    )
-  }
 </section>
 
 <style>
@@ -87,18 +68,13 @@ const plazas =
     background: var(--crema);
   }
 
-  /* Escritorio: la foto ocupa la derecha hasta el borde y se desvanece hacia el texto */
+  /* Escritorio: el dibujo ocupa la derecha hasta el borde y se desvanece hacia el texto */
   .portada__foto {
     position: absolute;
     z-index: -1;
     inset: 0 0 0 38%;
     -webkit-mask-image: linear-gradient(90deg, transparent 0%, rgb(0 0 0 / 0.5) 26%, #000 52%);
     mask-image: linear-gradient(90deg, transparent 0%, rgb(0 0 0 / 0.5) 26%, #000 52%);
-  }
-
-  .portada__foto :global(.portada__imagen) {
-    position: absolute;
-    inset: 0;
   }
 
   /* Un poco de crema abajo para que la sección siguiente no corte en seco */
@@ -110,25 +86,6 @@ const plazas =
     height: 18%;
     background: linear-gradient(180deg, rgb(var(--crema-rgb) / 0), var(--crema));
     pointer-events: none;
-  }
-
-  /* Sin foto: el halo de sol */
-  .portada__halo {
-    position: absolute;
-    z-index: -1;
-    top: 50%;
-    right: -12%;
-    width: min(70rem, 110vw);
-    aspect-ratio: 1;
-    translate: 0 -50%;
-    pointer-events: none;
-    background: radial-gradient(
-      closest-side,
-      rgb(var(--sol-500-rgb) / 0.45) 0%,
-      rgb(var(--sol-300-rgb) / 0.28) 34%,
-      rgb(var(--sol-200-rgb) / 0.14) 58%,
-      rgb(var(--crema-rgb) / 0) 100%
-    );
   }
 
   /* Paletas alternativas: portada lisa en el color principal. Encima, texto en tinta plena
@@ -143,22 +100,8 @@ const plazas =
   }
 
   .portada--liso .portada__fecha,
-  .portada--liso .portada__subtitulo,
   .portada--liso .portada__plazas {
     color: rgb(var(--texto) / 0.82);
-  }
-
-  .portada--liso .portada__secundario {
-    color: rgb(var(--texto));
-    text-decoration-color: rgb(var(--texto) / 0.4);
-  }
-
-  .portada--liso .portada__secundario:hover {
-    text-decoration-color: rgb(var(--texto));
-  }
-
-  .portada--liso .portada__abajo :global(.seguir) {
-    color: rgb(var(--texto));
   }
 
   .portada--liso .portada__plazas-punto {
@@ -174,7 +117,7 @@ const plazas =
 
   .portada__titulo {
     max-width: 10ch;
-    margin-bottom: 1.5rem;
+    margin-bottom: 2.25rem;
     font-size: clamp(3rem, 1.4rem + 6vw, 6rem);
     font-weight: 400;
     line-height: 0.98;
@@ -182,38 +125,11 @@ const plazas =
     text-wrap: balance;
   }
 
-  .portada__subtitulo {
-    max-width: 36ch;
-    margin-bottom: 2.25rem;
-    font-size: var(--t-lead);
-    line-height: 1.55;
-    color: var(--tinta-60);
-  }
-
   .portada__acciones {
     display: flex;
     flex-wrap: wrap;
     align-items: center;
     gap: 1.25rem 2rem;
-  }
-
-  .portada__secundario {
-    font-size: 1.0625rem;
-    color: var(--n900);
-    text-underline-offset: 0.25em;
-    text-decoration-color: var(--n300);
-  }
-
-  .portada__secundario:hover {
-    text-decoration-color: var(--n900);
-  }
-
-  /* Escritorio: el indicador al pie de la portada, alineado con el texto */
-  .portada__abajo {
-    position: absolute;
-    left: 0;
-    right: 0;
-    bottom: clamp(1.5rem, 1rem + 1.5vw, 2.5rem);
   }
 
   .portada__plazas {
@@ -269,15 +185,6 @@ const plazas =
 
     .portada__titulo {
       font-size: clamp(2.75rem, 1.5rem + 7vw, 4rem);
-    }
-
-    .portada__subtitulo {
-      margin-bottom: 1.5rem;
-    }
-
-    .portada__abajo {
-      position: static;
-      margin-top: 2rem;
     }
 
     /* En móvil el botón está en la barra fija inferior */

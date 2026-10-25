@@ -1,0 +1,42 @@
+---
+/*
+ * El dibujo de la portada, en recortes de papel: un sol enorme en capas que sube sobre
+ * dos colinas. Al cargar, el sol termina de salir. Ocupa la caja de quien lo usa.
+ */
+---
+
+<div class="amanecer grano" aria-hidden="true">
+  <svg viewBox="0 0 800 600" preserveAspectRatio="xMidYMid slice" aria-hidden="true">
+    <rect class="am-cielo" width="800" height="600" />
+    <g class="am-sol">
+      <circle class="am-anillo-1" cx="540" cy="420" r="360" />
+      <circle class="am-anillo-2" cx="540" cy="420" r="270" />
+      <circle class="am-anillo-3" cx="540" cy="420" r="190" />
+      <circle class="am-disco" cx="540" cy="420" r="122" />
+    </g>
+    <path class="am-colina-atras" d="M0 470c120-40 230-60 360-40s250 20 440-30v200H0z" />
+    <path class="am-colina" d="M0 520c160-10 300-50 460-40s220 40 340 20v100H0z" />
+  </svg>
+</div>
+
+<style>
+  .amanecer { position: absolute; inset: 0; --grano-capa: 1; }
+  .amanecer svg { display: block; width: 100%; height: 100%; }
+  .am-cielo { fill: var(--sol-50); }
+  .am-anillo-1 { fill: var(--sol-100); }
+  .am-anillo-2 { fill: var(--sol-200); }
+  .am-anillo-3 { fill: var(--sol-300); }
+  .am-disco { fill: var(--sol-500); }
+  .am-colina-atras { fill: color-mix(in srgb, var(--n700) 35%, var(--tostado)); }
+  .am-colina { fill: color-mix(in srgb, var(--n700) 70%, var(--cacao)); }
+  .am-sol {
+    transform-box: view-box;
+    animation: sube 0.9s var(--ease) both;
+  }
+  @keyframes sube {
+    from { transform: translateY(48px); }
+  }
+  @media (prefers-reduced-motion: reduce) {
+    .am-sol { animation: none; }
+  }
+</style>

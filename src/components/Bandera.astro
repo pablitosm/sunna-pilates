@@ -1,0 +1,74 @@
+---
+/*
+ * Bandera de cada idioma como un recorte de papel redondo: formas planas sin contorno,
+ * colores suavizados hacia la paleta cálida (el negro alemán es el cacao del logo).
+ */
+import type { Lang } from '../lib/content';
+
+interface Props {
+  codigo: Lang;
+  tamano?: number;
+}
+const { codigo, tamano = 20 } = Astro.props;
+const id = `bandera-${codigo}`;
+---
+
+<svg class="bandera" width={tamano} height={tamano} viewBox="0 0 24 24" aria-hidden="true" focusable="false">
+  <clipPath id={id}><circle cx="12" cy="12" r="12" /></clipPath>
+  <g clip-path={`url(#${id})`}>
+    {
+      codigo === 'es' && (
+        <>
+          <rect width="24" height="24" style="fill: var(--b-rojo)" />
+          <rect y="6" width="24" height="12" style="fill: var(--b-amarillo)" />
+        </>
+      )
+    }
+    {
+      codigo === 'fr' && (
+        <>
+          <rect width="8" height="24" style="fill: var(--b-azul)" />
+          <rect x="8" width="8" height="24" style="fill: var(--claro)" />
+          <rect x="16" width="8" height="24" style="fill: var(--b-rojo)" />
+        </>
+      )
+    }
+    {
+      codigo === 'de' && (
+        <>
+          <rect width="24" height="8" style="fill: var(--cacao)" />
+          <rect y="8" width="24" height="8" style="fill: var(--b-rojo)" />
+          <rect y="16" width="24" height="8" style="fill: var(--b-amarillo)" />
+        </>
+      )
+    }
+    {
+      codigo === 'en' && (
+        <>
+          <rect width="24" height="24" style="fill: var(--b-azul)" />
+          <path d="M0 0 24 24M24 0 0 24" style="stroke: var(--claro); stroke-width: 4" />
+          <path d="M12 0v24M0 12h24" style="stroke: var(--claro); stroke-width: 6" />
+          <path d="M12 0v24M0 12h24" style="stroke: var(--b-rojo); stroke-width: 3" />
+        </>
+      )
+    }
+  </g>
+  <circle class="bandera__canto" cx="12" cy="12" r="11.5" />
+</svg>
+
+<style>
+  .bandera {
+    --b-rojo: var(--rojo-500);
+    --b-amarillo: #f4c14f;
+    --b-azul: #3f5684;
+    display: block;
+    flex: none;
+  }
+
+  /* Un filo apenas visible, para que el recorte no se pierda sobre el papel claro */
+  .bandera__canto {
+    fill: none;
+    stroke: rgb(var(--tinta-rgb) / 0.12);
+    stroke-width: 1;
+  }
+</style>

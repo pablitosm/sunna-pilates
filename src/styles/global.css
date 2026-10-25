@@ -527,77 +527,31 @@ html {
 }
 
 /* ───────── Botón sol ─────────
-   Botones de reserva (primera sesión y WhatsApp): naranja con texto chocolate.
-   Al pasar por encima sale el sol: un disco de luz cálida sube y lo ilumina por
-   dentro. Al irse el ratón la luz se desvanece en su sitio, sin ponerse. */
+   Botones de reserva (primera sesión y WhatsApp): vidrio melocotón con texto chocolate,
+   sin sombra. Canto naranja translúcido que deja ver el desenfoque de detrás.
+   Al pasar por encima, el vidrio se aviva un punto. */
 .boton-sol {
-  position: relative;
-  isolation: isolate;
-  overflow: hidden;
-  background: var(--sol-500);
+  border: 3px solid rgb(var(--sol-500-rgb) / 0.35);
+  background: rgb(var(--sol-200-rgb) / 0.65);
   color: var(--cacao);
-  box-shadow: 0 10px 26px -14px rgb(var(--cacao-rgb) / 0.6);
-  transition: box-shadow 1.2s var(--ease);
-  -webkit-tap-highlight-color: transparent;
-}
-
-.boton-sol::before {
-  content: '';
-  position: absolute;
-  z-index: -1;
-  pointer-events: none;
-}
-
-/* La luz del sol, esperando bajo el botón */
-.boton-sol::before {
-  left: 50%;
-  top: 100%;
-  width: 170%;
-  aspect-ratio: 1;
-  border-radius: 50%;
-  translate: -50% 0;
-  background: radial-gradient(
-    closest-side,
-    var(--claro) 0 34%,
-    var(--sol-100) 48%,
-    var(--sol-200) 62%,
-    rgb(var(--sol-500-rgb) / 0) 100%
-  );
-  opacity: 0;
-  /* Al salir: se apaga en su sitio y, ya invisible, vuelve abajo sin verse */
+  -webkit-backdrop-filter: blur(20px) saturate(1.8);
+  backdrop-filter: blur(20px) saturate(1.8);
   transition:
-    opacity 0.5s var(--ease),
-    top 0s linear 0.5s;
+    background-color 0.2s var(--ease),
+    border-color 0.2s var(--ease);
+  -webkit-tap-highlight-color: transparent;
 }
 
 @media (hover: hover) {
   .boton-sol:hover {
-    box-shadow:
-      0 0 0 6px rgb(var(--sol-500-rgb) / 0.18),
-      0 14px 40px -10px rgb(var(--sol-500-rgb) / 0.9);
-    transition-duration: 0.6s;
-  }
-  .boton-sol:hover::before {
-    top: -55%;
-    opacity: 1;
-    transition:
-      top 0.9s var(--ease),
-      opacity 0.9s var(--ease);
+    border-color: rgb(var(--sol-500-rgb) / 0.6);
+    background-color: rgb(var(--sol-300-rgb) / 0.7);
   }
 }
 
-/* En táctil sale al pulsar; con teclado, al enfocar */
-.boton-sol:active,
-.boton-sol:focus-visible {
-  box-shadow:
-    0 0 0 6px rgb(var(--sol-500-rgb) / 0.18),
-    0 14px 40px -10px rgb(var(--sol-500-rgb) / 0.9);
-}
-
-.boton-sol:active::before,
-.boton-sol:focus-visible::before {
-  top: -55%;
-  opacity: 1;
+.boton-sol:active {
+  border-color: rgb(var(--sol-500-rgb) / 0.6);
+  background-color: rgb(var(--sol-300-rgb) / 0.7);
 }
 
 .boton-sol:focus-visible {
@@ -606,8 +560,7 @@ html {
 }
 
 @media (prefers-reduced-motion: reduce) {
-  .boton-sol,
-  .boton-sol::before {
+  .boton-sol {
     transition: none;
   }
 }

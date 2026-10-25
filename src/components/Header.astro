@@ -1,6 +1,7 @@
 ---
 import Logo from './Logo.astro';
 import CtaButton from './CtaButton.astro';
+import Bandera from './Bandera.astro';
 import MobileMenu from './vue/MobileMenu.vue';
 import type { Ajustes, Home, Lang, Pagina } from '../lib/content';
 import { idiomas, nombresIdioma, raizIdioma, urlPagina, whatsappUrl } from '../lib/content';
@@ -95,15 +96,15 @@ const opcionesIdioma = idiomas.map((l) => ({
             opcionesIdioma.map((o) => (
               <li>
                 <a
-                  class="opcion"
+                  class="opcion opcion--idioma"
                   href={o.href}
                   hreflang={o.codigo}
                   lang={o.codigo}
                   aria-current={o.actual ? 'page' : undefined}
                   data-elegir-idioma={o.codigo}
                 >
+                  <Bandera codigo={o.codigo} />
                   <span class="opcion__titulo">{o.nombre}</span>
-                  <span class="opcion__texto" aria-hidden="true">{o.codigo.toUpperCase()}</span>
                 </a>
               </li>
             ))
@@ -285,12 +286,11 @@ const opcionesIdioma = idiomas.map((l) => ({
     right: 0;
   }
 
-  /* Idiomas: rejilla de 2 × 2, nombre y código */
+  /* Idiomas: lista de una columna, nombre y código */
   .idiomas__lista {
     display: grid;
-    grid-template-columns: repeat(2, minmax(0, 1fr));
     gap: 0.25rem;
-    width: 19rem;
+    width: 12rem;
   }
 
   .cabecera__nav a {
@@ -507,6 +507,13 @@ const opcionesIdioma = idiomas.map((l) => ({
   .cabecera .opcion:hover,
   .cabecera .opcion[aria-current='page'] {
     background: var(--n50);
+  }
+
+  /* Idioma: bandera y nombre en una línea */
+  .cabecera .opcion--idioma {
+    grid-template-columns: auto 1fr;
+    align-items: center;
+    gap: 0.625rem;
   }
 
   .opcion__titulo {

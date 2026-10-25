@@ -10,7 +10,6 @@ import Recovery from '../components/secciones/Recovery.astro';
 import Clases from '../components/secciones/Clases.astro';
 import Precios from '../components/secciones/Precios.astro';
 import Explora from '../components/secciones/Explora.astro';
-import Cierre from '../components/secciones/Cierre.astro';
 import { getSite, idiomas, paginas, rutas, type Lang, type Pagina } from '../lib/content';
 
 export function getStaticPaths() {
@@ -38,14 +37,12 @@ const apartado = espacio ? home.recovery.apartados.find((a) => a.tipo === espaci
   ) : pagina === 'precios' ? (
     <Base lang={lang} titulo={home.precios.titulo} descripcion={home.explora?.precios.texto} pagina="precios" alternos>
       <Precios ajustes={ajustes} home={home} pagina />
-      <Cierre ajustes={ajustes} home={home} />
     </Base>
   ) : (
     <Base lang={lang} titulo={apartado?.titulo} descripcion={apartado?.texto} pagina={pagina} alternos>
       <Recovery home={home} tipos={espacio ? [espacio] : []} pagina />
       {espacio === 'reformer' && <Clases home={home} />}
       <Explora home={home} excluir={pagina} />
-      <Cierre ajustes={ajustes} home={home} />
     </Base>
   )
 }
