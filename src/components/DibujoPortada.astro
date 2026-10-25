@@ -2,7 +2,39 @@
 /*
  * El dibujo de la portada, en recortes de papel: un sol enorme en capas que sube sobre
  * dos colinas. Al cargar, el sol termina de salir. Ocupa la caja de quien lo usa.
+ *
+ * Variantes (en prueba):
+ *  - 'sol': solo el amanecer
+ *  - 'colina': un reformer sobre la colina, con una sansevieria detrás y una mata de hierba
+ *  - 'halo': el reformer delante del disco, que le hace de foco; monstera y pampas a los lados
+ *  - 'rama': el reformer en línea fina y una rama de olivo que cuelga sobre el sol
+ *
+ * En móvil el dibujo se recorta a lo que cae entre x ≈ 40 y 600: el reformer vive ahí.
  */
+interface Props {
+  variante?: 'sol' | 'colina' | 'halo' | 'rama';
+}
+const { variante = 'sol' } = Astro.props;
+
+// Dónde y a qué tamaño va el reformer en cada variante (su base son las patas, en y = 0)
+const reformer = {
+  sol: '',
+  colina: 'translate(350 494) scale(0.72)',
+  halo: 'translate(326 498) scale(0.8)',
+  rama: 'translate(346 494) scale(0.74)',
+}[variante];
+const linea = variante === 'rama';
+const hojasRama = [
+  [770, 108, -28], [742, 118, 52], [712, 130, -18], [684, 146, 60], [656, 162, -10],
+  [630, 184, 66], [604, 208, 0], [580, 236, 74], [558, 262, 10], [538, 290, 80],
+  [520, 318, 20], [506, 342, 90],
+];
+// Hojas de la monstera: dónde nacen, cuánto se inclinan y si van en el verde oscuro
+const hojasMonstera: [string, number, boolean][] = [
+  ['-10 -156', -38, false],
+  ['90 -166', 34, true],
+  ['58 -114', 58, false],
+];
 ---
 
 <div class="amanecer grano" aria-hidden="true">
@@ -14,8 +46,108 @@
       <circle class="am-anillo-3" cx="540" cy="420" r="190" />
       <circle class="am-disco" cx="540" cy="420" r="122" />
     </g>
+
+    {
+      variante === 'rama' && (
+        <g class="am-rama">
+          <path class="am-tallo" d="M812 96C740 112 668 150 610 206S520 300 496 350" />
+          {hojasRama.map(([x, y, a], i) => (
+            <ellipse
+              class={i % 3 === 1 ? 'am-hoja am-hoja--oscura' : 'am-hoja'}
+              cx={x}
+              cy={y}
+              rx="22"
+              ry="6.5"
+              transform={`rotate(${a} ${x} ${y}) translate(${i % 2 ? 14 : -14} 0)`}
+            />
+          ))}
+          <circle class="am-oliva" cx="618" cy="222" r="7" />
+          <circle class="am-oliva" cx="548" cy="300" r="6" />
+        </g>
+      )
+    }
+
+    {
+      variante === 'colina' && (
+        <g class="am-sansevieria" transform="translate(402 498) scale(0.85)">
+          <path class="am-hoja" d="M14 -40C6 -96 8 -150 22 -196C30 -150 32 -96 30 -40z" />
+          <path class="am-hoja am-hoja--oscura" d="M26 -40C26 -110 40 -160 62 -214C62 -156 50 -100 44 -40z" />
+          <path class="am-hoja" d="M38 -40C44 -90 60 -132 84 -164C76 -118 62 -82 56 -40z" />
+          <path class="am-hoja am-hoja--oscura" d="M8 -40C0 -80 -12 -112 -30 -140C-14 -104 -6 -74 -4 -40z" />
+          <path class="am-maceta" d="M-6 -46h76l-8 46H2z" />
+          <rect class="am-maceta-borde" x="-10" y="-52" width="84" height="12" rx="4" />
+        </g>
+      )
+    }
+
+    {
+      variante === 'halo' && (
+        <g>
+          <g class="am-pampas">
+            <path class="am-tallo" d="M626 470C622 410 612 350 592 300" />
+            <path class="am-tallo" d="M630 470C636 410 650 366 672 322" />
+            <path class="am-tallo" d="M622 470C608 430 590 396 562 366" />
+            <ellipse class="am-penacho" cx="588" cy="292" rx="12" ry="40" transform="rotate(-18 588 292)" />
+            <ellipse class="am-penacho" cx="676" cy="312" rx="11" ry="36" transform="rotate(26 676 312)" />
+            <ellipse class="am-penacho" cx="556" cy="358" rx="10" ry="32" transform="rotate(-44 556 358)" />
+            <path class="am-maceta" d="M606 462h44l-4 40h-36z" />
+          </g>
+          <g class="am-monstera" transform="translate(286 504) scale(0.85)">
+            <path class="am-tallo" d="M30 -40C26 -90 10 -130 -10 -156M34 -40C40 -100 60 -140 90 -166M32 -40C30 -70 40 -96 58 -114" />
+            {hojasMonstera.map(([en, giro, oscura]) => (
+              <g transform={`translate(${en}) rotate(${giro})`}>
+                <path
+                  class:list={['am-hoja', { 'am-hoja--oscura': oscura }]}
+                  d="M0 -6C-14 6 -40 -4 -42 -32C-44 -62 -20 -86 0 -100C20 -86 44 -62 42 -32C40 -4 14 6 0 -6z"
+                />
+                <path class="am-nervio" d="M0 -6V-86M0 -30L-26 -44M0 -30L26 -44M0 -54L-22 -70M0 -54L22 -70" />
+              </g>
+            ))}
+            <path class="am-maceta" d="M4 -46h60l-6 46H10z" />
+            <rect class="am-maceta-borde" x="0" y="-52" width="68" height="12" rx="4" />
+          </g>
+        </g>
+      )
+    }
+
     <path class="am-colina-atras" d="M0 470c120-40 230-60 360-40s250 20 440-30v200H0z" />
-    <path class="am-colina" d="M0 520c160-10 300-50 460-40s220 40 340 20v100H0z" />
+    {
+      variante === 'sol' ? (
+        <path class="am-colina" d="M0 520c160-10 300-50 460-40s220 40 340 20v100H0z" />
+      ) : (
+        <path class="am-colina" d="M0 524c140-14 260-34 400-34s260 4 400 2v108H0z" />
+      )
+    }
+
+    {
+      reformer && (
+        <g class:list={['am-reformer', { 'am-reformer--linea': linea }]} transform={reformer}>
+          {/* patas y bastidor */}
+          <rect class="am-madera" x="12" y="-34" width="14" height="34" rx="3" />
+          <rect class="am-madera" x="294" y="-34" width="14" height="34" rx="3" />
+          <rect class="am-madera" x="150" y="-34" width="12" height="34" rx="3" />
+          <rect class="am-madera" x="0" y="-46" width="320" height="14" rx="7" />
+          {/* torre del cabecero con su polea y la cuerda hasta el carro */}
+          <rect class="am-madera" x="6" y="-108" width="10" height="64" rx="5" />
+          <circle class="am-madera" cx="11" cy="-112" r="9" />
+          <path class="am-cuerda" d="M18 -116C60 -104 98 -90 124 -72" />
+          {/* barra de pies, inclinada hacia el carro, y los muelles */}
+          <path class="am-barra" d="M300 -44L276 -120" />
+          <circle class="am-madera" cx="275" cy="-122" r="8" />
+          <path class="am-muelle" d="M232 -56l5 -6l6 12l6 -12l6 12l6 -12l6 12l6 -12l5 6" />
+          {/* carro tapizado, reposacabezas y hombreras */}
+          <rect class="am-tapiz" x="84" y="-66" width="148" height="20" rx="8" />
+          <rect class="am-tapiz" x="62" y="-64" width="32" height="12" rx="6" transform="rotate(-14 78 -58)" />
+          <rect class="am-tapiz" x="118" y="-92" width="11" height="28" rx="5" />
+        </g>
+      )
+    }
+
+    {
+      (variante === 'colina' || variante === 'rama') && (
+        <path class="am-hoja" d="M600 500c-2-18-10-30-22-38c12 6 20 16 24 26c4-14 12-24 24-30c-12 10-18 24-18 42z" />
+      )
+    }
   </svg>
 </div>
 
@@ -29,6 +161,28 @@
   .am-disco { fill: var(--sol-500); }
   .am-colina-atras { fill: color-mix(in srgb, var(--n700) 35%, var(--tostado)); }
   .am-colina { fill: color-mix(in srgb, var(--n700) 70%, var(--cacao)); }
+
+  /* El reformer: madera en cacao, tapizado en crema; en la variante de línea, solo trazo */
+  .am-madera { fill: var(--cacao); }
+  .am-tapiz { fill: var(--crema); }
+  .am-barra { fill: none; stroke: var(--cacao); stroke-width: 8; stroke-linecap: round; }
+  .am-cuerda,
+  .am-muelle { fill: none; stroke: var(--cacao); stroke-width: 2.5; stroke-linecap: round; stroke-linejoin: round; }
+  .am-reformer--linea .am-madera,
+  .am-reformer--linea .am-tapiz { fill: var(--sol-50); stroke: var(--cacao); stroke-width: 3; }
+  .am-reformer--linea .am-barra { stroke-width: 3; }
+
+  /* Las plantas: oliva de la marca, en dos tonos; macetas de barro */
+  .am-hoja { fill: var(--oliva); }
+  .am-hoja--oscura { fill: color-mix(in srgb, var(--oliva-tinta) 35%, var(--oliva)); }
+  .am-tallo { fill: none; stroke: color-mix(in srgb, var(--oliva-tinta) 50%, var(--oliva)); stroke-width: 3; stroke-linecap: round; }
+  .am-nervio { fill: none; stroke: var(--sol-50); stroke-width: 3; stroke-linecap: round; opacity: 0.55; }
+  .am-oliva { fill: var(--oliva-tinta); }
+  .am-maceta { fill: var(--n700); }
+  .am-maceta-borde { fill: color-mix(in srgb, var(--n700) 80%, var(--cacao)); }
+  .am-penacho { fill: var(--tostado); }
+  .am-pampas .am-tallo { stroke: color-mix(in srgb, var(--n700) 40%, var(--tostado)); stroke-width: 2.5; }
+
   .am-sol {
     transform-box: view-box;
     animation: sube 0.9s var(--ease) both;
