@@ -1,7 +1,6 @@
 ---
 import { acentuar } from '../../lib/acento';
 import CtaButton from '../CtaButton.astro';
-import DibujoPortada from '../DibujoPortada.astro';
 import { hayPlazasFundador, plazasFundador, type Ajustes, type Home } from '../../lib/content';
 
 interface Props {
@@ -10,7 +9,7 @@ interface Props {
 }
 const { ajustes, home } = Astro.props;
 const { portada } = home;
-// Naranja y cacao llevan el dibujo del amanecer; las demás paletas, un fondo liso del color principal
+// Naranja y cacao llevan el halo de sol; las demás paletas, un fondo liso del color principal
 const liso = !['naranja', 'cacao'].includes(ajustes.paleta);
 const conFecha = ajustes.estado === 'preapertura' && ajustes.fechaApertura;
 const lugar = conFecha
@@ -28,15 +27,9 @@ const plazas =
     : '';
 ---
 
-<section id="portada" class:list={['portada', { 'portada--foto': !liso, 'portada--liso': liso }]} aria-labelledby="portada-titulo">
-  <!-- El dibujo ocupa el sitio de la foto y se funde igual con el papel crema -->
-  {
-    !liso && (
-      <div class="portada__foto">
-        <DibujoPortada />
-      </div>
-    )
-  }
+<section id="portada" class:list={['portada', { 'portada--liso': liso }]} aria-labelledby="portada-titulo">
+  <!-- Un sol difuminado a la derecha, sin bordes, sobre el papel crema -->
+  {!liso && <div class="portada__halo" aria-hidden="true" />}
 
   <div class="envoltura portada__texto">
     {conFecha && <p class="portada__fecha">{lugar}</p>}
@@ -68,24 +61,23 @@ const plazas =
     background: var(--crema);
   }
 
-  /* Escritorio: el dibujo ocupa la derecha hasta el borde y se desvanece hacia el texto */
-  .portada__foto {
+  /* El halo de sol */
+  .portada__halo {
     position: absolute;
     z-index: -1;
-    inset: 0 0 0 38%;
-    -webkit-mask-image: linear-gradient(90deg, transparent 0%, rgb(0 0 0 / 0.5) 26%, #000 52%);
-    mask-image: linear-gradient(90deg, transparent 0%, rgb(0 0 0 / 0.5) 26%, #000 52%);
-  }
-
-  /* Un poco de crema abajo para que la sección siguiente no corte en seco */
-  .portada--foto::after {
-    content: '';
-    position: absolute;
-    z-index: -1;
-    inset: auto 0 0;
-    height: 18%;
-    background: linear-gradient(180deg, rgb(var(--crema-rgb) / 0), var(--crema));
+    top: 50%;
+    right: -12%;
+    width: min(70rem, 110vw);
+    aspect-ratio: 1;
+    translate: 0 -50%;
     pointer-events: none;
+    background: radial-gradient(
+      closest-side,
+      rgb(var(--sol-500-rgb) / 0.45) 0%,
+      rgb(var(--sol-300-rgb) / 0.28) 34%,
+      rgb(var(--sol-200-rgb) / 0.14) 58%,
+      rgb(var(--crema-rgb) / 0) 100%
+    );
   }
 
   /* Paletas alternativas: portada lisa en el color principal. Encima, texto en tinta plena
@@ -154,8 +146,7 @@ const plazas =
     box-shadow: 0 0 0 4px rgb(var(--n500-rgb) / 0.2);
   }
 
-  /* Móvil: la foto arriba, de borde a borde, fundida en crema por abajo;
-     el titular empieza sobre ese degradado */
+  /* Móvil: el titular arriba, con el halo asomando por la esquina */
   @media (max-width: 56.25rem) {
     .portada {
       display: block;
@@ -164,23 +155,13 @@ const plazas =
       padding: 0 0 calc(5.5rem + env(safe-area-inset-bottom));
     }
 
-    .portada--foto {
-      padding-top: min(46svh, 26rem);
-    }
-
-    .portada:not(.portada--foto) {
+    .portada {
       padding-top: calc(8rem + var(--aviso-alto));
     }
 
-    .portada__foto {
-      inset: 0 0 auto;
-      height: min(60svh, 34rem);
-      -webkit-mask-image: linear-gradient(180deg, #000 45%, rgb(0 0 0 / 0.5) 72%, transparent 100%);
-      mask-image: linear-gradient(180deg, #000 45%, rgb(0 0 0 / 0.5) 72%, transparent 100%);
-    }
-
-    .portada--foto::after {
-      display: none;
+    .portada__halo {
+      top: 22%;
+      right: -40%;
     }
 
     .portada__titulo {
