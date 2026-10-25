@@ -2,7 +2,7 @@
 import ContactoDudas from '../ContactoDudas.astro';
 import DibujoRazon from '../DibujoRazon.astro';
 import { acentuar } from '../../lib/acento';
-import { ctaEsFundador, type Ajustes, type Home } from '../../lib/content';
+import { ctaEsFundador, idiomaDe, type Ajustes, type Home } from '../../lib/content';
 
 interface Props {
   ajustes: Ajustes;
@@ -15,7 +15,9 @@ const Titulo = pagina ? 'h1' : 'h2';
 // El nombre de cada plan, un nivel por debajo del título de la sección
 const Nombre = pagina ? 'h2' : 'h3';
 const { precios } = home;
-const euros = (n: number) => new Intl.NumberFormat('es-ES').format(n);
+// «55 €» en castellano, alemán y francés; «€55» en inglés
+const euros = (n: number) =>
+  new Intl.NumberFormat(idiomaDe(Astro.currentLocale), { style: 'currency', currency: 'EUR', maximumFractionDigits: 0 }).format(n);
 const g = precios.graficos;
 const intro = (ctaEsFundador(ajustes) && precios.introFundador) || precios.intro;
 // Basic al alba, Standard por la mañana, Pro por la tarde y Premium a mediodía
@@ -46,7 +48,7 @@ const momentos = ['alba', 'manana', 'tarde', 'mediodia'] as const;
             <Nombre class="etiqueta membresia__nombre">{m.nombre}</Nombre>
             <p class="membresia__precio">
               <span class="membresia__cifra">
-                {euros(m.precio)} €
+                {euros(m.precio)}
               </span>
               <span class="membresia__mes">{home.ui.porMes}</span>
             </p>

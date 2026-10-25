@@ -56,6 +56,11 @@ const libres = plazasFundador(ajustes);
   };
   abrirVentajas();
   window.addEventListener('hashchange', abrirVentajas);
+  // Ya en #fundadores, otro clic al botón no cambia el hash ni dispara hashchange
+  document.addEventListener('click', (e) => {
+    const enlace = (e.target as Element).closest?.('a[href$="#fundadores"]');
+    if (enlace && location.hash === '#fundadores') setTimeout(abrirVentajas);
+  });
 
   // La barra va encima de la cabecera: su alto (cerrada) baja la cabecera y el contenido.
   const barra = document.querySelector<HTMLElement>('.fundadores summary');

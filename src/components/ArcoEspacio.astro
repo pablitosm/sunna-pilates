@@ -88,8 +88,9 @@ const tablas = Array.from({ length: 10 }, (_, i) => i * 32);
         <svg class="escena" viewBox="0 0 320 240" preserveAspectRatio="xMidYMid slice">
           <rect class="ref-pared" width="320" height="240" />
           <rect class="ref-suelo" y="196" width="320" height="44" />
-          {/* La sala encendida, vista desde fuera por el arco */}
-          <path class="luz-sala" d="M96 196V86a64 64 0 0 1 128 0v110z" />
+          {/* La sala encendida, vista desde fuera por el arco. Se mete por debajo de la banda
+              del arco: si acabaran en el mismo borde, el suavizado deja ver un hilo de pared */}
+          <path class="luz-sala" d="M91 196V84a69 69 0 0 1 138 0v112z" />
           <path class="luz-suelo" d="M96 172h128v24H96z" />
           <ellipse class="luz-brillo" cx="160" cy="112" rx="60" ry="58" />
           <rect class="luz-panel" x="122" y={panel.y} width={panel.ancho} height={panel.alto} rx="3" />
@@ -101,7 +102,7 @@ const tablas = Array.from({ length: 10 }, (_, i) => i * 32);
           <rect class="luz-taburete" x="145" y="166" width="5" height="10" />
           <rect class="luz-taburete" x="170" y="166" width="5" height="10" />
           {/* El arco de la puerta y la luz roja que sale al suelo de fuera */}
-          <path class="e-terracota" d="M86 196V84a74 74 0 0 1 148 0v112h-10V86a64 64 0 0 0-128 0v110z" />
+          <path class="e-terracota" d="M86 196V84a74 74 0 0 1 148 0v112h-10V84a64 64 0 0 0-128 0v112z" />
           <path class="luz-salida" d="M96 196h128l50 44H46z" />
           {/* Un olivo junto a la puerta */}
           <path class="e-hoja" d="M262 196c-6-30 0-58 18-74-1 30-6 54-18 74z" />

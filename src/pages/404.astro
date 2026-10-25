@@ -125,9 +125,10 @@ import Icon from '../components/Icon.astro';
     stroke-linecap: round;
   }
 
-  /* El sol se pone muy despacio y vuelve a asomar */
+  /* El sol se pone muy despacio y vuelve a asomar, una vez: va dentro del SVG, entre el cielo
+     y el mar, y cada fotograma de la animación repinta el dibujo entero */
   .sol {
-    animation: sol-404 9s ease-in-out infinite alternate;
+    animation: sol-404 9s ease-in-out 2 alternate;
   }
 
   @keyframes sol-404 {

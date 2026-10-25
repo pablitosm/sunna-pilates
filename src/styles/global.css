@@ -48,7 +48,6 @@
   --rojo-500-rgb: 236 74 50;
   /* Chocolate del logo */
   --cacao: #3b1d0e;
-  --cacao-rgb: 59 29 14;
 
   --linea: rgb(var(--tinta-rgb) / 0.12);
   --linea-fuerte: rgb(var(--tinta-rgb) / 0.22);
@@ -398,12 +397,6 @@ textarea {
   font-weight: 400;
 }
 
-.t-h3 {
-  font-size: var(--t-h3);
-  line-height: 1.15;
-  letter-spacing: -0.015em;
-  font-weight: 400;
-}
 
 /* Etiqueta de esquina: 12 px, mayúscula, tracking +16 % */
 .etiqueta {
@@ -492,11 +485,6 @@ html {
 
 :root[data-paleta='cacao'] a:hover {
   text-decoration-color: var(--sol-500);
-}
-
-:root[data-paleta='cacao'] .horario__texto--destacado::before,
-:root[data-paleta='cacao'] .horario__texto--destacado::after {
-  background: var(--sol-500);
 }
 
 :root[data-paleta='cacao'] .pie__titulo {

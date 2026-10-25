@@ -1,8 +1,8 @@
 ---
 /*
- * Páginas propias en los cuatro idiomas: la primera sesión gratis, los precios
- * y cada espacio (reformer, luz roja, sauna). Las direcciones de cada idioma
- * están en src/lib/content.ts → rutas.
+ * Páginas propias en los cuatro idiomas: la primera sesión gratis, los precios,
+ * cada espacio (reformer, luz roja, sauna) y las páginas legales. Las direcciones de
+ * cada idioma están en src/lib/content.ts → rutas y rutasLegales.
  */
 import Base from '../layouts/Base.astro';
 import PaginaPrimeraSesion from '../components/PaginaPrimeraSesion.astro';
@@ -10,29 +10,28 @@ import Recovery from '../components/secciones/Recovery.astro';
 import Clases from '../components/secciones/Clases.astro';
 import Precios from '../components/secciones/Precios.astro';
 import Explora from '../components/secciones/Explora.astro';
-import { getSite, idiomas, paginas, rutas, type Lang, type Pagina } from '../lib/content';
+import PaginaLegal from '../components/PaginaLegal.astro';
+import { getSite, idiomas, paginas, paginasLegales, rutas, rutasLegales, type Lang, type Pagina, type PaginaLegal as Legal } from '../lib/content';
 
 export function getStaticPaths() {
-  return idiomas.flatMap((lang) =>
-    paginas.map((pagina) => ({
-      params: { ruta: lang === 'es' ? rutas.es[pagina] : `${lang}/${rutas[lang][pagina]}` },
-      props: { lang, pagina },
-    })),
-  );
+  const ruta = (lang: Lang, slug: string) => (lang === 'es' ? slug : `${lang}/${slug}`);
+  return idiomas.flatMap((lang) => [
+    ...paginas.map((pagina) => ({ params: { ruta: ruta(lang, rutas[lang][pagina]) }, props: { lang, pagina } })),
+    ...paginasLegales.map((legal) => ({ params: { ruta: ruta(lang, rutasLegales[lang][legal]) }, props: { lang, legal } })),
+  ]);
 }
 
-interface Props {
-  lang: Lang;
-  pagina: Pagina;
-}
-const { lang, pagina } = Astro.props;
+type Props = { lang: Lang; pagina: Pagina; legal?: undefined } | { lang: Lang; legal: Legal; pagina?: undefined };
+const { lang, pagina, legal } = Astro.props;
 const { ajustes, home } = await getSite(lang);
 const espacio = pagina === 'reformer' || pagina === 'luz-roja' || pagina === 'sauna' ? pagina : null;
 const apartado = espacio ? home.recovery.apartados.find((a) => a.tipo === espacio) : undefined;
 ---
 
 {
-  pagina === 'primera-sesion' ? (
+  legal ? (
+    <PaginaLegal lang={lang} legal={legal} />
+  ) : pagina === 'primera-sesion' ? (
     <PaginaPrimeraSesion lang={lang} />
   ) : pagina === 'precios' ? (
     <Base lang={lang} titulo={home.precios.titulo} descripcion={home.explora?.precios.texto} pagina="precios" alternos>

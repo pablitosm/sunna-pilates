@@ -20,14 +20,12 @@ const textos = corto ? home.botones.principalCorto : home.botones.principal;
 const label = (ctaEsFundador(ajustes) && textos.fundador) || textos[ajustes.estado];
 const href = ctaHref(ajustes, idiomaDe(Astro.currentLocale));
 const abrePanel = ajustes.estado === 'preapertura';
-const externo = href.startsWith('http');
 ---
 
 <a
   class:list={['cta', 'boton-sol', `cta--${tamano}`, className]}
   href={href}
   data-open-booking={abrePanel ? '' : undefined}
-  {...externo ? { target: '_blank', rel: 'noopener' } : {}}
 >
   <span class="cta__texto">{label}</span>
   <span class="cta__flecha" aria-hidden="true"><Icon name="flecha" size={tamano === 'compacto' ? 16 : 20} /></span>

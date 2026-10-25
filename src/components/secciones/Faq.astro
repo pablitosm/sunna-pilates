@@ -1,7 +1,8 @@
 ---
 import { acentuar } from '../../lib/acento';
 import ContactoDudas from '../ContactoDudas.astro';
-import type { Ajustes, Home } from '../../lib/content';
+import { idiomaDe, type Ajustes, type Home } from '../../lib/content';
+import { conHorario } from '../../lib/horario';
 
 interface Props {
   ajustes: Ajustes;
@@ -11,12 +12,14 @@ const { ajustes, home } = Astro.props;
 const { faq } = home;
 // Con el horario ampliado, las preguntas que lo tienen usan su respuesta alternativa.
 // Las preguntas sin respuesta (pendientes) no se muestran.
+// {horario} se cambia por el horario vigente, escrito en cada idioma.
 const ampliado = ajustes.horario === 'ampliado';
+const lang = idiomaDe(Astro.currentLocale);
 const grupos = faq.grupos
   .map((g) => ({
     ...g,
     preguntas: g.preguntas
-      .map((p) => ({ ...p, respuesta: (ampliado && p.respuestaAmpliado) || p.respuesta }))
+      .map((p) => ({ ...p, respuesta: conHorario((ampliado && p.respuestaAmpliado) || p.respuesta, ajustes, lang) }))
       .filter((p) => p.respuesta.trim()),
   }))
   .filter((g) => g.preguntas.length);

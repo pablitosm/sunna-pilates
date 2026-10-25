@@ -7,6 +7,7 @@
  * marcada. Otro icono: el glifo de trazo de siempre.
  */
 import Glifo from './Glifo.astro';
+import { tieneDibujo } from '../lib/dibujos';
 
 interface Props {
   icono: string;
@@ -14,7 +15,7 @@ interface Props {
 }
 const { icono, class: className } = Astro.props;
 const id = `dibujo-paso-${icono}`;
-const conDibujo = ['arco', 'pantalla', 'punto', 'reserva'].includes(icono);
+const conDibujo = tieneDibujo(icono);
 ---
 
 {
@@ -83,7 +84,7 @@ const conDibujo = ['arco', 'pantalla', 'punto', 'reserva'].includes(icono);
       </g>
     </svg>
   ) : (
-    <Glifo forma={icono as Parameters<typeof Glifo>[0]['forma']} tamano={96} />
+    <Glifo forma={icono as Parameters<typeof Glifo>[0]['forma']} tamano={96} class={className} />
   )
 }
 

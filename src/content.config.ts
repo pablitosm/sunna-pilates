@@ -17,9 +17,14 @@ const ajustes = defineCollection({
   schema: z.object({
     estado: z.enum(['preapertura', 'abierto']),
     paleta: z.enum(['naranja', 'salvia', 'arena', 'oliva', 'cacao']).default('naranja'),
-    // Qué horario se muestra: el de las primeras semanas o el ampliado.
+    // Qué horario se muestra (inicial o ampliado) y los tramos de cada uno, "08:00-14:00".
     horario: z.enum(['inicial', 'ampliado']).default('inicial'),
-    fechaApertura: opcional,
+    horarios: z.object({
+      inicial: z.array(z.string().regex(/^\d{2}:\d{2}-\d{2}:\d{2}$/, 'Tramo con formato 08:00-14:00')).min(1),
+      ampliado: z.array(z.string().regex(/^\d{2}:\d{2}-\d{2}:\d{2}$/, 'Tramo con formato 08:00-14:00')).min(1),
+    }),
+    // Fecha de apertura como AAAA-MM-DD; cada idioma la escribe a su manera. Vacía: no se muestra.
+    fechaApertura: z.union([z.literal(''), z.string().regex(/^\d{4}-\d{2}-\d{2}$/, 'Fecha con formato 2026-11-15')]).default(''),
     direccion: z.object({
       calle: texto,
       codigoPostal: texto,
@@ -65,7 +70,7 @@ const boton = z.object({ preapertura: texto, abierto: texto, fundador: opcional 
 const home = defineCollection({
   loader: glob({ pattern: '*/home.yaml', base: './src/content' }),
   schema: ({ image }) => {
-    // Foto real opcional: si se añade, sustituye a la ilustración de ese bloque.
+    // Foto real opcional (hoy solo la usa la página de la primera sesión; la portada lleva siempre el dibujo).
     const foto = z.object({ imagen: image(), alt: texto }).optional();
     return z.object({
       // Título y descripción para Google y al compartir el enlace.
@@ -82,10 +87,11 @@ const home = defineCollection({
         // Abre la letra pequeña de la reserva en Cómo funciona.
         detallesReserva: opcional,
         porMes: texto,
-        mapaTitulo: texto,
         pieEstudio: texto,
         pieContacto: texto,
         pieLegal: texto,
+        // «Actualizado: …» bajo el título de las páginas legales.
+        actualizado: texto,
         // Mensaje con el que se abre WhatsApp desde el botón flotante, el menú y el pie.
         whatsappMensaje: opcional,
         pieEspacios: opcional,
@@ -107,12 +113,11 @@ const home = defineCollection({
               }),
             )
             .optional(),
-        }),
+        }).refine((m) => m.pagina || m.ancla, { message: 'Cada entrada del menú necesita pagina o ancla' }),
       ),
       botones: z.object({
         principal: boton,
         principalCorto: boton,
-        secundario: texto,
         precios: opcional,
       }),
       enlaces: z.object({
@@ -130,27 +135,24 @@ const home = defineCollection({
       porQue: z
         .object({
           titulo: texto,
-          intro: texto,
           // ampliado: título y texto alternativos cuando ajustes.yaml → horario es "ampliado".
           razones: z.array(z.object({ titulo: texto, texto, ampliado: z.object({ titulo: texto, texto }).optional() })),
           app: z.object({
             titulo: texto,
             texto: opcional,
-            pasos: z.array(texto),
-            // Paso 2 mientras quedan plazas de socio fundador.
-            pasoFundador: opcional,
             proximamente: texto,
             appStore: texto,
             googlePlay: texto,
           }),
         })
         .optional(),
-      // Accesos rápidos a cada espacio y a los precios (portada).
+      // Accesos a los demás espacios, al pie de la página de cada uno. precios.texto es la
+      // descripción de la página de precios para buscadores.
       explora: z
         .object({
           titulo: texto,
           ver: texto,
-          precios: z.object({ titulo: texto, texto }),
+          precios: z.object({ texto }),
         })
         .optional(),
       // Página de la primera sesión gratis.
@@ -167,10 +169,6 @@ const home = defineCollection({
           whatsappMensaje: texto,
         })
         .optional(),
-      queEs: z.object({
-        titulo: texto,
-        ideas: z.array(z.object({ icono: texto, titulo: texto, texto })),
-      }),
       comoFunciona: z.object({
         titulo: texto,
         pasos: z.array(z.object({ icono: texto, titulo: texto, texto })),
@@ -180,16 +178,20 @@ const home = defineCollection({
           cancelacion: texto,
           horario: z.object({
             titulo: texto,
-            intro: opcional,
             // Una fase por horario; solo se muestra la que marca ajustes.yaml → horario.
+            // El texto de debajo de las horas solo puede faltar en la fase inicial.
             fases: z.array(
-              z.object({
-                fase: z.enum(['inicial', 'ampliado']),
-                intro: opcional,
-                etiqueta: opcional,
-                horas: z.array(texto),
-                texto,
-              }),
+              z
+                .object({
+                  fase: z.enum(['inicial', 'ampliado']),
+                  intro: opcional,
+                  etiqueta: opcional,
+                  texto: opcional,
+                })
+                .refine((f) => f.fase === 'inicial' || f.texto, {
+                  message: 'Falta el texto del horario ampliado',
+                  path: ['texto'],
+                }),
             ),
             // Cómo se llena el día: franjas de más y menos demanda (tranquila = verde oliva).
             franjas: z
@@ -204,7 +206,6 @@ const home = defineCollection({
       clases: z.object({
         titulo: texto,
         tipos: z.array(texto),
-        tiposTitulo: texto,
         duraciones: z.array(z.object({ nombre: texto, minutos: texto })),
         idiomas: z.array(texto),
         idiomasTexto: texto,
@@ -242,7 +243,6 @@ const home = defineCollection({
         // Textos de los gráficos de cada tarjeta y del contacto bajo los precios.
         graficos: z
           .object({
-            recovery: texto,
             luzRoja: texto,
             sauna: texto,
             ilimitado: texto,
@@ -280,12 +280,9 @@ const home = defineCollection({
       }),
       estudio: z.object({
         titulo: texto,
-        espacios: z.array(z.object({ icono: texto, texto, tono: z.enum(['claro', 'medio', 'sol', 'tinta', 'rojo']), foto })),
         mapa: z.object({
           direccion: texto,
           comoLlegar: texto,
-          boton: texto,
-          aviso: texto,
           abrir: texto,
         }),
       }),
@@ -301,19 +298,10 @@ const home = defineCollection({
           }),
         ),
       }),
-      // textoPreapertura sustituye a texto mientras la web está en preapertura.
-      // fundador sustituye título y texto mientras quedan plazas de socio fundador (web abierta).
-      cierre: z.object({
-        titulo: texto,
-        texto,
-        textoPreapertura: opcional,
-        fundador: z.object({ titulo: texto, texto }).optional(),
-      }),
       pie: z.object({
         horarioTitulo: texto,
-        // Líneas del horario en el pie, una lista por fase.
-        horario: z.object({ inicial: z.array(texto), ampliado: z.array(texto) }),
-        legal: z.array(z.object({ texto, url: texto })),
+        // Enlaces a las páginas legales del idioma (src/content/<idioma>/legal/<pagina>.md).
+        legal: z.array(z.object({ texto, pagina: z.enum(['aviso-legal', 'privacidad', 'cookies', 'condiciones-membresia']) })),
         cookies: texto,
       }),
       panel: z.object({

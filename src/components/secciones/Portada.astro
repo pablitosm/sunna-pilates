@@ -2,7 +2,8 @@
 import { acentuar } from '../../lib/acento';
 import CtaButton from '../CtaButton.astro';
 import DibujoPortada from '../DibujoPortada.astro';
-import { hayPlazasFundador, plazasFundador, type Ajustes, type Home } from '../../lib/content';
+import { hayPlazasFundador, idiomaDe, plazasFundador, type Ajustes, type Home } from '../../lib/content';
+import { fechaLarga } from '../../lib/fecha';
 
 interface Props {
   ajustes: Ajustes;
@@ -15,9 +16,9 @@ const liso = !['naranja', 'cacao'].includes(ajustes.paleta);
 // El subtítulo en dos tiempos: lo que tienes (suave) y la promesa (en tinta)
 const [subIntro, ...subResto] = portada.subtitulo.split(/(?<=\.)\s+/);
 const subCierre = subResto.join(' ');
-const conFecha = ajustes.estado === 'preapertura' && ajustes.fechaApertura;
-const lugar = conFecha
-  ? `${ajustes.direccion.ciudad} · ${portada.abrimos} ${ajustes.fechaApertura}`
+const fecha = ajustes.estado === 'preapertura' ? fechaLarga(ajustes.fechaApertura, idiomaDe(Astro.currentLocale)) : '';
+const lugar = fecha
+  ? `${ajustes.direccion.ciudad} · ${portada.abrimos} ${fecha}`
   : ajustes.direccion.ciudad;
 
 // Antes de abrir, la oferta de fundadores asoma ya en la portada y lleva a su bloque
@@ -42,7 +43,7 @@ const plazas =
   }
 
   <div class="envoltura portada__texto">
-    {conFecha && <p class="portada__fecha">{lugar}</p>}
+    {fecha && <p class="portada__fecha">{lugar}</p>}
     <h1 id="portada-titulo" class="portada__titulo" set:html={acentuar(portada.titular)} />
     <p class="portada__subtitulo">
       <span set:html={acentuar(subIntro)} />

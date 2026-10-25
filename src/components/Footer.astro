@@ -1,6 +1,7 @@
 ---
 import Logo from './Logo.astro';
-import { direccionCompleta, idiomaDe, mapsUrl, urlPagina, whatsappUrl, type Ajustes, type Home } from '../lib/content';
+import { direccionCompleta, idiomaDe, mapsUrl, urlLegal, urlPagina, whatsappUrl, type Ajustes, type Home } from '../lib/content';
+import { tramosCortos } from '../lib/horario';
 
 interface Props {
   ajustes: Ajustes;
@@ -51,12 +52,12 @@ const anio = new Date().getFullYear();
 
       <div class="pie__col">
         <h2 class="etiqueta pie__titulo">{home.pie.horarioTitulo}</h2>
-        {home.pie.horario[ajustes.horario].map((h) => <span>{h}</span>)}
+        {tramosCortos(ajustes).map((h) => <span>{h}</span>)}
       </div>
 
       <div class="pie__col">
         <h2 class="etiqueta pie__titulo">{home.ui.pieLegal}</h2>
-        {home.pie.legal.map((l) => <a href={l.url}>{l.texto}</a>)}
+        {home.pie.legal.map((l) => <a href={urlLegal(lang, l.pagina)}>{l.texto}</a>)}
         {
           hayMedicion && (
             <button type="button" class="pie__cookies" data-open-cookies>

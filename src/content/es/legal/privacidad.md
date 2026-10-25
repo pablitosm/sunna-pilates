@@ -1,24 +1,25 @@
 ---
 titulo: "Política de privacidad"
 descripcion: "Cómo trata SUNNA tus datos personales."
-actualizado: ""
+actualizado: "25 de octubre de 2026"
 # PARA EL GESTOR · antes de publicar, completar:
-# - Responsable del tratamiento (razón social, NIF/CIF, email).
-# - Finalidades y bases legales de bsport y Kisi, videovigilancia, plazos de conservación
-# y encargados del tratamiento (herramienta del formulario, bsport, Kisi, Google, Meta).
-# - Confirmar la base legal de la analítica propia (interés legítimo) y su plazo de conservación.
+# - Responsable del tratamiento: razón social y NIF/CIF.
+# - Plazo de conservación de la lista de espera (propuesto: hasta la apertura y 12 meses después).
+# - Proveedor del servidor (alojamiento) y su ubicación.
+# - Videovigilancia del estudio, si la hay (cartel y finalidad).
 ---
-
 
 ## Responsable
 
 SUNNA Pilates · C/ San Francisco Javier 5, bajo exterior, 38001 Santa Cruz de Tenerife.
+Para cualquier cuestión sobre tus datos: info@sunnapilates.es.
 
 ## Qué datos tratamos y para qué
 
-- **Lista de espera y socios fundadores:** nombre, email y teléfono, para avisarte de la apertura. Base legal: tu consentimiento.
-- **Reservas, pagos y acceso al estudio:** se gestionan con bsport y Kisi.
-- **Analítica de la web:** ver el apartado siguiente.
+- **Lista de espera y socios fundadores.** Si te apuntas desde la web, guardamos tu nombre, email, teléfono e idioma para avisarte de la apertura y de la oferta de socio/a fundador/a. Guardamos también la fecha y la IP desde la que lo enviaste, como prueba de tu consentimiento. Base legal: tu consentimiento, que puedes retirar cuando quieras. Los conservamos hasta la apertura del estudio y, como máximo, 12 meses después, salvo que te hagas socio/a.
+- **Reservas, pagos y acceso al estudio.** Se gestionan con bsport (reservas y pagos) y Kisi (apertura de la puerta con el móvil), que tratan tus datos por cuenta de SUNNA. Base legal: el contrato de tu membresía.
+- **Cuando nos escribes** por WhatsApp, Instagram o email, usamos tus datos para responderte. Base legal: tu solicitud.
+- **Analítica de la web.** Ver el apartado siguiente.
 
 ## Analítica de la web
 
@@ -31,6 +32,14 @@ Para saber qué interesa de la web y mejorarla, medimos de forma agregada cómo 
 
 Base legal: nuestro interés legítimo en conocer el uso de la web para mejorarla. Puedes oponerte escribiéndonos, o activando en tu navegador la opción de no ser seguido. Estos datos se conservan un máximo de 13 meses y después se borran automáticamente.
 
+## Google Analytics y píxel de Meta
+
+Solo si están activados en la web y los aceptas en el aviso de cookies. Google y Meta pueden transferir datos a Estados Unidos, amparados en el Marco de Privacidad de Datos UE-EE. UU. y en las cláusulas contractuales tipo de la Comisión Europea. Puedes retirar tu consentimiento en cualquier momento desde «Preferencias de cookies», al pie de la web. Más detalle en la Política de cookies.
+
+## Quién más accede a tus datos
+
+No vendemos ni cedemos tus datos. Solo acceden a ellos los proveedores que nos ayudan a prestar el servicio (alojamiento de la web, bsport y Kisi y, si los aceptas, Google y Meta), con contrato y solo para lo que les encargamos, o las autoridades cuando la ley lo exija.
+
 ## Tus derechos
 
-Puedes pedir acceso, rectificación, supresión, oposición, limitación y portabilidad de tus datos. También puedes reclamar ante la Agencia Española de Protección de Datos (aepd.es).
+Puedes pedir acceso, rectificación, supresión, oposición, limitación y portabilidad de tus datos, y retirar tu consentimiento, escribiendo a info@sunnapilates.es. Si crees que no los hemos atendido bien, puedes reclamar ante la Agencia Española de Protección de Datos (aepd.es).

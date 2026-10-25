@@ -3,8 +3,8 @@ import Logo from './Logo.astro';
 import CtaButton from './CtaButton.astro';
 import Bandera from './Bandera.astro';
 import MobileMenu from './vue/MobileMenu.vue';
-import type { Ajustes, Home, Lang, Pagina } from '../lib/content';
-import { idiomas, nombresIdioma, raizIdioma, urlPagina, whatsappUrl } from '../lib/content';
+import type { Ajustes, Home, Lang, Pagina, PaginaLegal } from '../lib/content';
+import { idiomas, nombresIdioma, raizIdioma, urlLegal, urlPagina, whatsappUrl } from '../lib/content';
 
 interface Props {
   ajustes: Ajustes;
@@ -12,8 +12,10 @@ interface Props {
   lang?: Lang;
   /** Página actual: el selector de idioma lleva a la misma página en otro idioma. */
   pagina?: Pagina;
+  /** Página legal actual: el selector de idioma lleva a la misma página legal en otro idioma. */
+  legal?: PaginaLegal;
 }
-const { ajustes, home, lang = 'es', pagina } = Astro.props;
+const { ajustes, home, lang = 'es', pagina, legal } = Astro.props;
 const actual = Astro.url.pathname;
 const links = home.menu.map((m) => {
   const href = m.pagina ? urlPagina(lang, m.pagina) : `${raizIdioma(lang)}#${m.ancla}`;
@@ -26,12 +28,12 @@ const links = home.menu.map((m) => {
 const opcionesIdioma = idiomas.map((l) => ({
   codigo: l,
   nombre: nombresIdioma[l],
-  href: urlPagina(l, pagina),
+  href: legal ? urlLegal(l, legal) : urlPagina(l, pagina),
   actual: l === lang,
 }));
 ---
 
-<header class="cabecera" data-cabecera>
+<header class="cabecera">
   <div class="cabecera__pildora">
     <a class="cabecera__logo" href={raizIdioma(lang)} aria-label={home.ui.irInicio}>
       <Logo label="SUNNA" />
@@ -58,7 +60,7 @@ const opcionesIdioma = idiomas.map((l) => ({
                             {i === 0 && (
                               <svg class="destacado__arco" width="36" height="36" viewBox="0 0 36 36" aria-hidden="true">
                                 <path class="destacado__arco-marco" d="M6 34V18a12 12 0 0 1 24 0v16z" />
-                                <path class="destacado__arco-luz" d="M10 34V18.5a8 8 0 0 1 16 0V34z" />
+                                <path class="destacado__arco-luz" d="M10 34V18a8 8 0 0 1 16 0v16z" />
                                 <circle class="destacado__arco-sol" cx="18" cy="22" r="4.5" />
                               </svg>
                             )}

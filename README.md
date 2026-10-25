@@ -51,6 +51,20 @@ Sin sesión, cualquier página redirige al login. No hay base de datos: el servi
   `sudo caddy validate --config /etc/caddy/Caddyfile && sudo systemctl reload caddy`.
 - **Abrir la web al público:** en el bloque `http://:8082` del Caddyfile, quita la parte de
   `forward_auth` y la cabecera `X-Robots-Tag`. Después, `systemctl reload caddy`.
+- **Cambiar una contraseña cierra las sesiones abiertas** con la anterior, tanto en el acceso
+  privado como en el panel.
+
+### IP real de los visitantes
+
+Apache apunta la IP del visitante en `X-Forwarded-For`, pero Caddy solo la conserva si se fía de
+Apache. Sin eso, el acceso y el panel ven a todo el mundo como `127.0.0.1`: 10 contraseñas mal
+puestas bloquean a todos, el formulario y la analítica comparten un único límite y se cuentan mal
+los visitantes únicos. Para activarlo (una vez):
+
+1. `ssh 144.91.89.189 'bash -s' < servidor/activar-ip-real-caddy.sh` — añade `trusted_proxies`
+   (`servidor/ip-real.caddy`) con copia de seguridad, validación y recarga.
+2. Sube `servidor/acceso.py` a `/opt/sunnapilates-acceso/` y `servidor/panel.py` a donde esté
+   instalado el panel, y reinicia `sunnapilates-acceso` y `sunnapilates-panel`.
 
 ## Editar textos, precios y fotos
 
@@ -58,9 +72,16 @@ Todo el contenido está en `src/content/es/` y no hace falta tocar componentes:
 
 | Archivo | Qué contiene |
 | --- | --- |
-| `ajustes.yaml` | Estado de la web, fecha de apertura, dirección, WhatsApp, Instagram, plazas de fundadores, analítica y SEO |
+| `ajustes.yaml` | Estado de la web, fecha de apertura (`2026-11-15`), horario, dirección, WhatsApp, Instagram, plazas de fundadores, analítica y SEO |
 | `home.yaml` | Todos los textos de la home, en el orden de la página, incluidos los precios |
 | `legal/*.md` | Aviso legal, privacidad, cookies y condiciones de membresía |
+
+Los textos de cada idioma están en `src/content/en/`, `de/` y `fr/`, con los mismos archivos
+(menos `ajustes.yaml`, que es común). Las páginas legales también existen en los cuatro idiomas.
+
+**Horario:** los tramos se escriben una sola vez en `ajustes.yaml` → `horarios`. En los textos
+de `home.yaml` el horario va como `{horario}` y la web lo escribe en cada idioma («de 08:00 a
+14:00 y de 16:00 a 22:00», «08:00–14:00 and 16:00–22:00»…).
 
 Las líneas que empiezan por `#` son notas. Las marcadas como **PENDIENTE** son datos que faltan
 por cerrar. Si un dato está mal escrito, `npm run build` avisa con un mensaje de qué campo falla.
@@ -68,15 +89,16 @@ por cerrar. Si un dato está mal escrito, `npm run build` avisa con un mensaje d
 ### Cambiar de preapertura a abierto
 
 En `ajustes.yaml`, cambia `estado: preapertura` por `estado: abierto` y rellena
-`reservas.primeraSesionUrl` con el enlace de bsport. El botón principal, el panel y el cierre
-cambian solos.
+`reservas.primeraSesionUrl` con el enlace de bsport. El botón principal y el panel cambian
+solos.
 
 ### Fotos
 
 La web funciona sin fotos: la portada, Recovery y El estudio usan formas del diseño
-(arcos y sol). Para añadir una foto real, guárdala en `src/assets/fotos/` y quita las `#`
-de las líneas `foto:` que hay en `home.yaml` para la portada y para Recovery. En El estudio,
-añade `foto:` a cualquiera de los arcos. Astro la optimiza sola (AVIF/WebP, varios tamaños).
+(arcos y sol). Para añadir una foto real, guárdala en `src/assets/fotos/` y ponla en las líneas
+`foto:` de `home.yaml`: la de `portada` sale en la página de la primera sesión (la portada
+lleva siempre el dibujo) y las de Recovery, en cada espacio. Astro la optimiza sola
+(AVIF/WebP, varios tamaños).
 
 ### Formulario de preapertura
 

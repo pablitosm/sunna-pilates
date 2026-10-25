@@ -17,7 +17,9 @@ Solo biblioteca estándar (Python 3.6+).
 import base64
 import hashlib
 import hmac
+import ipaddress
 import os
+import re
 import secrets
 import socketserver
 import sys
@@ -53,9 +55,14 @@ def firmar(datos):
     return datos + "." + base64.urlsafe_b64encode(firma).decode().rstrip("=")
 
 
+def huella_hash():
+    # Va dentro del token: al cambiar la contraseña (ACCESO_HASH) caducan todas las sesiones
+    return hashlib.sha256(HASH.encode()).hexdigest()[:16]
+
+
 def crear_token():
     caduca = int(time.time()) + DURACION
-    return firmar("{}:{}".format(USUARIO, caduca))
+    return firmar("{}:{}:{}".format(USUARIO, caduca, huella_hash()))
 
 
 def token_valido(token):
@@ -65,8 +72,8 @@ def token_valido(token):
     if not hmac.compare_digest(firmar(datos), token):
         return False
     try:
-        usuario, caduca = datos.split(":")
-        return usuario == USUARIO and int(caduca) > time.time()
+        usuario, caduca, huella = datos.split(":")
+        return usuario == USUARIO and int(caduca) > time.time() and hmac.compare_digest(huella, huella_hash())
     except ValueError:
         return False
 
@@ -79,17 +86,39 @@ def leer_cookie(cabecera, nombre):
     return ""
 
 
+# Solo rutas internas con caracteres de URL corrientes. Fuera quedan «//sitio» (otro dominio),
+# la barra invertida, y tabuladores y saltos de línea: el navegador los borra («/\t/sitio» acaba
+# en «//sitio») y en la cabecera Location permitirían colar cabeceras nuevas.
+RUTA_INTERNA = re.compile(r"/(?![/\\])[A-Za-z0-9/_.~%?=&#+:@!$'()*,;-]*")
+
+
 def destino_seguro(ruta):
-    # Solo rutas internas de la propia web (evita redirecciones abiertas).
-    # «//sitio» y «/\sitio» los navegadores los leen como otro dominio.
-    if not ruta or not ruta.startswith("/") or ruta.startswith("//") or "\\" in ruta or ruta.startswith("/login"):
+    if not ruta or not RUTA_INTERNA.fullmatch(ruta) or ruta.startswith("/login"):
         return "/"
     return ruta
 
 
 def ip_cliente(handler):
-    reenviada = handler.headers.get("X-Forwarded-For", "")
-    return reenviada.split(",")[0].strip() or handler.client_address[0]
+    """IP del visitante. Apache añade la suya a X-Forwarded-For y Caddy, que confía en Apache
+    (servidor/ip-real.caddy), la conserva y añade la de Apache al final. Se recorre la cadena de
+    derecha a izquierda saltando los equipos locales (Apache, Caddy): la primera IP pública es la
+    del visitante. Lo que el visitante escriba a la izquierda no cuenta, así que no puede falsearla."""
+    cadena = [s.strip() for s in handler.headers.get("X-Forwarded-For", "").split(",") if s.strip()]
+    cadena.append(handler.client_address[0])
+    for salto in reversed(cadena):
+        try:
+            ip = ipaddress.ip_address(salto)
+        except ValueError:
+            continue
+        if not (ip.is_loopback or ip.is_private):
+            return salto
+    return handler.client_address[0]
+
+
+def podar(registro, ahora):
+    # Sin esto el diccionario guarda para siempre una entrada por cada IP que ha fallado alguna vez
+    for clave in [c for c, ts in registro.items() if not ts or ahora - ts[-1] >= VENTANA]:
+        registro.pop(clave, None)
 
 
 class Acceso(BaseHTTPRequestHandler):
@@ -149,6 +178,7 @@ class Acceso(BaseHTTPRequestHandler):
             return
         recientes.append(ahora)
         fallos[ip] = recientes
+        podar(fallos, ahora)
         time.sleep(1)
         self.redirigir("/login?error=1&next=" + quote(siguiente, safe="/"))
 

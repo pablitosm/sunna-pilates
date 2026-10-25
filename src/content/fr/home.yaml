@@ -21,10 +21,10 @@ ui:
   paso: "Étape"
   detallesReserva: "Détails de la réservation"
   porMes: "/mois"
-  mapaTitulo: "Carte : emplacement de SUNNA"
   pieEstudio: "Studio"
   pieContacto: "Contact"
   pieLegal: "Mentions"
+  actualizado: "Mis à jour"
   whatsappMensaje: "Bonjour, j'ai une question sur SUNNA Pilates : "
   pieEspacios: "Découvrir"
 
@@ -55,7 +55,6 @@ botones:
     preapertura: "Devenir membre fondateur"
     abierto: "Première séance gratuite"
     fundador: "Devenir membre fondateur"
-  secundario: "Comment ça marche"
   precios: "Voir les tarifs"
 
 enlaces:
@@ -74,13 +73,12 @@ portada:
 
 porQue:
   titulo: "Pourquoi SUNNA"
-  intro: "Entraîne-toi quand tu veux, à ton rythme, avec un cours guidé à l'écran. Et tu ne commences jamais seul·e : la première fois, on te montre tout."
   razones:
     - titulo: "Ouvert matin et après-midi"
-      texto: "De 08:00 à 14:00 et de 16:00 à 22:00. Pas d'horaires de groupe : tu réserves l'heure qui te convient."
+      texto: "{horario}. Pas d'horaires de groupe : tu réserves l'heure qui te convient."
       # Con ajustes.yaml → horario: ampliado se muestra esto en su lugar.
       ampliado:
-        titulo: "Ouvert de 05:00 à 23:00"
+        titulo: "Ouvert {horario}"
         texto: "Sans accueil ni horaires de groupe, le studio ouvre bien plus longtemps."
     - titulo: "Tout est autonome"
       texto: "Tu réserves ton reformer dans l'app et la porte s'ouvre avec ta réservation. Pas de clés, pas d'accueil, pas d'attente."
@@ -89,12 +87,6 @@ porQue:
   app:
     titulo: "Ta clé, c'est l'*app*"
     texto: "Avec elle, tu réserves ton reformer, tu paies et tu ouvres la porte du studio. Sans l'app, pas d'accès : télécharge-la avant de venir."
-    pasos:
-      - "Télécharge l'app SUNNA."
-      - "Réserve ta première séance gratuite."
-      - "Viens au studio et entre avec ton téléphone."
-    # Paso 2 mientras quedan plazas de socio fundador (enlaza a la oferta de fundadores).
-    pasoFundador: "Deviens membre fondateur."
     proximamente: "Bientôt disponible"
     appStore: "App Store"
     googlePlay: "Google Play"
@@ -103,7 +95,6 @@ explora:
   titulo: "Découvrir SUNNA"
   ver: "Voir"
   precios:
-    titulo: "Tarifs"
     texto: "Quatre abonnements mensuels, à partir de 55 € par mois."
 
 primeraSesion:
@@ -120,20 +111,6 @@ primeraSesion:
   web: "Réserver sur le web"
   whatsapp: "Réserver sur WhatsApp"
   whatsappMensaje: "Bonjour, je voudrais réserver ma première séance gratuite chez SUNNA Pilates."
-
-# 2 · QUÉ ES SUNNA
-queEs:
-  titulo: "SUNNA, c'est quoi"
-  ideas:
-    - icono: "anillo"
-      titulo: "Tu choisis l'heure"
-      texto: "Tu réserves dans l'app, sans horaires de groupe fixes."
-    - icono: "pantalla"
-      titulo: "Un cours guidé sur ton reformer"
-      texto: "Un iPad sur chaque machine avec des cours de 10 à 45 min."
-    - icono: "arco"
-      titulo: "Tu ne commences jamais seul·e"
-      texto: "Première séance de 45 min avec nous."
 
 # 3 · CÓMO FUNCIONA
 comoFunciona:
@@ -157,12 +134,7 @@ comoFunciona:
       titulo: "Horaires"
       fases:
         - fase: "inicial"
-          intro: "Nous ouvrons en deux créneaux le temps de valider le fonctionnement en autonomie."
-          etiqueta: "Les 2–3 premières semaines"
-          horas: ["08:00 — 14:00", "16:00 — 22:00"]
-          texto: "Le studio n'ouvre qu'avec quelqu'un de SUNNA sur place."
         - fase: "ampliado"
-          horas: ["05:00 — 23:00"]
           texto: "Accès en autonomie."
       # "Cómo se llena el día" (franjas de demanda) se quita hasta tener estadísticas reales.
       # El componente lo sigue admitiendo: basta con volver a añadir "franjas:" aquí.
@@ -170,7 +142,6 @@ comoFunciona:
 # 4 · LAS CLASES
 clases:
   titulo: "Les *cours*"
-  tiposTitulo: "Types"
   tipos: ["Full Body", "Jambes", "Bras", "Core", "Mobilité", "Étirements"]
   duraciones:
     - nombre: "Longs"
@@ -225,7 +196,7 @@ recovery:
           cantidad: "2 par semaine"
         - plan: "Premium"
           cantidad: "Illimité"
-      pendiente: "[PENDIENTE] duración de cada sesión y qué llevar"
+      pendiente: ""
     - tipo: "luz-roja"
       titulo: "La salle de lumière rouge"
       texto: "Une salle avec des panneaux de lumière rouge. Tu te places devant, tu te détends et tu laisses la séance se dérouler."
@@ -242,7 +213,7 @@ recovery:
           cantidad: "3 par semaine"
         - plan: "Premium"
           cantidad: "Illimité"
-      pendiente: "[PENDIENTE] duración de cada sesión y qué llevar"
+      pendiente: ""
 
 # 6 · ¿Y SI…?
 dudas:
@@ -265,7 +236,6 @@ precios:
   introFundador: "Choisis combien de fois par mois tu veux ton reformer. La lumière rouge est incluse dans tous les abonnements, le sauna à partir de Standard. Tant qu'il reste des places, tu deviens membre fondateur."
   porSesion: "par séance"
   graficos:
-    recovery: "Recovery par semaine"
     porSemana: "par semaine"
     luzRoja: "Lumière rouge"
     sauna: "Sauna"
@@ -325,24 +295,9 @@ precios:
 # 8 · EL ESTUDIO
 estudio:
   titulo: "Le studio"
-  espacios:
-    - icono: "rectangulo"
-      texto: "6 reformers, une personne par machine"
-      tono: "claro"
-    - icono: "pantalla"
-      texto: "iPad et casque bluetooth sur chaque reformer"
-      tono: "medio"
-    - icono: "punto"
-      texto: "Lumière rouge"
-      tono: "rojo"
-    - icono: "arco"
-      texto: "Sauna"
-      tono: "tinta"
   mapa:
     direccion: "Adresse"
     comoLlegar: "Comment venir"
-    boton: "Voir la carte"
-    aviso: "La carte Google Maps ne se charge que si tu le demandes."
     abrir: "Ouvrir dans Maps"
 
 # 9 · PREGUNTAS FRECUENTES
@@ -369,9 +324,9 @@ faq:
         - pregunta: "Puis-je annuler ?"
           respuesta: "Oui, l'annulation est gratuite jusqu'à 2 heures avant."
         - pregunta: "Quels sont vos horaires ?"
-          respuesta: "De 08:00 à 14:00 et de 16:00 à 22:00, toujours avec quelqu'un de l'équipe au studio."
+          respuesta: "{horario}, toujours avec quelqu'un de l'équipe au studio."
           # Con ajustes.yaml → horario: ampliado se muestra esta respuesta.
-          respuestaAmpliado: "De 05:00 à 23:00, en accès autonome."
+          respuestaAmpliado: "{horario}, en accès autonome."
     - titulo: "Les cours"
       preguntas:
         - pregunta: "Comment se passe un cours ?"
@@ -391,35 +346,18 @@ faq:
         - pregunta: "Y a-t-il un âge minimum ?"
           respuesta: "18 ans pour s'entraîner seul·e. Les mineurs à partir de 16 ans, accompagnés d'un adulte."
 
-# 10 · CIERRE
-cierre:
-  titulo: "Ta première séance est gratuite."
-  texto: "Réserve et on te montre tout."
-  # Mientras la web está en preapertura se muestra este texto en lugar del anterior.
-  textoPreapertura: "Inscris-toi sur la liste d'attente, on t'écrira avant l'ouverture."
-  # Mientras quedan plazas de socio fundador (web abierta) se muestran estos en su lugar.
-  fundador:
-    titulo: "Deviens l'un des *40* membres fondateurs."
-    texto: "Un tarif fondateur garanti pour toujours, la priorité pour réserver à l'ouverture et un pack de bienvenue."
-
 # 11 · PIE (las páginas legales están en castellano)
 pie:
   horarioTitulo: "Horaires"
-  horario:
-    inicial:
-      - "08:00–14:00"
-      - "16:00–22:00"
-    ampliado:
-      - "05:00–23:00"
   legal:
-    - texto: "Mentions légales (ES)"
-      url: "/aviso-legal"
-    - texto: "Confidentialité (ES)"
-      url: "/privacidad"
-    - texto: "Cookies (ES)"
-      url: "/cookies"
-    - texto: "Conditions d'abonnement (ES)"
-      url: "/condiciones-membresia"
+    - texto: "Mentions légales"
+      pagina: "aviso-legal"
+    - texto: "Confidentialité"
+      pagina: "privacidad"
+    - texto: "Cookies"
+      pagina: "cookies"
+    - texto: "Conditions d'abonnement"
+      pagina: "condiciones-membresia"
   cookies: "Préférences cookies"
 
 panel:

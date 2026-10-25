@@ -10,7 +10,7 @@ import { sinAcento } from '../lib/acento';
 // Las dos letras de los títulos, precargadas: llegan antes de pintar y el texto no salta al cambiar de letra
 import fuenteTexto from '@fontsource-variable/dm-sans/files/dm-sans-latin-opsz-normal.woff2?url';
 import fuenteAcento from '@fontsource/ephesis/files/ephesis-latin-400-normal.woff2?url';
-import { colorTema, getSite, idiomas, localeOg, mapsUrl, urlPagina, whatsappUrl, type Lang, type Pagina } from '../lib/content';
+import { colorTema, getSite, idiomas, localeOg, mapsUrl, urlLegal, urlPagina, whatsappUrl, type Lang, type Pagina, type PaginaLegal } from '../lib/content';
 
 interface Props {
   titulo?: string;
@@ -21,10 +21,12 @@ interface Props {
   alternos?: boolean;
   /** Página propia (primera sesión, precios, cada espacio); sin ella, la portada. */
   pagina?: Pagina;
+  /** Página legal: el selector de idioma lleva a la misma página legal en otro idioma. */
+  legal?: PaginaLegal;
   /** Sin la barra fija del móvil (la página ya tiene sus propios botones de reservar). */
   sinBarraMovil?: boolean;
 }
-const { titulo, descripcion, lang = 'es', indexar = true, alternos = false, pagina, sinBarraMovil = false } = Astro.props;
+const { titulo, descripcion, lang = 'es', indexar = true, alternos = false, pagina, legal, sinBarraMovil = false } = Astro.props;
 const { ajustes, home } = await getSite(lang);
 
 // Página para la analítica: igual en los 4 idiomas (inicio, precios, sauna…); legales y 404 son «otra»
@@ -98,7 +100,7 @@ const negocio = {
   <body>
     <a class="saltar" href="#contenido">{home.ui.saltar}</a>
     <BarraFundadores ajustes={ajustes} home={home} />
-    <Header ajustes={ajustes} home={home} lang={lang} pagina={pagina} />
+    <Header ajustes={ajustes} home={home} lang={lang} pagina={pagina} legal={legal} />
     <main id="contenido">
       <slot />
     </main>
@@ -114,7 +116,7 @@ const negocio = {
       reservaUrl={ajustes.reservas.primeraSesionUrl}
       whatsapp={wa}
       instagram={ajustes.contacto.instagram}
-      privacidadUrl="/privacidad"
+      privacidadUrl={urlLegal(lang, 'privacidad')}
       textos={home.panel}
     />
       )
@@ -126,7 +128,7 @@ const negocio = {
           client:idle
           gaId={ajustes.medicion.googleAnalyticsId}
           pixelId={ajustes.medicion.metaPixelId}
-          cookiesUrl="/cookies"
+          cookiesUrl={urlLegal(lang, 'cookies')}
           textos={home.cookies}
         />
       )

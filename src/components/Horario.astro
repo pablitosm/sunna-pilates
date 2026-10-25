@@ -5,6 +5,7 @@
  * (ajustes.yaml → horario), nunca las dos a la vez.
  */
 import type { Ajustes, Home } from '../lib/content';
+import { tramosCortos } from '../lib/horario';
 
 interface Props {
   ajustes: Ajustes;
@@ -20,17 +21,17 @@ const { horariosUrl, appUrl } = ajustes.reservas;
 
 {
   fase && (
-    <div class:list={['horario', `horario--${fase.fase}`, { 'horario--derecha': derecha }]}>
+    <div class:list={['horario', { 'horario--derecha': derecha }]}>
       <p class="etiqueta horario__etiqueta">
         {horario.titulo}
         {fase.etiqueta && <span> · {fase.etiqueta}</span>}
       </p>
       <div class="horario__franjas">
-        {fase.horas.map((h) => (
+        {tramosCortos(ajustes, ' — ').map((h) => (
           <p class="horario__horas">{h}</p>
         ))}
       </div>
-      <p class:list={['horario__texto', { 'horario__texto--destacado': fase.fase === 'inicial' }]}>{fase.texto}</p>
+      {fase.texto && <p class="horario__texto">{fase.texto}</p>}
       {fase.intro && <p class="horario__intro">{fase.intro}</p>}
 
       {
@@ -92,66 +93,6 @@ const { horariosUrl, appUrl } = ajustes.reservas;
     margin-top: 1rem;
     font-size: 0.9375rem;
     color: var(--tinta-60);
-  }
-
-  /* Las primeras semanas siempre hay alguien de SUNNA: se lee de un vistazo */
-  .horario__texto--destacado {
-    isolation: isolate;
-    display: flex;
-    align-items: center;
-    gap: 0.875rem;
-    font-size: 1.0625rem;
-    line-height: 1.4;
-    color: var(--tinta);
-  }
-
-  .horario__texto--destacado::before {
-    content: '';
-    flex: none;
-    width: 0.75rem;
-    height: 0.75rem;
-    margin-left: 0.25rem;
-    border-radius: var(--r-pill);
-    background: var(--n500);
-    animation: horario-respira 4.5s ease-in-out infinite;
-  }
-
-  /* El aro, aparte del punto y detrás: solo transform y opacity, que anima la GPU sin repintar
-     (animar box-shadow repintaba la página en cada fotograma, aunque no se viera) */
-  .horario__texto--destacado::after {
-    content: '';
-    /* Va antes del punto en la fila y los márgenes negativos lo centran debajo de él
-       (también en .horario--derecha), sin ocupar sitio ni subir la altura de la línea */
-    order: -1;
-    z-index: -1;
-    flex: none;
-    width: calc(0.75rem + 18px);
-    height: calc(0.75rem + 18px);
-    margin: -9px calc(-1.875rem - 9px) -9px calc(0.25rem - 9px);
-    border-radius: var(--r-pill);
-    background: var(--n500);
-    opacity: 0.22;
-    scale: 0.73;
-    animation: horario-aro 4.5s ease-in-out infinite;
-  }
-
-  /* Respira despacio, como alguien presente en la sala */
-  @keyframes horario-respira {
-    50% {
-      transform: scale(1.12);
-    }
-  }
-
-  @keyframes horario-aro {
-    0%,
-    100% {
-      opacity: 0.24;
-      scale: 0.67;
-    }
-    50% {
-      opacity: 0.08;
-      scale: 1.12;
-    }
   }
 
   .horario__intro {
@@ -220,7 +161,6 @@ const { horariosUrl, appUrl } = ajustes.reservas;
     }
 
     .horario--derecha .horario__franjas,
-    .horario--derecha .horario__texto--destacado,
     .horario--derecha .horario__enlaces {
       justify-content: flex-end;
     }
@@ -233,13 +173,6 @@ const { horariosUrl, appUrl } = ajustes.reservas;
   @media (max-width: 40rem) {
     .franjas__lista {
       grid-template-columns: 1fr;
-    }
-  }
-
-  @media (prefers-reduced-motion: reduce) {
-    .horario__texto--destacado::before,
-    .horario__texto--destacado::after {
-      animation: none;
     }
   }
 </style>

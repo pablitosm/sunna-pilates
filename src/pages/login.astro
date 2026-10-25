@@ -68,8 +68,9 @@ const { ajustes } = await getSite('es');
       const q = new URLSearchParams(location.search);
       const next = q.get('next');
       const campoNext = document.querySelector<HTMLInputElement>('[data-next]');
-      // Solo rutas internas: «//sitio» y «/\sitio» los navegadores los leen como otro dominio
-      if (campoNext && next && next.startsWith('/') && !/^\/[\/\\]/.test(next) && !next.includes('\\')) campoNext.value = next;
+      // Solo rutas internas con caracteres de URL corrientes (la misma regla que servidor/acceso.py):
+      // «//sitio» y «/\sitio» son otro dominio, y un tabulador o salto de línea lo borra el navegador
+      if (campoNext && next && /^\/(?![\/\\])[A-Za-z0-9\/_.~%?=&#+:@!$'()*,;-]*$/.test(next)) campoNext.value = next;
       const error = q.get('error');
       const aviso = document.querySelector<HTMLElement>('[data-error]');
       if (aviso && error) {

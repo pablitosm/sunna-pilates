@@ -9,7 +9,7 @@
  * Si cambia la dirección, actualiza PIN (y, si hace falta, el encuadre).
  * Datos © colaboradores de OpenStreetMap (ODbL): la atribución va junto al mapa (Estudio.astro).
  */
-import { existsSync, readFileSync, writeFileSync } from 'node:fs';
+import { existsSync, mkdirSync, readFileSync, writeFileSync } from 'node:fs';
 
 // El estudio: C/ San Francisco Javier 5, Santa Cruz de Tenerife
 const PIN = { lat: 28.47075, lon: -16.24915 };
@@ -54,6 +54,7 @@ async function datos() {
     }).catch(() => null);
     const texto = r?.ok ? await r.text() : '';
     if (texto.startsWith('{')) {
+      mkdirSync(new URL('.', guardado), { recursive: true });
       writeFileSync(guardado, texto);
       return JSON.parse(texto);
     }
@@ -170,9 +171,6 @@ ${nombres.map((n) => `    <path id="mapa-osm-${n.id}" d="${n.d}" />`).join('\n')
   <path class="verde" d="${[...verdes, ...relVerdes].join('')}" />
   <path class="muelle" d="${muelles.join('')}" />
   <path class="menor" d="${menores}" />
-  <path class="calle-borde" d="${calles}" />
-  <path class="media-borde" d="${medias}" />
-  <path class="principal-borde" d="${principales}" />
   <path class="calle" d="${calles}" />
   <path class="media" d="${medias}" />
   <path class="principal" d="${principales}" />
@@ -220,9 +218,6 @@ ${lugares.map(([t, [x, y]]) => `    <text x="${x}" y="${y}" text-anchor="middle"
   }
 
   .menor,
-  .calle-borde,
-  .media-borde,
-  .principal-borde,
   .calle,
   .media,
   .principal {
@@ -236,29 +231,14 @@ ${lugares.map(([t, [x, y]]) => `    <text x="${x}" y="${y}" text-anchor="middle"
     stroke-width: 1.5;
   }
 
-  .calle-borde {
-    stroke: none;
-    stroke-width: 9;
-  }
-
   .calle {
     stroke: var(--sol-50);
     stroke-width: 6.5;
   }
 
-  .media-borde {
-    stroke: none;
-    stroke-width: 11;
-  }
-
   .media {
     stroke: var(--sol-50);
     stroke-width: 8;
-  }
-
-  .principal-borde {
-    stroke: none;
-    stroke-width: 14;
   }
 
   .principal {

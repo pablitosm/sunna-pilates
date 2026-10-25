@@ -1,24 +1,30 @@
 ---
-import Glifo from '../Glifo.astro';
+import IconoPaso from '../IconoPaso.astro';
 import DibujoPaso from '../DibujoPaso.astro';
 import { acentuar } from '../../lib/acento';
-import type { Ajustes, Home } from '../../lib/content';
+import type { Home } from '../../lib/content';
 
 interface Props {
-  ajustes: Ajustes;
   home: Home;
 }
 const { home } = Astro.props;
 const { comoFunciona: cf } = home;
-type Forma = Parameters<typeof Glifo>[0]['forma'];
 // Datos prácticos de la reserva: una carta más del mazo, detrás de las tres ideas
 const detalles = [cf.datos.reserva, cf.datos.cancelacion, cf.notaFinal].filter(Boolean) as string[];
-const cartas: { icono: string; glifo: Forma; titulo: string; texto?: string; lista?: string[] }[] = [
-  ...cf.pasos.map((p) => ({ icono: p.icono, glifo: p.icono as Forma, titulo: p.titulo, texto: p.texto })),
-  ...(detalles.length > 0
-    ? [{ icono: 'reserva', glifo: 'rectangulo' as Forma, titulo: home.ui.detallesReserva, lista: detalles }]
+const cartas: { icono: string; titulo: string; texto?: string; lista?: string[] }[] = [
+  ...cf.pasos.map((p) => ({ icono: p.icono, titulo: p.titulo, texto: p.texto })),
+  ...(detalles.length > 0 && home.ui.detallesReserva
+    ? [{ icono: 'reserva', titulo: home.ui.detallesReserva, lista: detalles }]
     : []),
 ];
+// Cada carta conserva su papel esté donde esté, elegido por dibujo para que el medallón no se
+// funda con el fondo (arco y punto llevan cielo --sol-100, pantalla y reserva --sol-200)
+const papeles: Record<string, string> = {
+  arco: 'var(--n200)',
+  pantalla: 'var(--n100)',
+  punto: 'var(--n300)',
+  reserva: 'var(--tostado)',
+};
 ---
 
 <section id="como-funciona" class="como seccion" aria-labelledby="como-titulo">
@@ -40,7 +46,7 @@ const cartas: { icono: string; glifo: Forma; titulo: string; texto?: string; lis
               tabindex={i === 0 ? 0 : -1}
               class="pildora"
             >
-              <Glifo forma={carta.glifo} tamano={32} />
+              <IconoPaso icono={carta.icono} class="pildora__icono" />
               <span>{carta.titulo}</span>
             </button>
           ))
@@ -54,7 +60,7 @@ const cartas: { icono: string; glifo: Forma; titulo: string; texto?: string; lis
               id={`paso-${i}`}
               aria-labelledby={`paso-tab-${i}`}
               class="carta grano"
-              style={`--d: ${i}`}
+              style={`--d: ${i}; --papel: ${papeles[carta.icono] ?? 'var(--tostado)'}`}
               data-d={i}
               inert={i !== 0}
             >
@@ -128,6 +134,19 @@ const cartas: { icono: string; glifo: Forma; titulo: string; texto?: string; lis
     color: var(--tinta);
   }
 
+  /* La pegatina se ladea al pasar y se queda ladeada en la elegida */
+  .pildora :global(.pildora__icono) {
+    transition: transform 0.35s var(--ease);
+  }
+
+  .pildora:hover :global(.pildora__icono) {
+    transform: rotate(-6deg) scale(1.06);
+  }
+
+  .pildora[aria-selected='true'] :global(.pildora__icono) {
+    transform: rotate(6deg) scale(1.1);
+  }
+
   .pildora:focus-visible {
     outline: 2px solid var(--n500);
     outline-offset: 2px;
@@ -150,22 +169,10 @@ const cartas: { icono: string; glifo: Forma; titulo: string; texto?: string; lis
     padding: clamp(1.75rem, 1rem + 3vw, 3rem);
     border: 1px solid var(--linea);
     border-radius: var(--r);
-    background: var(--tostado);
+    background: var(--papel);
     transform-origin: 50% 100%;
     transform: translate(calc(var(--d) * 1.1rem), calc(var(--d) * -0.6rem)) rotate(calc(var(--d) * 2.5deg));
     transition: transform 0.3s var(--ease);
-  }
-
-  .carta[data-d='1'] {
-    background: var(--n100);
-  }
-
-  .carta[data-d='2'] {
-    background: var(--n200);
-  }
-
-  .carta[data-d='3'] {
-    background: var(--n300);
   }
 
   /* Solo se lee la de arriba: las de detrás se quedan en papel liso */
@@ -177,6 +184,11 @@ const cartas: { icono: string; glifo: Forma; titulo: string; texto?: string; lis
   .carta[data-d='0'] > * {
     opacity: 1;
     transition: opacity 0.2s var(--ease) 0.1s;
+  }
+
+  /* La que sale volando se lleva su contenido; se apaga ya detrás del mazo */
+  .carta.vuela > * {
+    opacity: 1;
   }
 
   .carta :global(.carta__dibujo) {
@@ -211,12 +223,14 @@ const cartas: { icono: string; glifo: Forma; titulo: string; texto?: string; lis
     max-width: 42ch;
     font-size: var(--t-body);
     line-height: 1.6;
-    color: var(--tinta-60);
+    /* Más tinta que --tinta-60: sobre el papel más naranja se quedaba corto de contraste */
+    color: rgb(var(--tinta-rgb) / 0.8);
   }
 
   @media (prefers-reduced-motion: reduce) {
     .carta,
-    .carta > * {
+    .carta > *,
+    .pildora :global(.pildora__icono) {
       transition: none;
     }
   }
@@ -232,21 +246,89 @@ const cartas: { icono: string; glifo: Forma; titulo: string; texto?: string; lis
 <script>
   // Pestañas del mazo: clic, flechas arriba/abajo, Inicio/Fin. Ninguna carta se esconde:
   // cada una sabe a qué distancia queda de la elegida (data-d y --d) y solo la de arriba se usa.
+  // Al retroceder o al saltar varias, la elegida sale del mazo y se pone encima con la transición
+  // del CSS. Al avanzar una, la de delante no puede colarse detrás sin más (el z-index salta al
+  // instante y desaparece): sale del mazo hacia un lado, ahí pasa detrás y vuelve por el fondo.
+  // Con varias a la vez volaban cartas en blanco en abanico, por eso solo vuela una.
+  // Las posiciones del mazo solo las sabe el CSS: el script lee de dónde sale y adónde llega.
+  const quieto = matchMedia('(prefers-reduced-motion: reduce)');
+  const fuera = 'translate(-16%, 9%) rotate(-9deg)';
+  const ease = 'cubic-bezier(0.22, 1, 0.36, 1)';
+
   document.querySelectorAll<HTMLElement>('[data-mazo]').forEach((mazo) => {
     const tabs = [...mazo.querySelectorAll<HTMLElement>('[role=tab]')];
     const cartas = [...mazo.querySelectorAll<HTMLElement>('[role=tabpanel]')];
     const n = cartas.length;
+    const vuelos = new Map<HTMLElement, Animation>();
+    const apagados = new Map<HTMLElement, number>();
+    let actual = 0;
+
+    // Mientras se anima a mano, la transición del CSS va apagada (una transición manda sobre la
+    // animación) y vuelve al terminar, si no ha empezado otra animación entretanto
+    const animar = (c: HTMLElement, frames: Keyframe[], duracion: number, alPasarDetras?: number) => {
+      c.style.transition = 'none';
+      const vuelo = c.animate(frames, { duration: duracion });
+      vuelos.set(c, vuelo);
+      // El contenido de la que vuela se apaga cuando ya ha pasado detrás del mazo
+      clearTimeout(apagados.get(c));
+      if (alPasarDetras) apagados.set(c, setTimeout(() => c.classList.remove('vuela'), duracion * alPasarDetras));
+      const terminar = () => {
+        if (vuelos.get(c) !== vuelo) return;
+        clearTimeout(apagados.get(c));
+        vuelos.delete(c);
+        c.style.transition = '';
+        c.classList.remove('vuela');
+      };
+      vuelo.onfinish = terminar;
+      vuelo.oncancel = terminar;
+    };
+
     const elegir = (i: number, foco = false) => {
+      const avanza = (i - actual + n) % n === 1 && !quieto.matches;
       tabs.forEach((t, j) => {
         t.setAttribute('aria-selected', String(j === i));
         t.tabIndex = j === i ? 0 : -1;
       });
+      // Dónde está cada carta ahora mismo, a medio vuelo incluido
+      const antes = cartas.map((c) => {
+        const estilo = getComputedStyle(c);
+        return { transform: estilo.transform, zIndex: estilo.zIndex, volando: vuelos.has(c) };
+      });
       cartas.forEach((c, j) => {
         const d = (j - i + n) % n;
+        vuelos.get(c)?.cancel();
         c.dataset.d = String(d);
         c.style.setProperty('--d', String(d));
         c.inert = d !== 0;
       });
+      cartas.forEach((c, j) => {
+        const desde = antes[j];
+        const vuela = avanza && (j - actual + n) % n === 0;
+        if (!vuela && !desde.volando) return;
+        // Con la transición apagada, el estilo calculado ya es la posición de llegada
+        c.style.transition = 'none';
+        const hasta = getComputedStyle(c);
+        const llegada = { transform: hasta.transform, zIndex: hasta.zIndex };
+        if (vuela) {
+          c.classList.add('vuela');
+          animar(
+            c,
+            [
+              { ...desde, zIndex: '20', easing: 'cubic-bezier(0.33, 0, 0.2, 1)' },
+              { transform: fuera, zIndex: '20', offset: 0.4 },
+              { transform: fuera, zIndex: llegada.zIndex, offset: 0.4, easing: 'cubic-bezier(0.45, 0, 0.2, 1)' },
+              llegada,
+            ],
+            720,
+            0.4,
+          );
+        } else {
+          // Pillada a medio vuelo: sigue desde donde está, sin saltos
+          c.classList.remove('vuela');
+          animar(c, [{ ...desde, easing: ease }, llegada], 400);
+        }
+      });
+      actual = i;
       if (foco) tabs[i].focus();
     };
     tabs.forEach((t, i) => {

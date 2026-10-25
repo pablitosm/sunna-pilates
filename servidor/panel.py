@@ -32,6 +32,7 @@ import hashlib
 import hmac
 import html
 import io
+import ipaddress
 import json
 import os
 import re
@@ -135,21 +136,26 @@ def firma(datos):
     return base64.urlsafe_b64encode(hmac.new(SECRETO, datos.encode(), hashlib.sha256).digest()).decode().rstrip("=")
 
 
-def crear_token(admin_id):
-    datos = "{}:{}".format(admin_id, int(time.time()) + DURACION)
+def huella_hash(guardado):
+    # Va dentro del token: al cambiar la contraseña caducan las sesiones abiertas con la anterior
+    return hashlib.sha256(guardado.encode()).hexdigest()[:16]
+
+
+def crear_token(admin_id, guardado):
+    datos = "{}:{}:{}".format(admin_id, int(time.time()) + DURACION, huella_hash(guardado))
     return datos + "." + firma(datos)
 
 
 def leer_token(token):
-    """Devuelve el id del administrador si el token es válido y no ha caducado."""
+    """(id del administrador, huella de su contraseña) si el token es válido y no ha caducado."""
     if not token or "." not in token:
         return None
     datos, recibida = token.rsplit(".", 1)
     if not hmac.compare_digest(firma(datos), recibida):
         return None
     try:
-        admin_id, caduca = datos.split(":")
-        return int(admin_id) if int(caduca) > time.time() else None
+        admin_id, caduca, huella = datos.split(":")
+        return (int(admin_id), huella) if int(caduca) > time.time() else None
     except ValueError:
         return None
 
@@ -170,12 +176,26 @@ def limitar(registro, clave, maximo):
     """True si la clave ya ha superado el máximo de intentos en la ventana."""
     ahora = time.time()
     recientes = [t for t in registro.get(clave, []) if ahora - t < VENTANA]
-    registro[clave] = recientes
+    if recientes:
+        registro[clave] = recientes
+    else:
+        # Sin intentos recientes la entrada sobra: si no, queda una por cada IP para siempre
+        registro.pop(clave, None)
     return len(recientes) >= maximo
 
 
 def anotar(registro, clave):
-    registro.setdefault(clave, []).append(time.time())
+    ahora = time.time()
+    registro.setdefault(clave, []).append(ahora)
+    # Las IP que no vuelven dejarían su entrada para siempre: de vez en cuando se barren
+    if len(registro) > 2000:
+        for vieja in [c for c, ts in registro.items() if ahora - ts[-1] >= VENTANA]:
+            registro.pop(vieja, None)
+
+
+# Destino tras entrar al panel: solo rutas del panel con caracteres de URL corrientes. Fuera
+# quedan tabuladores y saltos de línea, que en la cabecera Location permitirían colar cabeceras.
+RUTA_PANEL = re.compile(r"/panel[A-Za-z0-9/_.~%?=&#+:@!$'()*,;-]*")
 
 
 # ─── Utilidades de presentación ─────────────────────────────────
@@ -414,7 +434,7 @@ APARTADOS = {
 }
 PAGINAS = {
     "inicio": "Inicio", "precios": "Precios", "primera-sesion": "Primera sesión", "reformer": "Reformer",
-    "sauna": "Sauna", "luz-roja": "Luz roja", "legal": "Legal",
+    "sauna": "Sauna", "luz-roja": "Luz roja", "otra": "Otras (legales, 404)",
 }
 
 
@@ -694,8 +714,20 @@ def pagina_login(error="", siguiente="/panel"):
 # ─── Servidor ───────────────────────────────────────────────────
 
 def ip_cliente(handler):
-    reenviada = handler.headers.get("X-Forwarded-For", "")
-    return reenviada.split(",")[0].strip() or handler.client_address[0]
+    """IP del visitante. Apache añade la suya a X-Forwarded-For y Caddy, que confía en Apache
+    (servidor/ip-real.caddy), la conserva y añade la de Apache al final. Se recorre la cadena de
+    derecha a izquierda saltando los equipos locales (Apache, Caddy): la primera IP pública es la
+    del visitante. Lo que el visitante escriba a la izquierda no cuenta, así que no puede falsearla."""
+    cadena = [s.strip() for s in handler.headers.get("X-Forwarded-For", "").split(",") if s.strip()]
+    cadena.append(handler.client_address[0])
+    for salto in reversed(cadena):
+        try:
+            ip = ipaddress.ip_address(salto)
+        except ValueError:
+            continue
+        if not (ip.is_loopback or ip.is_private):
+            return salto
+    return handler.client_address[0]
 
 
 class Panel(BaseHTTPRequestHandler):
@@ -764,11 +796,12 @@ class Panel(BaseHTTPRequestHandler):
     def sesion(self):
         """(admin, token) si hay una sesión válida de un administrador que sigue existiendo."""
         token = leer_cookie(self.headers.get("Cookie"), COOKIE)
-        admin_id = leer_token(token)
-        if admin_id is None:
+        leido = leer_token(token)
+        if leido is None:
             return None, ""
-        fila = self.bd.uno("SELECT id, usuario FROM administradores WHERE id = %s", (admin_id,))
-        if not fila:
+        admin_id, huella = leido
+        fila = self.bd.uno("SELECT id, usuario, hash FROM administradores WHERE id = %s", (admin_id,))
+        if not fila or not hmac.compare_digest(huella, huella_hash(fila[2])):
             return None, ""
         return {"id": fila[0], "usuario": fila[1]}, token
 
@@ -848,7 +881,7 @@ class Panel(BaseHTTPRequestHandler):
         ip = ip_cliente(self)
         campos = self.campos()
         siguiente = campos.get("next", "/panel")
-        if not siguiente.startswith("/panel") or siguiente.startswith("/panel/entrar"):
+        if not RUTA_PANEL.fullmatch(siguiente) or siguiente.startswith("/panel/entrar"):
             siguiente = "/panel"
         if limitar(fallos, ip, MAX_FALLOS):
             return self.redirigir("/panel/entrar?error=espera")
@@ -856,7 +889,7 @@ class Panel(BaseHTTPRequestHandler):
         if comprobar_hash(campos.get("password", ""), fila[1] if fila else HASH_RELLENO) and fila:
             fallos.pop(ip, None)
             self.bd.ejecutar("UPDATE administradores SET ultimo_acceso = now() WHERE id = %s", (fila[0],))
-            return self.redirigir(siguiente, self.cookie(crear_token(fila[0]), DURACION))
+            return self.redirigir(siguiente, self.cookie(crear_token(fila[0], fila[1]), DURACION))
         anotar(fallos, ip)
         time.sleep(1)
         return self.redirigir("/panel/entrar?error=1&next=" + quote(siguiente, safe="/"))
@@ -874,6 +907,8 @@ class Panel(BaseHTTPRequestHandler):
                 return self.json(400, {"ok": False, "error": "formato"})
         else:
             datos = {k: v[0] for k, v in parse_qs(crudo).items()}
+        if not isinstance(datos, dict):
+            return self.json(400, {"ok": False, "error": "formato"})
         nombre = str(datos.get("nombre", "")).strip()[:120]
         email = str(datos.get("email", "")).strip()[:200]
         telefono = str(datos.get("telefono", "")).strip()[:40]

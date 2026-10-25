@@ -26,6 +26,22 @@ export const rutas: Record<Lang, Record<Pagina, string>> = {
   fr: { 'primera-sesion': 'premiere-seance', precios: 'tarifs', reformer: 'reformer', 'luz-roja': 'lumiere-rouge', sauna: 'sauna' },
 };
 
+/** Páginas legales, en los cuatro idiomas (src/content/<idioma>/legal/<clave>.md). */
+export const paginasLegales = ['aviso-legal', 'privacidad', 'cookies', 'condiciones-membresia'] as const;
+export type PaginaLegal = (typeof paginasLegales)[number];
+
+/** Dirección de cada página legal en cada idioma (sin el prefijo del idioma). Si cambia alguna,
+ *  hay que cambiarla también en el filtro del sitemap (astro.config.mjs). */
+export const rutasLegales: Record<Lang, Record<PaginaLegal, string>> = {
+  es: { 'aviso-legal': 'aviso-legal', privacidad: 'privacidad', cookies: 'cookies', 'condiciones-membresia': 'condiciones-membresia' },
+  en: { 'aviso-legal': 'legal-notice', privacidad: 'privacy', cookies: 'cookies', 'condiciones-membresia': 'membership-terms' },
+  de: { 'aviso-legal': 'impressum', privacidad: 'datenschutz', cookies: 'cookies', 'condiciones-membresia': 'mitgliedschaftsbedingungen' },
+  fr: { 'aviso-legal': 'mentions-legales', privacidad: 'confidentialite', cookies: 'cookies', 'condiciones-membresia': 'conditions-abonnement' },
+};
+
+/** Enlace a una página legal en un idioma. */
+export const urlLegal = (lang: Lang, legal: PaginaLegal) => `${raizIdioma(lang)}${rutasLegales[lang][legal]}/`;
+
 /** Enlace a una página en un idioma; sin página, la portada de ese idioma. */
 export const urlPagina = (lang: Lang, pagina?: Pagina) =>
   pagina ? `${raizIdioma(lang)}${rutas[lang][pagina]}/` : raizIdioma(lang);
@@ -105,5 +121,7 @@ export function ctaEsFundador(a: Ajustes) {
 export function ctaHref(a: Ajustes, lang: Lang = 'es') {
   if (ctaEsFundador(a)) return `${urlPagina(lang, 'precios')}#fundadores`;
   if (a.estado === 'abierto') return urlPagina(lang, 'primera-sesion');
-  return a.fundadores.mostrar ? `${urlPagina(lang, 'precios')}#fundadores` : '#cierre';
+  // Sin JavaScript (o antes de que cargue el panel) el enlace tiene que llevar a algo que exista:
+  // el bloque de fundadores solo se pinta si quedan plazas
+  return hayPlazasFundador(a) ? `${urlPagina(lang, 'precios')}#fundadores` : urlPagina(lang, 'primera-sesion');
 }

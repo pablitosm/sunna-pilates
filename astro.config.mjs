@@ -17,7 +17,13 @@ export default defineConfig({
   integrations: [
     vue(),
     ...(site
-      ? [sitemap({ filter: (url) => !/\/(login|aviso-legal|privacidad|cookies|condiciones-membresia)\/?$/.test(url) })]
+      ? [
+          sitemap({
+            // Las páginas legales de los cuatro idiomas (src/lib/content.ts → rutasLegales)
+            filter: (url) =>
+              !/\/(login|aviso-legal|privacidad|cookies|condiciones-membresia|legal-notice|privacy|membership-terms|impressum|datenschutz|mitgliedschaftsbedingungen|mentions-legales|confidentialite|conditions-abonnement)\/?$/.test(url),
+          }),
+        ]
       : []),
   ],
   i18n: {

@@ -1,7 +1,7 @@
 ---
 titulo: "Condiciones de membresía"
 descripcion: "Condiciones de las membresías de SUNNA."
-actualizado: ""
+actualizado: "25 de octubre de 2026"
 # PARA EL GESTOR · antes de publicar, confirmar:
 # - Plazo de reserva (con bsport). Cancelación sin coste: hasta 2 horas antes.
 # - Plazo de baja (10 días) y si se puede pausar la membresía.
@@ -10,13 +10,17 @@ actualizado: ""
 ---
 
 
+## Membresías
+
+Las membresías son mensuales. Los planes, los precios y lo que incluye cada uno (sesiones de reformer, sauna y luz roja) son los que figuran en la página de precios y en la app en el momento de contratar.
+
 ## Primera sesión
 
 La primera sesión es gratuita, dura 45 minutos y es obligatoria antes de entrenar por tu cuenta. Explica el funcionamiento del estudio y el uso seguro del reformer. No es una valoración médica.
 
 ## Reservas
 
-Cada reserva es un bloque de 1 hora: hasta 50 minutos de clase más el tiempo para entrar, colocarte y salir. Se reserva con antelación y la cancelación es gratuita hasta 2 horas antes.
+Cada reserva es un bloque de 1 hora: hasta 50 minutos de clase más el tiempo para entrar, colocarte y salir. Se reserva con antelación desde la app y la cancelación es gratuita hasta 2 horas antes.
 
 ## Bajas
 

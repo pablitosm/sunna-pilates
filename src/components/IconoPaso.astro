@@ -1,0 +1,123 @@
+---
+/*
+ * Pegatina de cada paso en las píldoras de «Cómo funciona»: recortes de papel a color, cada uno
+ * con su silueta para que la lista no sean cuatro círculos iguales.
+ * arco: el sol que sale (primera sesión) · pantalla: el móvil para reservar y entrar ·
+ * punto: el play en una chapa ondulada · reserva: la hoja del calendario con el día marcado.
+ * Otro icono: el glifo de trazo de siempre.
+ */
+import Glifo from './Glifo.astro';
+import { tieneDibujo } from '../lib/dibujos';
+
+interface Props {
+  icono: string;
+  class?: string;
+}
+const { icono, class: className } = Astro.props;
+const conPegatina = tieneDibujo(icono);
+// Las ondas de la chapa del play: ocho círculos alrededor del centro
+const ondas = Array.from({ length: 8 }, (_, k) => {
+  const a = (k * Math.PI) / 4;
+  return { cx: 24 + 14.5 * Math.cos(a), cy: 24 + 14.5 * Math.sin(a) };
+});
+---
+
+{
+  conPegatina ? (
+    <svg class:list={['pegatina', className]} viewBox="0 0 48 48" aria-hidden="true" focusable="false">
+      {icono === 'arco' && (
+        <>
+          <rect class="p-sol" x="5" y="5" width="38" height="38" rx="12" transform="rotate(-8 24 24)" />
+          <path class="p-claro" d="M14 31a10 10 0 0 1 20 0z" />
+          <rect class="p-claro" x="22.75" y="11" width="2.5" height="6" rx="1.25" />
+          <rect class="p-claro" x="22.75" y="11" width="2.5" height="6" rx="1.25" transform="rotate(-48 24 31)" />
+          <rect class="p-claro" x="22.75" y="11" width="2.5" height="6" rx="1.25" transform="rotate(48 24 31)" />
+          <rect class="p-cacao" x="11" y="31" width="26" height="3" rx="1.5" />
+          <rect class="p-cacao" x="16" y="36" width="16" height="2.5" rx="1.25" />
+        </>
+      )}
+      {icono === 'pantalla' && (
+        <>
+          <circle class="p-cacao" cx="24" cy="24" r="21" />
+          <g transform="rotate(12 24 24)">
+            <rect class="p-melocoton" x="16" y="9" width="16" height="30" rx="4" />
+            <rect class="p-claro" x="18.5" y="12" width="11" height="22" rx="1.5" />
+            <rect class="p-melocoton" x="20.5" y="15" width="7" height="2.5" rx="1" />
+            <rect class="p-sol" x="20.5" y="20" width="7" height="5" rx="1" />
+            <rect class="p-melocoton" x="20.5" y="27.5" width="7" height="2.5" rx="1" />
+          </g>
+          <circle class="p-sol" cx="36" cy="13" r="3" />
+        </>
+      )}
+      {icono === 'punto' && (
+        <>
+          {ondas.map((o) => (
+            <circle class="p-naranja" cx={o.cx} cy={o.cy} r="7.5" />
+          ))}
+          <circle class="p-naranja" cx="24" cy="24" r="15" />
+          <circle class="p-cacao" cx="24" cy="24" r="10.5" />
+          <path class="p-claro" d="M21 18.5v11l9-5.5z" />
+        </>
+      )}
+      {icono === 'reserva' && (
+        <>
+          <path class="p-tostado" d="M9 8c9-4 24-3 31 2s5 21 1 27-20 8-28 4S0 30 2 21s0-9 7-13z" />
+          <g transform="rotate(-7 24 25)">
+            <rect class="p-claro" x="11" y="13" width="26" height="24" rx="4" />
+            <path class="p-cacao" d="M11 17a4 4 0 0 1 4-4h18a4 4 0 0 1 4 4v3H11z" />
+            <rect class="p-cacao" x="16" y="9.5" width="3" height="7" rx="1.5" />
+            <rect class="p-cacao" x="29" y="9.5" width="3" height="7" rx="1.5" />
+            {[0, 1].flatMap((f) =>
+              [0, 1, 2].map((c) => (
+                <rect
+                  class={f === 1 && c === 1 ? 'p-sol' : 'p-melocoton'}
+                  x={15 + c * 7}
+                  y={23.5 + f * 6.5}
+                  width="4.5"
+                  height="4.5"
+                  rx="1.2"
+                />
+              )),
+            )}
+          </g>
+        </>
+      )}
+    </svg>
+  ) : (
+    <Glifo forma={icono as Parameters<typeof Glifo>[0]['forma']} tamano={40} class={className} />
+  )
+}
+
+<style>
+  .pegatina {
+    display: block;
+    flex: none;
+    width: 2.5rem;
+    height: 2.5rem;
+    overflow: visible;
+  }
+
+  .p-sol {
+    fill: var(--sol-500);
+  }
+
+  .p-naranja {
+    fill: var(--sol-300);
+  }
+
+  .p-melocoton {
+    fill: var(--sol-200);
+  }
+
+  .p-tostado {
+    fill: var(--n700);
+  }
+
+  .p-cacao {
+    fill: var(--cacao);
+  }
+
+  .p-claro {
+    fill: var(--claro);
+  }
+</style>

@@ -5,7 +5,8 @@
  */
 import { acentuar } from '../../lib/acento';
 import DibujoRazon from '../DibujoRazon.astro';
-import type { Ajustes, Home } from '../../lib/content';
+import { idiomaDe, type Ajustes, type Home } from '../../lib/content';
+import { conHorario, tramosHorario } from '../../lib/horario';
 
 interface Props {
   ajustes: Ajustes;
@@ -14,7 +15,14 @@ interface Props {
 const { ajustes, home } = Astro.props;
 const pq = home.porQue;
 // Con el horario ampliado, las razones que lo tienen usan su título y texto alternativos.
-const razones = (pq?.razones ?? []).map((r) => (ajustes.horario === 'ampliado' && r.ampliado) || r);
+// {horario} en los textos se cambia por el horario vigente, escrito en cada idioma.
+const lang = idiomaDe(Astro.currentLocale);
+const razones = (pq?.razones ?? [])
+  .map((r) => (ajustes.horario === 'ampliado' && r.ampliado) || r)
+  .map((r) => ({ titulo: conHorario(r.titulo, ajustes, lang), texto: conHorario(r.texto, ajustes, lang) }));
+// La apertura y el cierre del día, para el dibujo del horario
+const tramos = tramosHorario(ajustes);
+const dia: [string, string] = [tramos[0][0], tramos[tramos.length - 1][1]];
 const dibujos = ['horario', 'autonomo', 'ritmo'] as const;
 ---
 
@@ -28,7 +36,7 @@ const dibujos = ['horario', 'autonomo', 'ritmo'] as const;
           {razones.map((r, i) => (
             <li class="razon">
               <div class="razon__lamina grano">
-                <DibujoRazon tipo={dibujos[i % dibujos.length]} />
+                <DibujoRazon tipo={dibujos[i % dibujos.length]} horas={dia} />
               </div>
               <h3 class="razon__titulo">{r.titulo}</h3>
               <p class="razon__texto">{r.texto}</p>

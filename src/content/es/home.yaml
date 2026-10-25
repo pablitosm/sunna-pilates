@@ -23,10 +23,10 @@ ui:
   paso: "Paso"
   detallesReserva: "Detalles de la reserva"
   porMes: "/mes"
-  mapaTitulo: "Mapa: ubicación de SUNNA"
   pieEstudio: "Estudio"
   pieContacto: "Contacto"
   pieLegal: "Legal"
+  actualizado: "Actualizado"
   whatsappMensaje: "Hola, tengo una duda sobre SUNNA Pilates: "
   pieEspacios: "Descubre"
 
@@ -59,7 +59,6 @@ botones:
     preapertura: "Quiero ser socio/a fundador/a"
     abierto: "Primera sesión gratis"
     fundador: "Hazte socio/a fundador/a"
-  secundario: "Cómo funciona"
   precios: "Ver precios"
 
 # Enlaces a bsport (se muestran solo si el enlace está en ajustes.yaml → reservas).
@@ -75,8 +74,8 @@ portada:
   subtitulo: "Tu reformer, tu clase en pantalla y el estudio para ti. La primera vez, te lo enseñamos todo."
   # Antes de abrir se muestra la fecha de apertura (ajustes.yaml → fechaApertura) cuando esté cerrada.
   abrimos: "abrimos el"
-  # Foto opcional (foto real del estudio o de alguien en el reformer con luz natural).
-  # Para añadirla: guárdala en src/assets/fotos/ y quita las # de estas líneas.
+  # Foto real del estudio o de alguien en el reformer con luz natural. Sale en la página de la
+  # primera sesión; la portada lleva siempre el dibujo del amanecer.
   foto:
     imagen: "../../assets/portada.png"
     alt: "El estudio de SUNNA: reformers, cortinas y luz cálida"
@@ -84,13 +83,12 @@ portada:
 # POR QUÉ SUNNA + LA APP (portada, justo después de la portada)
 porQue:
   titulo: "Por qué SUNNA"
-  intro: "Entrenas cuando quieres, a tu ritmo, con una clase guiada en pantalla. Y nunca empiezas sola/o: la primera vez te lo enseñamos todo."
   razones:
     - titulo: "Abierto mañana y tarde"
-      texto: "De 08:00 a 14:00 y de 16:00 a 22:00. Sin horarios de grupo: reservas la hora que te va bien."
+      texto: "{horario}. Sin horarios de grupo: reservas la hora que te va bien."
       # Con ajustes.yaml → horario: ampliado se muestra esto en su lugar.
       ampliado:
-        titulo: "Abierto de 05:00 a 23:00"
+        titulo: "Abierto {horario}"
         texto: "Sin recepción ni horarios de grupo, el estudio abre muchas más horas."
     - titulo: "Todo es autónomo"
       texto: "Reservas tu reformer en la app y la puerta se abre con tu reserva. Sin llaves, sin recepción, sin esperas."
@@ -99,12 +97,6 @@ porQue:
   app:
     titulo: "Tu llave es la *app*"
     texto: "Con ella reservas tu reformer, pagas y abres la puerta del estudio. Sin la app no se entra: descárgala antes de venir."
-    pasos:
-      - "Descarga la app de SUNNA."
-      - "Reserva tu primera sesión gratis."
-      - "Ven al estudio y entra con el móvil."
-    # Paso 2 mientras quedan plazas de socio fundador (enlaza a la oferta de fundadores).
-    pasoFundador: "Hazte socio/a fundador/a."
     proximamente: "Próximamente"
     appStore: "App Store"
     googlePlay: "Google Play"
@@ -114,7 +106,6 @@ explora:
   titulo: "Descubre SUNNA"
   ver: "Ver"
   precios:
-    titulo: "Precios"
     texto: "Cuatro membresías mensuales, desde 55 € al mes."
 
 # PÁGINA DE LA PRIMERA SESIÓN GRATIS (a ella lleva el botón principal)
@@ -132,21 +123,6 @@ primeraSesion:
   web: "Reservar en la web"
   whatsapp: "Reservar por WhatsApp"
   whatsappMensaje: "Hola, quiero reservar mi primera sesión gratis en SUNNA Pilates."
-
-# 2 · QUÉ ES SUNNA (3 ideas en una fila)
-# Iconos disponibles: arco, anillo, pantalla, linea, punto, hoja, rectangulo
-queEs:
-  titulo: "Qué es SUNNA"
-  ideas:
-    - icono: "anillo"
-      titulo: "Tú eliges la hora"
-      texto: "Reservas en la app, sin horarios fijos de grupo."
-    - icono: "pantalla"
-      titulo: "Una clase guiada en tu reformer"
-      texto: "iPad en cada máquina con clases de 10 a 45 min."
-    - icono: "arco"
-      titulo: "Nunca empiezas sola/o"
-      texto: "Primera sesión de 45 min con nosotros."
 
 # 3 · CÓMO FUNCIONA, EN 4 PASOS (el bloque más importante)
 comoFunciona:
@@ -171,12 +147,7 @@ comoFunciona:
       titulo: "Horario"
       fases:
         - fase: "inicial"
-          intro: "Abrimos en dos tramos mientras validamos la operación autónoma."
-          etiqueta: "Las 2–3 primeras semanas"
-          horas: ["08:00 — 14:00", "16:00 — 22:00"]
-          texto: "El estudio solo abre con alguien de SUNNA dentro."
         - fase: "ampliado"
-          horas: ["05:00 — 23:00"]
           texto: "Acceso autónomo."
       # "Cómo se llena el día" (franjas de demanda) se quita hasta tener estadísticas reales.
       # El componente lo sigue admitiendo: basta con volver a añadir "franjas:" aquí.
@@ -184,7 +155,6 @@ comoFunciona:
 # 4 · LAS CLASES
 clases:
   titulo: "Las *clases*"
-  tiposTitulo: "Tipos"
   tipos: ["Full Body", "Pierna", "Brazo", "Core", "Movilidad", "Estiramientos"]
   duraciones:
     - nombre: "Largas"
@@ -248,7 +218,7 @@ recovery:
         - plan: "Premium"
           cantidad: "Ilimitada"
       # PENDIENTE: duración de cada sesión y qué llevar.
-      pendiente: "[PENDIENTE] duración de cada sesión y qué llevar"
+      pendiente: ""
     - tipo: "luz-roja"
       titulo: "La sala de luz roja"
       texto: "Una sala con paneles de luz roja. Te colocas frente a ellos, te relajas y dejas que pase la sesión."
@@ -266,7 +236,7 @@ recovery:
         - plan: "Premium"
           cantidad: "Ilimitada"
       # PENDIENTE: duración de cada sesión y qué llevar.
-      pendiente: "[PENDIENTE] duración de cada sesión y qué llevar"
+      pendiente: ""
 
 # 6 · ¿Y SI…? — dudas en una línea (va justo después de Cómo funciona)
 dudas:
@@ -290,7 +260,6 @@ precios:
   introFundador: "Elige cuántas veces al mes quieres tu reformer. Todas las membresías incluyen luz roja, y la sauna entra desde Standard. Mientras queden plazas, entras como socio/a fundador/a."
   porSesion: "por sesión"
   graficos:
-    recovery: "Recovery a la semana"
     porSemana: "a la semana"
     luzRoja: "Luz roja"
     sauna: "Sauna"
@@ -348,33 +317,12 @@ precios:
     plazas: "plazas libres de"
     verVentajas: "Ver ventajas de fundador"
 
-# 8 · EL ESTUDIO
-# Cada arco muestra un dato del estudio. Tonos: claro, medio, sol, tinta, rojo.
-# Iconos: arco, anillo, pantalla, linea, punto, hoja, rectangulo.
-# Para poner una foto real en un arco, añade debajo:
-#     foto:
-#       imagen: "../../assets/fotos/estudio-1.jpg"
-#       alt: "Descripción de la foto"
+# 8 · EL ESTUDIO (el mapa y la dirección)
 estudio:
   titulo: "El estudio"
-  espacios:
-    - icono: "rectangulo"
-      texto: "6 reformers, una persona por máquina"
-      tono: "claro"
-    - icono: "pantalla"
-      texto: "iPad y cascos bluetooth en cada reformer"
-      tono: "medio"
-    - icono: "punto"
-      texto: "Luz roja"
-      tono: "rojo"
-    - icono: "arco"
-      texto: "Sauna"
-      tono: "tinta"
   mapa:
     direccion: "Dirección"
     comoLlegar: "Cómo llegar"
-    boton: "Ver el mapa"
-    aviso: "El mapa de Google Maps se carga solo si lo pides."
     abrir: "Abrir en el mapa"
 
 # 9 · PREGUNTAS FRECUENTES (acordeón)
@@ -402,9 +350,9 @@ faq:
         - pregunta: "¿Puedo cancelar?"
           respuesta: "Sí, la cancelación es gratuita hasta 2 horas antes."
         - pregunta: "¿Qué horario tenéis?"
-          respuesta: "De 08:00 a 14:00 y de 16:00 a 22:00, siempre con alguien del equipo en el estudio."
+          respuesta: "{horario}, siempre con alguien del equipo en el estudio."
           # Con ajustes.yaml → horario: ampliado se muestra esta respuesta.
-          respuestaAmpliado: "De 05:00 a 23:00, con acceso autónomo."
+          respuestaAmpliado: "{horario}, con acceso autónomo."
     - titulo: "Las clases"
       preguntas:
         - pregunta: "¿Cómo es una clase?"
@@ -427,35 +375,18 @@ faq:
         - pregunta: "¿Hay edad mínima?"
           respuesta: "18 años para entrenar solo/a. Menores, acompañados de un adulto a partir de 16 años."
 
-# 10 · CIERRE
-cierre:
-  titulo: "Tu primera sesión es gratis."
-  texto: "Reserva y te lo enseñamos todo."
-  # Mientras la web está en preapertura se muestra este texto en lugar del anterior.
-  textoPreapertura: "Apúntate a la lista de espera y te escribiremos antes de la apertura."
-  # Mientras quedan plazas de socio fundador (web abierta) se muestran estos en su lugar.
-  fundador:
-    titulo: "Sé uno de los *40* socios fundadores."
-    texto: "Precio de fundador protegido para siempre, prioridad para reservar en la apertura y pack de bienvenida."
-
 # 11 · PIE
 pie:
   horarioTitulo: "Horario"
-  horario:
-    inicial:
-      - "08:00–14:00"
-      - "16:00–22:00"
-    ampliado:
-      - "05:00–23:00"
   legal:
     - texto: "Aviso legal"
-      url: "/aviso-legal"
+      pagina: "aviso-legal"
     - texto: "Privacidad"
-      url: "/privacidad"
+      pagina: "privacidad"
     - texto: "Cookies"
-      url: "/cookies"
+      pagina: "cookies"
     - texto: "Condiciones de membresía"
-      url: "/condiciones-membresia"
+      pagina: "condiciones-membresia"
   cookies: "Preferencias de cookies"
 
 # PANEL QUE SE ABRE CON EL BOTÓN PRINCIPAL

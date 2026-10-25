@@ -15,7 +15,7 @@ const { ajustes, home } = Astro.props;
 const wa = whatsappUrl(ajustes.contacto.whatsapp, home.ui.whatsappMensaje);
 ---
 
-<div class="barra" data-barra-movil>
+<div class="barra">
   <div class="barra__pildora">
     <CtaButton ajustes={ajustes} home={home} corto class="barra__cta" />
     {
@@ -73,7 +73,6 @@ const wa = whatsappUrl(ajustes.contacto.whatsapp, home.ui.whatsappMensaje);
   /* Con WhatsApp al lado, el botón se compacta para que el texto quepa en una línea */
   .barra__pildora:has(.barra__wa) :global(.barra__cta) {
     --alto: 3.25rem;
-    --circulo: 2.5rem;
     padding-left: 1.25rem;
     font-size: 0.9375rem;
     white-space: nowrap;
@@ -114,7 +113,6 @@ const wa = whatsappUrl(ajustes.contacto.whatsapp, home.ui.whatsappMensaje);
     box-shadow:
       var(--sombra-s),
       inset 0 0 0 1px var(--n200);
-    transition: transform 0.4s var(--ease);
   }
 
 

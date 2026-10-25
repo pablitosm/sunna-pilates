@@ -1,23 +1,24 @@
 ---
-import { getCollection, render } from 'astro:content';
+/* Una página legal (aviso legal, privacidad, cookies, condiciones) en un idioma. */
+import { getEntry, render } from 'astro:content';
 import Base from '../layouts/Base.astro';
+import { getSite, type Lang, type PaginaLegal } from '../lib/content';
 
-export async function getStaticPaths() {
-  const paginas = await getCollection('legal', (p) => p.id.startsWith('es/'));
-  return paginas.map((pagina) => ({
-    params: { legal: pagina.id.replace('es/legal/', '') },
-    props: { pagina },
-  }));
+interface Props {
+  lang: Lang;
+  legal: PaginaLegal;
 }
-
-const { pagina } = Astro.props;
+const { lang, legal } = Astro.props;
+const pagina = await getEntry('legal', `${lang}/legal/${legal}`);
+if (!pagina) throw new Error(`Falta src/content/${lang}/legal/${legal}.md`);
 const { Content } = await render(pagina);
+const { home } = await getSite(lang);
 ---
 
-<Base titulo={pagina.data.titulo} descripcion={pagina.data.descripcion} indexar={false}>
+<Base lang={lang} titulo={pagina.data.titulo} descripcion={pagina.data.descripcion} indexar={false} legal={legal}>
   <article class="legal envoltura">
     <h1 class="t-h2">{pagina.data.titulo}</h1>
-    {pagina.data.actualizado && <p class="t-small t-secundario">Actualizado: {pagina.data.actualizado}</p>}
+    {pagina.data.actualizado && <p class="t-small t-secundario">{home.ui.actualizado}: {pagina.data.actualizado}</p>}
     <div class="legal__cuerpo">
       <Content />
     </div>

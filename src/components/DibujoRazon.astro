@@ -3,6 +3,8 @@
  * Recortes de «Por qué SUNNA»: formas planas de papel, sin contornos, una por razón.
  * horario: díptico de mañana y tarde, un sol que sale y otro que se pone.
  * autonomo: un arco terracota que se abre a la luz, con una planta al lado.
+ * Los arcos (autonomo, entrada, tarde) llevan el hueco concéntrico: la banda tiene el mismo grueso
+ * arriba que en los lados.
  * ritmo: tres semicírculos con el tamaño de cada clase (10, 25 y 45 minutos).
  * Y los cuatro pasos de la primera sesión: reformer, app, entrada e ipad.
  * Y un momento del día por membresía: alba (mar), manana (olivos), tarde (arco) y mediodia (cacao).
@@ -10,9 +12,11 @@
  */
 interface Props {
   tipo: 'horario' | 'autonomo' | 'ritmo' | 'reformer' | 'app' | 'entrada' | 'ipad' | 'alba' | 'manana' | 'tarde' | 'mediodia';
+  /** Apertura y cierre del día, en el dibujo del horario (ajustes.yaml → horarios). */
+  horas?: [string, string];
   class?: string;
 }
-const { tipo, class: className } = Astro.props;
+const { tipo, horas = ['08:00', '22:00'], class: className } = Astro.props;
 // Los momentos del día de las membresías son más apaisados
 const momento = ['alba', 'manana', 'tarde', 'mediodia'].includes(tipo);
 ---
@@ -33,8 +37,8 @@ const momento = ['alba', 'manana', 'tarde', 'mediodia'].includes(tipo);
         <circle class="r-terracota horario__baja" cx="196" cy="102" r="24" />
         <path class="r-arena" d="M0 116c22-4 52-5 119-2v56H0z" />
         <path class="r-arena-tostada" d="M121 114c48-3 84-1 119 3v53H121z" />
-        <text class="r-texto" x="12" y="156">08:00</text>
-        <text class="r-texto" x="228" y="156" text-anchor="end">22:00</text>
+        <text class="r-texto" x="12" y="156">{horas[0]}</text>
+        <text class="r-texto" x="228" y="156" text-anchor="end">{horas[1]}</text>
       </>
     )
   }
@@ -45,7 +49,7 @@ const momento = ['alba', 'manana', 'tarde', 'mediodia'].includes(tipo);
         <rect class="r-arena" width="240" height="170" />
         <rect class="r-arena-tostada" y="146" width="240" height="24" />
         <path class="r-terracota" d="M78 146V80a42 42 0 0 1 84 0v66z" />
-        <path class="r-luz" d="M93 146V84a27 27 0 0 1 54 0v62z" />
+        <path class="r-luz" d="M93 146V80a27 27 0 0 1 54 0v66z" />
         <circle class="r-sol" cx="120" cy="94" r="13" />
         <path class="r-luz autonomo__suelo" d="M93 146h54l26 24H67z" />
         <path class="r-hoja" d="M40 170c-2-26 6-44 22-56-2 22-8 40-22 56z" />
@@ -101,7 +105,7 @@ const momento = ['alba', 'manana', 'tarde', 'mediodia'].includes(tipo);
       <>
         <rect class="m-tarde-cielo" width="240" height="140" />
         <path class="r-terracota" d="M72 140V70a48 48 0 0 1 96 0v70z" />
-        <path class="m-tarde-dentro" d="M88 140V74a32 32 0 0 1 64 0v66z" />
+        <path class="m-tarde-dentro" d="M88 140V70a32 32 0 0 1 64 0v70z" />
         <circle class="r-sol" cx="120" cy="96" r="15" />
         <rect class="m-tarde-suelo" y="124" width="240" height="16" />
         <path class="m-tarde-dentro autonomo__suelo" d="M88 124h64l20 16H68z" />
@@ -166,7 +170,7 @@ const momento = ['alba', 'manana', 'tarde', 'mediodia'].includes(tipo);
         <rect class="r-arena" width="240" height="170" />
         <rect class="r-arena-tostada" y="146" width="240" height="24" />
         <path class="r-terracota" d="M60 146V84a38 38 0 0 1 76 0v62z" />
-        <path class="r-luz" d="M74 146V88a24 24 0 0 1 48 0v58z" />
+        <path class="r-luz" d="M74 146V84a24 24 0 0 1 48 0v62z" />
         <path class="r-luz autonomo__suelo" d="M74 146h48l24 24H50z" />
         <rect class="r-terracota" x="158" y="70" width="34" height="60" rx="8" />
         <rect class="r-fondo" x="163" y="77" width="24" height="46" rx="4" />

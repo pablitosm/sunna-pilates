@@ -2,8 +2,7 @@
 /*
  * La home completa en un idioma. La usan / (castellano) y /en/, /de/, /fr/.
  * Corta, como la de L'Audace: portada, por qué SUNNA, cómo funciona, la app,
- * accesos a cada espacio y a los precios (páginas propias), el estudio,
- * y preguntas.
+ * el estudio y preguntas. Cada espacio y los precios tienen página propia.
  */
 import Base from '../layouts/Base.astro';
 import Portada from './secciones/Portada.astro';
@@ -24,7 +23,7 @@ const { ajustes, home } = await getSite(lang);
 <Base lang={lang} alternos>
   <Portada ajustes={ajustes} home={home} />
   <PorQue ajustes={ajustes} home={home} />
-  <ComoFunciona ajustes={ajustes} home={home} />
+  <ComoFunciona home={home} />
   <App ajustes={ajustes} home={home} />
   <Estudio ajustes={ajustes} home={home} />
   <Faq ajustes={ajustes} home={home} />

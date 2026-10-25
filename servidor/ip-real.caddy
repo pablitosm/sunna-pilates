@@ -1,0 +1,16 @@
+# IP real de los visitantes (opciones globales del Caddyfile, el bloque { … } del principio).
+#
+# Apache (HTTPS, 443) hace de proxy hacia Caddy en 127.0.0.1:8082 y apunta la IP del visitante
+# en X-Forwarded-For. Sin esto, Caddy no se fía de Apache: tira esa cabecera y los servicios de
+# Python (acceso y panel) ven a todo el mundo como 127.0.0.1. Entonces 10 contraseñas mal puestas
+# bloquean el acceso a todos, el formulario y la analítica comparten un único límite y el panel
+# cuenta mal los visitantes únicos.
+#
+# Con trusted_proxies, Caddy conserva la cadena de Apache y añade la suya al final; acceso.py y
+# panel.py la leen de derecha a izquierda (ip_cliente), así que lo que escriba el visitante en
+# X-Forwarded-For no sirve para falsear su IP.
+#
+# Lo aplica servidor/activar-ip-real-caddy.sh (copia de seguridad, validación y recarga).
+servers {
+	trusted_proxies static 127.0.0.1/32 ::1/128
+}

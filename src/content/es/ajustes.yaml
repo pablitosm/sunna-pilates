@@ -22,15 +22,18 @@ estado: abierto
 #             botones naranja y chocolate, salvia en las bandas y la foto en la portada
 paleta: naranja
 
-# Fecha de apertura en texto libre, p. ej. "15 de noviembre".
-# Mientras esté vacía (""), la web no muestra ninguna fecha.
+# Fecha de apertura como año-mes-día, p. ej. "2026-11-15". Cada idioma la escribe a su
+# manera («15 de noviembre», «15 November»…). Vacía (""): la web no muestra ninguna fecha.
 fechaApertura: ""
 
-# HORARIO DEL ESTUDIO (en "Cómo funciona" y en el pie). Solo se ve uno a la vez.
-#   inicial  → las 2–3 primeras semanas: 08:00–14:00 y 16:00–22:00,
-#              siempre con alguien de SUNNA dentro.
-#   ampliado → acceso autónomo de 05:00 a 23:00.
+# HORARIO DEL ESTUDIO. Los tramos se escriben solo aquí, como "08:00-14:00", y la web los
+# muestra en cada idioma en Por qué SUNNA, Cómo funciona, el pie y las preguntas frecuentes
+# (en los textos de home.yaml van como {horario}).
+#   horario → cuál se ve: inicial (al abrir) o ampliado (acceso autónomo).
 horario: inicial
+horarios:
+  inicial: ["08:00-14:00", "16:00-22:00"]
+  ampliado: ["05:00-23:00"]
 
 direccion:
   # PENDIENTE: confirmación final de la dirección.

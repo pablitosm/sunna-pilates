@@ -27,7 +27,7 @@ const espacios = orden
 
 {
   ex && (
-    <section id={excluir ? undefined : 'descubre'} class="explora seccion" aria-labelledby="explora-titulo">
+    <section class="explora seccion" aria-labelledby="explora-titulo">
       <div class="envoltura">
         <h2 id="explora-titulo" class="t-h2 explora__titulo" set:html={acentuar(ex.titulo)} />
       </div>
@@ -79,13 +79,16 @@ const espacios = orden
     overflow: hidden;
   }
 
+  /* Foco de teclado: el aro de toda la web alrededor de la tarjeta, y el título subrayado */
   .acceso:focus-visible {
-    outline: none;
+    outline: 2px solid var(--tinta);
+    outline-offset: 4px;
+    border-radius: var(--r);
   }
 
   .acceso:focus-visible .acceso__titulo {
     text-decoration: underline;
-    text-decoration-color: var(--n500);
+    text-decoration-color: var(--n700);
     text-underline-offset: 0.2em;
   }
 
@@ -108,10 +111,6 @@ const espacios = orden
     margin-top: 0.25rem;
     font-size: 0.9375rem;
     color: var(--n900);
-  }
-
-  .acceso__ver :global(svg) {
-    transition: transform 0.3s var(--ease);
   }
 
 

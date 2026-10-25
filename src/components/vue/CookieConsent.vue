@@ -44,12 +44,26 @@ function guardar(analitica: boolean, marketing: boolean) {
     /* sin almacenamiento: la elección vale solo para esta visita */
   }
   visible.value = false;
-  // Retirar un consentimiento ya aplicado exige recargar para descargar los scripts.
+  // Retirar un consentimiento ya aplicado exige recargar para descargar los scripts, y borrar
+  // las cookies que ya dejaron (Analytics: _ga, _ga_*, _gid; Meta: _fbp)
   if ((anterior.analitica && !analitica) || (anterior.marketing && !marketing)) {
+    borrarCookies((n) => (!analitica && (n.startsWith('_ga') || n === '_gid')) || (!marketing && n === '_fbp'));
     location.reload();
     return;
   }
   aplicar(analitica, marketing);
+}
+
+// Las de Analytics y Meta se guardan en el dominio principal (.sunnapilates.es), así que se
+// caducan en el dominio exacto y en cada dominio padre
+function borrarCookies(quitar: (nombre: string) => boolean) {
+  const partes = location.hostname.split('.');
+  const dominios = ['', ...partes.slice(0, -1).map((_, i) => '; domain=.' + partes.slice(i).join('.'))];
+  for (const trozo of document.cookie.split(';')) {
+    const nombre = trozo.split('=')[0].trim();
+    if (!nombre || !quitar(nombre)) continue;
+    for (const d of dominios) document.cookie = `${nombre}=; Max-Age=0; path=/${d}`;
+  }
 }
 
 function aplicar(analitica: boolean, marketing: boolean) {
