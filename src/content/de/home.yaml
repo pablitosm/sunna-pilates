@@ -66,7 +66,7 @@ enlaces:
 # 1 · PORTADA
 portada:
   titular: "Reformer Pilates, wann es dir *passt*."
-  subtitulo: "Dein Reformer, deine Klasse auf dem Bildschirm und das Studio für dich. Beim ersten Mal zeigen wir dir alles."
+  subtitulo: "Dein Reformer, deine Klasse auf dem Bildschirm und das Studio für dich. Beim ersten Mal zeigen wir dir *alles*."
   abrimos: "Eröffnung am"
   foto:
     imagen: "../../assets/portada.png"

@@ -12,6 +12,9 @@ const { ajustes, home } = Astro.props;
 const { portada } = home;
 // Naranja y cacao llevan el dibujo del amanecer; las demás paletas, un fondo liso del color principal
 const liso = !['naranja', 'cacao'].includes(ajustes.paleta);
+// El subtítulo en dos tiempos: lo que tienes (suave) y la promesa (en tinta, con su palabra acentuada)
+const [subIntro, ...subResto] = portada.subtitulo.split(/(?<=\.)\s+/);
+const subCierre = subResto.join(' ');
 const conFecha = ajustes.estado === 'preapertura' && ajustes.fechaApertura;
 const lugar = conFecha
   ? `${ajustes.direccion.ciudad} · ${portada.abrimos} ${ajustes.fechaApertura}`
@@ -41,7 +44,10 @@ const plazas =
   <div class="envoltura portada__texto">
     {conFecha && <p class="portada__fecha">{lugar}</p>}
     <h1 id="portada-titulo" class="portada__titulo" set:html={acentuar(portada.titular)} />
-    <p class="portada__subtitulo">{portada.subtitulo}</p>
+    <p class="portada__subtitulo">
+      <span set:html={acentuar(subIntro)} />
+      {subCierre && <span class="portada__subtitulo-cierre" set:html={acentuar(subCierre)} />}
+    </p>
     <div class="portada__acciones">
       <CtaButton ajustes={ajustes} home={home} />
     </div>
@@ -101,7 +107,7 @@ const plazas =
   }
 
   .portada--liso .portada__fecha,
-  .portada--liso .portada__subtitulo,
+  .portada--liso .portada__subtitulo > :first-child,
   .portada--liso .portada__plazas {
     color: rgb(var(--texto) / 0.82);
   }
@@ -128,12 +134,26 @@ const plazas =
   }
 
   .portada__subtitulo {
-    max-width: 32ch;
+    max-width: 30ch;
     margin-bottom: 2.25rem;
-    font-size: var(--t-lead);
-    line-height: 1.5;
+    font-size: clamp(1.25rem, 1.05rem + 0.6vw, 1.5rem);
+    line-height: 1.4;
+    letter-spacing: -0.01em;
     color: var(--tinta-60);
-    text-wrap: pretty;
+    text-wrap: balance;
+  }
+
+  /* Ephesis es de letra pequeña: a este tamaño necesita más cuerpo para igualar al texto */
+  .portada__subtitulo :global(.acento) {
+    font-size: 1.7em;
+  }
+
+  /* La promesa, en su propia línea y en tinta; la palabra acentuada lleva la caligrafía
+     y la pasada de rotulador, como el titular */
+  .portada__subtitulo-cierre {
+    display: block;
+    margin-top: 0.5rem;
+    color: var(--tinta);
   }
 
   .portada__acciones {
