@@ -96,8 +96,8 @@ porQue:
     - titulo: "Tu clase, a tu ritmo"
       texto: "iPad y cascos en cada reformer: eliges clase de 10 a 45 min y le das al play. Esa hora el reformer es tuyo."
   app:
-    titulo: "Todo empieza en la app"
-    texto: "Reservas, pagos y acceso al estudio, desde el móvil."
+    titulo: "Tu llave es la *app*"
+    texto: "Con ella reservas tu reformer, pagas y abres la puerta del estudio. Sin la app no se entra: descárgala antes de venir."
     pasos:
       - "Descarga la app de SUNNA."
       - "Reserva tu primera sesión gratis."

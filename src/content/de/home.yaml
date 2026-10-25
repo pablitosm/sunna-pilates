@@ -87,8 +87,8 @@ porQue:
     - titulo: "Deine Klasse, dein Tempo"
       texto: "iPad und Kopfhörer an jedem Reformer: Wähle eine Klasse von 10 bis 45 Min. und drück auf Play. In dieser Stunde gehört der Reformer dir."
   app:
-    titulo: "Alles beginnt in der App"
-    texto: "Buchungen, Zahlungen und Zugang zum Studio – vom Handy aus."
+    titulo: "Dein Schlüssel ist die *App*"
+    texto: "Damit buchst du deinen Reformer, bezahlst und öffnest die Studiotür. Ohne App kein Zutritt: Lade sie herunter, bevor du kommst."
     pasos:
       - "Lade die SUNNA-App herunter."
       - "Buche deine kostenlose erste Session."

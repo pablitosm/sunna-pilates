@@ -1,0 +1,140 @@
+---
+/*
+ * La app, justo después de «Cómo funciona»: sin ella no se reserva ni se entra.
+ * Franja melocotón de borde a borde con el móvil y su sol, el título y las tiendas.
+ * Los textos siguen en home.yaml → porQue.app.
+ */
+import { acentuar } from '../../lib/acento';
+import TiendasApp from '../TiendasApp.astro';
+import type { Ajustes, Home } from '../../lib/content';
+
+interface Props {
+  ajustes: Ajustes;
+  home: Home;
+}
+const { ajustes, home } = Astro.props;
+const pq = home.porQue;
+---
+
+{
+  pq && (
+    <section class="app" aria-labelledby="app-titulo">
+      <div class="envoltura">
+        <div class="app__cabeza">
+          <svg class="app__movil" viewBox="0 0 100 180" fill="none" aria-hidden="true">
+            <rect class="traza" x="8" y="4" width="84" height="172" rx="16" />
+            <path class="traza" d="M38 18h24" />
+            <circle class="app__sol" cx="50" cy="58" r="16" />
+            <path class="traza" d="M32 128v-24a18 18 0 0 1 36 0v24" />
+            <path class="traza traza--suave" d="M28 146h44M28 158h30" />
+          </svg>
+          <div class="app__textos">
+            <h2 id="app-titulo" class="app__titulo" set:html={acentuar(pq.app.titulo)} />
+            {pq.app.texto && <p class="app__texto">{pq.app.texto}</p>}
+          </div>
+          <TiendasApp ajustes={ajustes} textos={pq.app} class="app__tiendas" />
+        </div>
+      </div>
+    </section>
+  )
+}
+
+<style>
+  /* La app: franja Naranja 100 de borde a borde, entre dos secciones crema; el sol, solo detrás del móvil */
+  .app {
+    isolation: isolate;
+    overflow: hidden;
+    padding-block: var(--seccion);
+    background: var(--n100);
+  }
+
+  .app__cabeza {
+    position: relative;
+    display: grid;
+    grid-template-columns: clamp(4.5rem, 3rem + 3vw, 6.5rem) minmax(0, 1fr) auto;
+    gap: clamp(1.25rem, 0.75rem + 1.5vw, 2.25rem);
+    align-items: center;
+  }
+
+  .app__cabeza::before {
+    content: '';
+    position: absolute;
+    z-index: -1;
+    left: clamp(-5rem, -3rem - 2vw, -2.5rem);
+    top: 50%;
+    width: clamp(14rem, 10rem + 8vw, 20rem);
+    aspect-ratio: 1;
+    translate: 0 -50%;
+    background: radial-gradient(closest-side, rgb(var(--sol-500-rgb) / 0.38), rgb(var(--sol-300-rgb) / 0.16) 55%, rgb(var(--sol-100-rgb) / 0));
+    pointer-events: none;
+  }
+
+  .app__movil {
+    width: 100%;
+    height: auto;
+    stroke: var(--n700);
+    stroke-width: 1.4;
+    stroke-linecap: round;
+    stroke-linejoin: round;
+    overflow: visible;
+  }
+
+  .traza--suave {
+    stroke: var(--n300);
+  }
+
+  .app__sol {
+    fill: var(--sol-500);
+    stroke: none;
+    opacity: 0.85;
+  }
+
+  .app__titulo {
+    font-size: var(--t-h2);
+    line-height: 1.06;
+    letter-spacing: -0.02em;
+    text-wrap: balance;
+  }
+
+  .app__texto {
+    margin-top: 0.625rem;
+    font-size: var(--t-lead);
+    color: var(--tinta-60);
+  }
+
+  @media (max-width: 64rem) {
+    .app__cabeza {
+      grid-template-columns: clamp(4.5rem, 3rem + 3vw, 6.5rem) minmax(0, 1fr);
+    }
+
+    .app :global(.app__tiendas) {
+      grid-column: 2;
+    }
+  }
+
+  @media (max-width: 40rem) {
+    .app__cabeza {
+      grid-template-columns: 3.25rem minmax(0, 1fr);
+      gap: 1.25rem;
+      align-items: start;
+    }
+
+    /* Con las tiendas debajo, el resplandor se centra en el móvil, no en todo el bloque */
+    .app__cabeza::before {
+      top: 3rem;
+      width: 12rem;
+    }
+
+    .app__titulo {
+      font-size: 2rem;
+    }
+
+    .app__texto {
+      font-size: var(--t-body);
+    }
+
+    .app :global(.app__tiendas) {
+      grid-column: 1 / -1;
+    }
+  }
+</style>
