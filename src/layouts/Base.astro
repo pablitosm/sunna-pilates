@@ -147,6 +147,15 @@ const negocio = {
         );
         acentos.forEach((a) => io.observe(a));
       }
+
+      // Dibujos con animación continua: solo se mueven mientras están en pantalla
+      const animados = document.querySelectorAll('.recorte--horario');
+      if (animados.length && 'IntersectionObserver' in window) {
+        const vista = new IntersectionObserver((entradas) => {
+          for (const e of entradas) e.target.classList.toggle('en-vista', e.isIntersecting);
+        });
+        animados.forEach((a) => vista.observe(a));
+      }
     </script>
     <script>
       // Analítica propia y sin cookies (panel → Analítica): vistas, clics, apartados vistos, tiempo y

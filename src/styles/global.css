@@ -68,7 +68,7 @@
   --r-pill: 999px;
   /* Forma de la pasada de rotulador (hover del header y palabras acentuadas), como máscara */
   --rotulador: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 20' preserveAspectRatio='none'%3E%3Cpath d='M2 4C20 2.6 50 2 80 2.4 90 2.5 96 2.2 98.5 3.4 99.6 7 99.4 12 98 16.6 80 17.6 50 18 20 17.6 12 17.5 5 17.8 1.6 16.4 .4 12 .6 7.6 2 4Z'/%3E%3C/svg%3E");
-  /* Grano del papel de los recortes (se pinta encima con multiply y poca opacidad) */
+  /* Grano del papel de los recortes (se pinta encima, marrón y con poca opacidad) */
   --grano-papel: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='160' height='160'%3E%3Cfilter id='g'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.9' numOctaves='2' stitchTiles='stitch'/%3E%3CfeColorMatrix values='0 0 0 0 .23 0 0 0 0 .11 0 0 0 0 .05 0 0 0 .55 0'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23g)'/%3E%3C/svg%3E");
   /* Esquinas de papel en toda la web: tarjetas, paneles, menús y recortes (las píldoras siguen siendo píldoras) */
   --r: 6px;
@@ -279,7 +279,9 @@ body {
   min-height: 100svh;
 }
 
-/* Grano de lámina, 3,5 % en multiplicar */
+/* Grano de lámina, 3,5 %. Sin mix-blend-mode: sobre una capa fija que cubre la pantalla,
+   multiplicar obliga a fundir todo el viewport en cada fotograma del scroll (y a esta opacidad
+   no se distingue de la mezcla normal) */
 body::after {
   content: '';
   position: fixed;
@@ -287,7 +289,6 @@ body::after {
   z-index: 100;
   pointer-events: none;
   opacity: 0.035;
-  mix-blend-mode: multiply;
   background-image: url("data:image/svg+xml,%3Csvg%20xmlns=%27http://www.w3.org/2000/svg%27%20width=%27160%27%20height=%27160%27%3E%3Cfilter%20id=%27n%27%3E%3CfeTurbulence%20type=%27fractalNoise%27%20baseFrequency=%270.85%27%20numOctaves=%272%27/%3E%3C/filter%3E%3Crect%20width=%27160%27%20height=%27160%27%20filter=%27url%28%23n%29%27/%3E%3C/svg%3E");
 }
 
@@ -493,9 +494,9 @@ html {
   text-decoration-color: var(--sol-500);
 }
 
-:root[data-paleta='cacao'] .horario__texto--destacado::before {
+:root[data-paleta='cacao'] .horario__texto--destacado::before,
+:root[data-paleta='cacao'] .horario__texto--destacado::after {
   background: var(--sol-500);
-  box-shadow: 0 0 0 5px rgb(var(--sol-500-rgb) / 0.22);
 }
 
 :root[data-paleta='cacao'] .pie__titulo {
@@ -510,32 +511,15 @@ html {
   fill: var(--sol-500);
 }
 
-:root[data-paleta='cacao'] .horario__texto--destacado::before {
-  animation-name: sol-respira;
-}
-
-@keyframes sol-respira {
-  0%,
-  100% {
-    transform: scale(1);
-    box-shadow: 0 0 0 4px rgb(var(--sol-500-rgb) / 0.24);
-  }
-  50% {
-    transform: scale(1.12);
-    box-shadow: 0 0 0 9px rgb(var(--sol-500-rgb) / 0.08);
-  }
-}
-
 /* ───────── Botón sol ─────────
    Botones de reserva (primera sesión y WhatsApp): vidrio melocotón con texto chocolate,
-   sin sombra. Canto naranja translúcido que deja ver el desenfoque de detrás.
-   Al pasar por encima, el vidrio se aviva un punto. */
+   sin sombra. Canto naranja translúcido. Sin backdrop-filter: siempre va sobre crema lisa
+   (no se notaba) y en la cabecera y la barra fijas recalculaba el desenfoque en cada
+   fotograma del scroll. Al pasar por encima, el vidrio se aviva un punto. */
 .boton-sol {
   border: 3px solid rgb(var(--sol-500-rgb) / 0.35);
   background: rgb(var(--sol-200-rgb) / 0.65);
   color: var(--cacao);
-  -webkit-backdrop-filter: blur(20px) saturate(1.8);
-  backdrop-filter: blur(20px) saturate(1.8);
   transition:
     background-color 0.2s var(--ease),
     border-color 0.2s var(--ease);
@@ -617,7 +601,8 @@ html {
 
 /* ───────── Papel ─────────
    El grano de los recortes (dibujos, mapa, tarjetas de precios): añade la clase .grano.
-   Se ajusta con --grano-opacidad, --grano-mezcla (multiply en papel claro, screen en oscuro)
+   Se ajusta con --grano-opacidad, --grano-mezcla (normal en papel claro: el grano ya es marrón
+   y multiplicar costaba una pasada extra de GPU por recorte sin verse distinto; screen en oscuro)
    y --grano-capa (z-index, para pintarlo encima del contenido). */
 .grano {
   position: relative;
@@ -629,7 +614,7 @@ html {
   z-index: var(--grano-capa, auto);
   inset: 0;
   background-image: var(--grano-papel);
-  mix-blend-mode: var(--grano-mezcla, multiply);
+  mix-blend-mode: var(--grano-mezcla, normal);
   opacity: var(--grano-opacidad, 0.22);
   pointer-events: none;
 }

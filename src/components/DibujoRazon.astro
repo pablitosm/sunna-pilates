@@ -337,6 +337,12 @@ const momento = ['alba', 'manana', 'tarde', 'mediodia'].includes(tipo);
     animation-direction: alternate-reverse;
   }
 
+  /* Fuera de pantalla se quedan quietos: una animación SVG no la hace la GPU y, aunque no
+     se vea, cuesta trabajo en cada fotograma (Base.astro marca .en-vista) */
+  :global(.con-acentos) .recorte--horario:not(.en-vista) :is(.horario__sube, .horario__baja) {
+    animation-play-state: paused;
+  }
+
   @keyframes recorte-sol {
     from {
       translate: 0 10px;
