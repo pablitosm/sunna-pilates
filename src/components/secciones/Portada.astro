@@ -41,6 +41,7 @@ const plazas =
   <div class="envoltura portada__texto">
     {conFecha && <p class="portada__fecha">{lugar}</p>}
     <h1 id="portada-titulo" class="portada__titulo" set:html={acentuar(portada.titular)} />
+    <p class="portada__subtitulo">{portada.subtitulo}</p>
     <div class="portada__acciones">
       <CtaButton ajustes={ajustes} home={home} />
     </div>
@@ -100,6 +101,7 @@ const plazas =
   }
 
   .portada--liso .portada__fecha,
+  .portada--liso .portada__subtitulo,
   .portada--liso .portada__plazas {
     color: rgb(var(--texto) / 0.82);
   }
@@ -117,12 +119,21 @@ const plazas =
 
   .portada__titulo {
     max-width: 10ch;
-    margin-bottom: 2.25rem;
+    margin-bottom: 1.5rem;
     font-size: clamp(3rem, 1.4rem + 6vw, 6rem);
     font-weight: 400;
     line-height: 0.98;
     letter-spacing: -0.035em;
     text-wrap: balance;
+  }
+
+  .portada__subtitulo {
+    max-width: 32ch;
+    margin-bottom: 2.25rem;
+    font-size: var(--t-lead);
+    line-height: 1.5;
+    color: var(--tinta-60);
+    text-wrap: pretty;
   }
 
   .portada__acciones {
