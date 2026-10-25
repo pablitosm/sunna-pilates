@@ -71,8 +71,8 @@ enlaces:
 # 1 · PORTADA
 portada:
   titular: "Pilates reformer a tu *hora*."
-  # La primera frase sale en suave; la segunda, en una línea aparte y en tinta, con su palabra *destacada*.
-  subtitulo: "Tu reformer, tu clase en pantalla y el estudio para ti. La primera vez, te lo enseñamos *todo*."
+  # La primera frase sale en suave; la segunda, en una línea aparte y en tinta.
+  subtitulo: "Tu reformer, tu clase en pantalla y el estudio para ti. La primera vez, te lo enseñamos todo."
   # Antes de abrir se muestra la fecha de apertura (ajustes.yaml → fechaApertura) cuando esté cerrada.
   abrimos: "abrimos el"
   # Foto opcional (foto real del estudio o de alguien en el reformer con luz natural).

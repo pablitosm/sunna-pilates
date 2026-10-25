@@ -66,7 +66,7 @@ enlaces:
 # 1 · PORTADA
 portada:
   titular: "Reformer Pilates on your *time*."
-  subtitulo: "Your reformer, your class on screen and the studio to yourself. The first time, we show you *everything*."
+  subtitulo: "Your reformer, your class on screen and the studio to yourself. The first time, we show you everything."
   abrimos: "opening on"
   foto:
     imagen: "../../assets/portada.png"

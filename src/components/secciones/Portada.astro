@@ -12,7 +12,7 @@ const { ajustes, home } = Astro.props;
 const { portada } = home;
 // Naranja y cacao llevan el dibujo del amanecer; las demás paletas, un fondo liso del color principal
 const liso = !['naranja', 'cacao'].includes(ajustes.paleta);
-// El subtítulo en dos tiempos: lo que tienes (suave) y la promesa (en tinta, con su palabra acentuada)
+// El subtítulo en dos tiempos: lo que tienes (suave) y la promesa (en tinta)
 const [subIntro, ...subResto] = portada.subtitulo.split(/(?<=\.)\s+/);
 const subCierre = subResto.join(' ');
 const conFecha = ajustes.estado === 'preapertura' && ajustes.fechaApertura;
@@ -143,13 +143,7 @@ const plazas =
     text-wrap: balance;
   }
 
-  /* Ephesis es de letra pequeña: a este tamaño necesita más cuerpo para igualar al texto */
-  .portada__subtitulo :global(.acento) {
-    font-size: 1.7em;
-  }
-
-  /* La promesa, en su propia línea y en tinta; la palabra acentuada lleva la caligrafía
-     y la pasada de rotulador, como el titular */
+  /* La promesa, en su propia línea y en tinta */
   .portada__subtitulo-cierre {
     display: block;
     margin-top: 0.5rem;
