@@ -1,0 +1,6 @@
+# Web cerrada: solo se entra con sesión (si no, /login) y los buscadores no la indexan.
+# Lo importa el Caddyfile dentro del bloque de SUNNA; se activa con `npm run web:cerrar`.
+header X-Robots-Tag "noindex, nofollow"
+forward_auth 127.0.0.1:8083 {
+	uri /auth/check
+}

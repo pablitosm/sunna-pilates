@@ -34,8 +34,19 @@ tocar ni recargar Apache ni Caddy.
 
 ### Acceso privado
 
-Mientras la web esté cerrada al público, solo entra el usuario `sunna` desde `/login`.
-Sin sesión, cualquier página redirige al login. No hay base de datos: el servicio
+La web puede estar abierta al público o cerrada con login, y se cambia en un momento:
+
+```bash
+npm run web:abrir    # sin login y visible para los buscadores
+npm run web:cerrar   # solo entra el usuario `sunna` desde /login
+npm run web:estado   # dice cómo está ahora
+```
+
+El Caddyfile importa `/etc/caddy/sunna-acceso.caddy`, y `scripts/acceso.sh` copia ahí
+`servidor/acceso-abierto.caddy` o `servidor/acceso-cerrado.caddy`, valida y recarga Caddy.
+El panel (`/panel`) tiene su propio login y no cambia.
+
+Con la web cerrada, cualquier página sin sesión redirige al login. No hay base de datos: el servicio
 `servidor/acceso.py` (sin dependencias) comprueba la contraseña, guardada como hash en
 `/etc/sunnapilates-acceso.env` del servidor, y crea una cookie de sesión firmada que dura
 30 días. Caddy le pregunta en cada petición (`forward_auth`). Para salir: `/auth/logout`.
@@ -49,8 +60,6 @@ Sin sesión, cualquier página redirige al login. No hay base de datos: el servi
   Lo hace Caddy con `servidor/idioma.caddy`: cópialo a `/etc/caddy/idioma.caddy`, añade
   `import /etc/caddy/idioma.caddy` dentro del bloque `http://:8082` del Caddyfile y ejecuta
   `sudo caddy validate --config /etc/caddy/Caddyfile && sudo systemctl reload caddy`.
-- **Abrir la web al público:** en el bloque `http://:8082` del Caddyfile, quita la parte de
-  `forward_auth` y la cabecera `X-Robots-Tag`. Después, `systemctl reload caddy`.
 - **Cambiar una contraseña cierra las sesiones abiertas** con la anterior, tanto en el acceso
   privado como en el panel.
 

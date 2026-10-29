@@ -1,0 +1,2 @@
+# Web abierta al público: sin login y visible para los buscadores.
+# Lo importa el Caddyfile dentro del bloque de SUNNA; se activa con `npm run web:abrir`.
