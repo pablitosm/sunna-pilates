@@ -111,13 +111,22 @@ explora:
 # PÁGINA DE LA PRIMERA SESIÓN GRATIS (a ella lleva el botón principal)
 primeraSesion:
   titulo: "Tu primera sesión es *gratis*."
-  texto: "45 minutos con nosotros antes de entrenar por tu cuenta. Es obligatoria, y es gratis."
+  texto: "45 minutos con nosotros antes de entrenar por tu cuenta. Es obligatoria."
   incluyeTitulo: "Qué hacemos en esos 45 minutos"
   incluye:
-    - "Te enseñamos el reformer y cómo usarlo con seguridad."
-    - "Configuramos contigo la app: reservar y cancelar."
-    - "Te explicamos cómo entrar al estudio con el móvil."
-    - "Te enseñamos a elegir tu clase en el iPad y a darle al play."
+    - minutos: 20
+      titulo: "El reformer"
+      texto: "Te enseñamos el reformer y cómo usarlo con seguridad."
+    - minutos: 10
+      titulo: "La app"
+      texto: "Configuramos contigo la app: reservar y cancelar."
+    - minutos: 5
+      titulo: "La entrada"
+      texto: "Te explicamos cómo entrar al estudio con el móvil."
+    - minutos: 10
+      titulo: "El iPad"
+      texto: "Te enseñamos a elegir tu clase en el iPad."
+  cierre: "Y listo: a partir de aquí entrenas por tu cuenta."
   reservarTitulo: "Resérvala"
   reservarTexto: "Desde la app, en la web o escribiéndonos por WhatsApp: tú eliges."
   web: "Reservar en la web"

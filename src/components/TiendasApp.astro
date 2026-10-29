@@ -1,9 +1,8 @@
 ---
 /*
- * Insignias de la app de SUNNA en App Store y Google Play. Sin enlace
- * (ajustes.yaml → reservas.appStoreUrl / googlePlayUrl) no parecen botones:
- * una insignia crema con borde discontinuo y «Próximamente» encima del nombre,
- * como el «Descárgalo en» de las insignias de verdad.
+ * Insignias de la app de SUNNA en App Store y Google Play. Siempre se ven como botones;
+ * sin enlace (ajustes.yaml → reservas.appStoreUrl / googlePlayUrl) no llevan a ningún
+ * sitio, y en cuanto se rellena el enlace, abren la tienda.
  */
 import type { Ajustes, Home } from '../lib/content';
 
@@ -31,26 +30,14 @@ const tiendas = [
 <div class:list={['tiendas', className]}>
   <ul role="list" class="tiendas__lista">
     {
-      tiendas.map((t) =>
-        t.url ? (
-          <li>
-            <a class="tienda" href={t.url} target="_blank" rel="noopener">
-              <svg class="tienda__icono" viewBox="0 0 24 24" width="20" height="20" fill="currentColor" aria-hidden="true" set:html={t.icono} />
-              {t.nombre}
-            </a>
-          </li>
-        ) : (
-          <li>
-            <span class="tienda tienda--apagada">
-              <svg class="tienda__icono" viewBox="0 0 24 24" width="22" height="22" fill="currentColor" aria-hidden="true" set:html={t.icono} />
-              <span class="tienda__lineas">
-                <span class="tienda__pronto">{textos.proximamente}</span>
-                <span class="tienda__nombre">{t.nombre}</span>
-              </span>
-            </span>
-          </li>
-        ),
-      )
+      tiendas.map((t) => (
+        <li>
+          <a class="tienda" href={t.url || undefined} target={t.url ? '_blank' : undefined} rel={t.url ? 'noopener' : undefined}>
+            <svg class="tienda__icono" viewBox="0 0 24 24" width="20" height="20" fill="currentColor" aria-hidden="true" set:html={t.icono} />
+            {t.nombre}
+          </a>
+        </li>
+      ))
     }
   </ul>
 </div>
@@ -73,47 +60,31 @@ const tiendas = [
     color: var(--crema);
     font-size: 0.9375rem;
     text-decoration: none;
+    cursor: pointer;
     box-shadow: 0 6px 18px -10px rgb(var(--tinta-rgb) / 0.6);
     transition:
       transform 0.3s var(--ease),
       box-shadow 0.3s var(--ease);
   }
 
-
-  /* Sin enlace todavía: insignia de dos líneas, plana y con borde discontinuo; no invita a pulsar */
-  .tienda--apagada {
-    gap: 0.625rem;
-    min-height: 3.25rem;
-    padding: 0 1.375rem 0 1.125rem;
-    border: 1px dashed rgb(var(--n700-rgb) / 0.45);
-    background: var(--crema);
-    color: var(--tinta);
-    box-shadow: none;
-    cursor: default;
+  @media (hover: hover) {
+    .tienda:hover {
+      transform: translateY(-1px);
+      box-shadow: 0 10px 22px -10px rgb(var(--tinta-rgb) / 0.7);
+    }
   }
 
-  .tienda--apagada .tienda__icono {
-    color: var(--n700);
-  }
-
-  .tienda__lineas {
-    display: grid;
-    line-height: 1.15;
-  }
-
-  .tienda__pronto {
-    font-size: var(--t-label);
-    letter-spacing: 0.16em;
-    text-transform: uppercase;
-    color: var(--tinta-60);
-  }
-
-  .tienda__nombre {
-    font-size: 1.0625rem;
-    letter-spacing: -0.01em;
+  .tienda:active {
+    transform: translateY(0);
   }
 
   .tienda__icono {
     flex: none;
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    .tienda {
+      transition: none;
+    }
   }
 </style>

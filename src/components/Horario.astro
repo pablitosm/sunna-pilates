@@ -5,7 +5,7 @@
  * (ajustes.yaml → horario), nunca las dos a la vez.
  */
 import type { Ajustes, Home } from '../lib/content';
-import { tramosCortos } from '../lib/horario';
+import { tramosHorario } from '../lib/horario';
 
 interface Props {
   ajustes: Ajustes;
@@ -27,8 +27,13 @@ const { horariosUrl, appUrl } = ajustes.reservas;
         {fase.etiqueta && <span> · {fase.etiqueta}</span>}
       </p>
       <div class="horario__franjas">
-        {tramosCortos(ajustes, ' — ').map((h) => (
-          <p class="horario__horas">{h}</p>
+        {tramosHorario(ajustes).map(([desde, hasta]) => (
+          <p class="horario__horas">
+            <span>{desde}</span>
+            <span aria-hidden="true">—</span>
+            <span class="solo-lectores">a</span>
+            <span>{hasta}</span>
+          </p>
         ))}
       </div>
       {fase.texto && <p class="horario__texto">{fase.texto}</p>}
@@ -75,18 +80,24 @@ const { horariosUrl, appUrl } = ajustes.reservas;
     margin-bottom: 0.625rem;
   }
 
+  /* Un tramo debajo del otro, en tres columnas (desde, raya y hasta) para que las horas y las
+     rayas queden alineadas aunque los números no midan lo mismo */
   .horario__franjas {
-    display: flex;
-    flex-wrap: wrap;
-    gap: 0.25rem 2rem;
-  }
-
-  .horario__horas {
+    display: grid;
+    grid-template-columns: repeat(3, auto);
+    justify-content: start;
+    gap: 0.25rem 0.4em;
+    /* Cada columna empieza en el mismo punto, también cuando el bloque va a la derecha */
+    text-align: left;
     font-size: clamp(1.75rem, 1.2rem + 1.8vw, 2.5rem);
     line-height: 1.1;
     letter-spacing: -0.02em;
     font-variant-numeric: tabular-nums;
     white-space: nowrap;
+  }
+
+  .horario__horas {
+    display: contents;
   }
 
   .horario__texto {
@@ -160,7 +171,17 @@ const { horariosUrl, appUrl } = ajustes.reservas;
       text-align: right;
     }
 
-    .horario--derecha .horario__franjas,
+    .horario--derecha .horario__franjas {
+      justify-content: end;
+    }
+
+    /* Alineado por la derecha: «hasta» contra el borde, así todas las líneas acaban justo donde
+       acaba el mapa, y «desde» pegado a la raya (a la izquierda, cada línea empieza en su sitio) */
+    .horario--derecha .horario__horas > :first-child,
+    .horario--derecha .horario__horas > :last-child {
+      justify-self: end;
+    }
+
     .horario--derecha .horario__enlaces {
       justify-content: flex-end;
     }

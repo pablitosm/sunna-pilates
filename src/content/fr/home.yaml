@@ -99,13 +99,22 @@ explora:
 
 primeraSesion:
   titulo: "Ta première séance est *gratuite*."
-  texto: "45 minutes avec nous avant de t'entraîner en autonomie. Elle est obligatoire, et gratuite."
+  texto: "45 minutes avec nous avant de t'entraîner en autonomie. Elle est obligatoire."
   incluyeTitulo: "Ce qu'on fait pendant ces 45 minutes"
   incluye:
-    - "On te montre le reformer et comment l'utiliser en toute sécurité."
-    - "On configure l'app avec toi : réserver et annuler."
-    - "On t'explique comment entrer au studio avec ton téléphone."
-    - "On te montre comment choisir ton cours sur l'iPad et appuyer sur play."
+    - minutos: 20
+      titulo: "Le reformer"
+      texto: "On te montre le reformer et comment l'utiliser en toute sécurité."
+    - minutos: 10
+      titulo: "L'app"
+      texto: "On configure l'app avec toi : réserver et annuler."
+    - minutos: 5
+      titulo: "L'entrée"
+      texto: "On t'explique comment entrer au studio avec ton téléphone."
+    - minutos: 10
+      titulo: "L'iPad"
+      texto: "On te montre comment choisir ton cours sur l'iPad."
+  cierre: "Et voilà : à partir de là, tu t'entraînes en autonomie."
   reservarTitulo: "Réserve-la"
   reservarTexto: "Dans l'app, sur le web ou en nous écrivant sur WhatsApp : c'est toi qui choisis."
   web: "Réserver sur le web"

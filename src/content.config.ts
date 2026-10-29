@@ -161,7 +161,10 @@ const home = defineCollection({
           titulo: texto,
           texto,
           incluyeTitulo: texto,
-          incluye: z.array(texto),
+          // Los pasos en orden; los minutos de todos suman los 45 de la sesión.
+          incluye: z.array(z.object({ minutos: z.number().int().positive(), titulo: texto, texto })),
+          // Lo que se dice al final del recorrido, antes de reservar.
+          cierre: opcional,
           reservarTitulo: texto,
           reservarTexto: opcional,
           web: texto,

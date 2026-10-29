@@ -1,18 +1,16 @@
 ---
 /*
  * La app, justo después de «Cómo funciona»: sin ella no se reserva ni se entra.
- * Franja melocotón de borde a borde con el móvil y su sol, el título y las tiendas.
+ * Franja melocotón de borde a borde con el móvil y su sol y el título.
  * Los textos siguen en home.yaml → porQue.app.
  */
 import { acentuar } from '../../lib/acento';
-import TiendasApp from '../TiendasApp.astro';
-import type { Ajustes, Home } from '../../lib/content';
+import type { Home } from '../../lib/content';
 
 interface Props {
-  ajustes: Ajustes;
   home: Home;
 }
-const { ajustes, home } = Astro.props;
+const { home } = Astro.props;
 const pq = home.porQue;
 ---
 
@@ -32,7 +30,6 @@ const pq = home.porQue;
             <h2 id="app-titulo" class="app__titulo" set:html={acentuar(pq.app.titulo)} />
             {pq.app.texto && <p class="app__texto">{pq.app.texto}</p>}
           </div>
-          <TiendasApp ajustes={ajustes} textos={pq.app} class="app__tiendas" />
         </div>
       </div>
     </section>
@@ -51,7 +48,7 @@ const pq = home.porQue;
   .app__cabeza {
     position: relative;
     display: grid;
-    grid-template-columns: clamp(4.5rem, 3rem + 3vw, 6.5rem) minmax(0, 1fr) auto;
+    grid-template-columns: clamp(4.5rem, 3rem + 3vw, 6.5rem) minmax(0, 1fr);
     gap: clamp(1.25rem, 0.75rem + 1.5vw, 2.25rem);
     align-items: center;
   }
@@ -102,16 +99,6 @@ const pq = home.porQue;
     color: var(--tinta-60);
   }
 
-  @media (max-width: 64rem) {
-    .app__cabeza {
-      grid-template-columns: clamp(4.5rem, 3rem + 3vw, 6.5rem) minmax(0, 1fr);
-    }
-
-    .app :global(.app__tiendas) {
-      grid-column: 2;
-    }
-  }
-
   @media (max-width: 40rem) {
     .app__cabeza {
       grid-template-columns: 3.25rem minmax(0, 1fr);
@@ -119,7 +106,7 @@ const pq = home.porQue;
       align-items: start;
     }
 
-    /* Con las tiendas debajo, el resplandor se centra en el móvil, no en todo el bloque */
+    /* El resplandor se centra en el móvil, no en todo el bloque */
     .app__cabeza::before {
       top: 3rem;
       width: 12rem;
@@ -131,10 +118,6 @@ const pq = home.porQue;
 
     .app__texto {
       font-size: var(--t-body);
-    }
-
-    .app :global(.app__tiendas) {
-      grid-column: 1 / -1;
     }
   }
 </style>

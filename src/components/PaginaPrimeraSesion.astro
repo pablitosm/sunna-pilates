@@ -1,17 +1,18 @@
 ---
 /*
  * Página de la primera sesión gratis (a ella lleva el botón principal).
- * Explica la sesión y da tres caminos para reservarla: la web de bsport
- * (cuando haya enlace), WhatsApp con un mensaje ya escrito y la app.
- * Debajo, qué se hace en esos 45 minutos (una franja de 0′ a 45′ partida en los
- * cuatro pasos, cada uno con su recorte) y las dudas en una línea.
+ * Es un recorrido por esos 45 minutos, en el orden en que pasan:
+ *   1. Arriba, el titular en una línea y la frase de los 45 minutos.
+ *   2. Los pasos en fila, cada uno con su píldora (número y minutos) y una flecha al siguiente,
+ *      su recorte, su título y su texto. En móvil se deslizan de lado. Acaba en el cierre.
+ *   3. Después, y no antes, reservarla: la web de bsport (cuando haya enlace), WhatsApp con
+ *      un mensaje ya escrito y la app.
+ *   4. Las dudas en una línea.
  */
-import { acentuar, sinAcento } from '../lib/acento';
+import { acentuar } from '../lib/acento';
 import Base from '../layouts/Base.astro';
 import DibujoRazon from './DibujoRazon.astro';
 import Icon from './Icon.astro';
-import PhotoSlot from './PhotoSlot.astro';
-import Seguir from './Seguir.astro';
 import TiendasApp from './TiendasApp.astro';
 import Dudas from './secciones/Dudas.astro';
 import { getSite, whatsappUrl, type Lang } from '../lib/content';
@@ -25,26 +26,70 @@ const ps = home.primeraSesion!;
 const web = ajustes.reservas.primeraSesionUrl;
 const wa = whatsappUrl(ajustes.contacto.whatsapp, ps.whatsappMensaje);
 const dibujos = ['reformer', 'app', 'entrada', 'ipad'] as const;
+
+// Cada paso con el minuto en que empieza y en el que acaba
+const total = ps.incluye.reduce((suma, p) => suma + p.minutos, 0);
+const pasos = ps.incluye.map((p, i) => {
+  const desde = ps.incluye.slice(0, i).reduce((suma, q) => suma + q.minutos, 0);
+  return { ...p, desde, hasta: desde + p.minutos, dibujo: dibujos[i % dibujos.length] };
+});
 ---
 
 <Base lang={lang} titulo={home.botones.principalCorto.abierto} descripcion={ps.texto} pagina="primera-sesion" alternos sinBarraMovil>
-  <section class:list={['prueba', { 'prueba--foto': home.portada.foto }]} aria-labelledby="prueba-titulo">
-    <!-- La foto del estudio fundida con el crema, igual que en la portada -->
-    {
-      home.portada.foto && (
-        <div class="prueba__foto">
-          <PhotoSlot foto={home.portada.foto} loading="eager" sizes="(min-width: 56.25rem) 65vw, 100vw" class="prueba__imagen" />
-        </div>
-      )
-    }
-    <div class="envoltura prueba__rejilla">
-      <div class="prueba__texto">
-        <h1 id="prueba-titulo" class="t-display prueba__titulo" set:html={acentuar(ps.titulo)} />
-        <p class="t-lead prueba__intro">{ps.texto}</p>
+  <section class="inicio" aria-labelledby="inicio-titulo">
+    <div class="envoltura">
+      <h1 id="inicio-titulo" class="t-display inicio__titulo" set:html={acentuar(ps.titulo)} />
+      <p class="t-lead inicio__intro">{ps.texto}</p>
+    </div>
+  </section>
 
-        <section class="reservar" aria-labelledby="reservar-titulo">
-          <h2 id="reservar-titulo" class="reservar__titulo">{ps.reservarTitulo}</h2>
-          {ps.reservarTexto && <p class="reservar__texto">{ps.reservarTexto}</p>}
+  <section id="incluye" class="camino seccion" aria-labelledby="camino-titulo">
+    <div class="envoltura">
+      <h2 id="camino-titulo" class="t-h2 camino__titulo" set:html={acentuar(ps.incluyeTitulo)} />
+
+      <ol role="list" class="fila">
+        {
+          pasos.map((p, i) => (
+            <li class="fila__paso" style={`--tramo: var(--tramo-${(i % 4) + 1})`}>
+              <div class="fila__marca">
+                <span class="fila__num" aria-hidden="true">
+                  {i + 1}
+                </span>
+                <span class="etiqueta fila__min">
+                  min {p.desde}–{p.hasta}
+                </span>
+                <span class="fila__linea" aria-hidden="true" />
+              </div>
+              <div class="fila__lamina grano">
+                <DibujoRazon tipo={p.dibujo} />
+              </div>
+              <h3 class="fila__titulo">{p.titulo}</h3>
+              <p class="fila__texto">{p.texto}</p>
+            </li>
+          ))
+        }
+      </ol>
+
+      {
+        ps.cierre && (
+          <p class="cierre">
+            <span class="cierre__sol" aria-hidden="true" />
+            <span class="etiqueta">min {total}</span>
+            {ps.cierre}
+          </p>
+        )
+      }
+    </div>
+  </section>
+
+  <section class="reservar" aria-labelledby="reservar-titulo">
+    <div class="envoltura">
+      <div class="reservar__panel">
+        <div class="reservar__texto">
+          <h2 id="reservar-titulo" class="t-h2">{ps.reservarTitulo}</h2>
+          {ps.reservarTexto && <p class="t-lead reservar__intro">{ps.reservarTexto}</p>}
+        </div>
+        <div class="reservar__acciones">
           <div class="reservar__botones">
             {
               web && (
@@ -64,43 +109,8 @@ const dibujos = ['reformer', 'app', 'entrada', 'ipad'] as const;
             }
           </div>
           {home.porQue && <TiendasApp ajustes={ajustes} textos={home.porQue.app} class="reservar__tiendas" />}
-        </section>
+        </div>
       </div>
-
-    </div>
-
-    <!-- Invita a bajar: lleva a lo que se hace en la sesión -->
-    <div class="envoltura">
-      <Seguir href="#incluye" texto={sinAcento(ps.incluyeTitulo)} class="prueba__seguir" />
-    </div>
-  </section>
-
-  <section id="incluye" class="incluye seccion" aria-labelledby="incluye-titulo">
-    <div class="envoltura">
-      <h2 id="incluye-titulo" class="t-h2 incluye__titulo" set:html={acentuar(ps.incluyeTitulo)} />
-
-      <!-- Los 45 minutos como una franja: cada paso, un tramo que se calienta como el sol al subir -->
-      <div class="tramos" aria-hidden="true">
-        {ps.incluye.map((_, i) => <span class="tramo" style={`--tramo: var(--tramo-${(i % 4) + 1})`}>{i + 1}</span>)}
-        <span class="tramos__marca tramos__marca--inicio">0′</span>
-        <span class="tramos__marca tramos__marca--fin">45′</span>
-      </div>
-
-      <ol role="list" class="incluye__lista">
-        {
-          ps.incluye.map((x, i) => (
-            <li class="paso" style={`--tramo: var(--tramo-${(i % 4) + 1})`}>
-              <div class="paso__lamina grano">
-                <DibujoRazon tipo={dibujos[i % dibujos.length]} />
-              </div>
-              <p class="paso__texto">
-                <span class="paso__num">{i + 1}</span>
-                {x}
-              </p>
-            </li>
-          ))
-        }
-      </ol>
     </div>
   </section>
 
@@ -108,75 +118,163 @@ const dibujos = ['reformer', 'app', 'entrada', 'ipad'] as const;
 </Base>
 
 <style>
-  .prueba {
-    position: relative;
-    isolation: isolate;
-    overflow: hidden;
-    padding: var(--pagina-arriba) 0 var(--seccion);
+  /* ───────── Arriba: el titular en una línea ───────── */
+  .inicio {
+    padding: var(--pagina-arriba) 0 0;
     background: var(--crema);
   }
 
-  /* Escritorio: la foto ocupa la derecha hasta el borde y se desvanece hacia el texto */
-  .prueba__foto {
-    position: absolute;
-    z-index: -1;
-    inset: 0 0 0 38%;
-    -webkit-mask-image: linear-gradient(90deg, transparent 0%, rgb(0 0 0 / 0.5) 26%, #000 52%);
-    mask-image: linear-gradient(90deg, transparent 0%, rgb(0 0 0 / 0.5) 26%, #000 52%);
+  /* Encoge con el ancho hasta caber en una línea (también en francés y alemán, más largos) */
+  .inicio__titulo {
+    font-size: min(var(--t-display), (100vw - 2 * var(--gutter)) / 13.8);
+    white-space: nowrap;
   }
 
-  .prueba__foto :global(.prueba__imagen) {
+  .inicio__intro {
+    max-width: 40ch;
+    margin-top: 1rem;
+    color: var(--tinta-60);
+  }
+
+  /* ───────── Los pasos en fila ───────── */
+  /* Los cuatro tramos se calientan como el sol al subir */
+  .camino {
+    --tramo-1: var(--sol-100);
+    --tramo-2: var(--sol-200);
+    --tramo-3: var(--sol-300);
+    --tramo-4: var(--sol-500);
+    --hueco: 1.5rem;
+  }
+
+  .camino__titulo {
+    margin-bottom: clamp(1.75rem, 1rem + 2vw, 2.5rem);
+    text-wrap: balance;
+  }
+
+  .fila {
+    display: grid;
+    grid-template-columns: repeat(4, minmax(0, 1fr));
+    gap: 2rem var(--hueco);
+  }
+
+  /* Encima de cada paso, una píldora de su color con el número y los minutos, y una flecha
+     hacia el siguiente */
+  .fila__marca {
+    display: flex;
+    align-items: center;
+    margin-bottom: 1rem;
+  }
+
+  .fila__num,
+  .fila__min {
+    display: grid;
+    place-items: center;
+    height: 2.25rem;
+    background: var(--tramo);
+    color: var(--tinta);
+  }
+
+  .fila__num {
+    padding: 0 0.375rem 0 0.875rem;
+    border-radius: var(--r-pill) 0 0 var(--r-pill);
+    font-size: 0.9375rem;
+    font-variant-numeric: tabular-nums;
+  }
+
+  .fila__min {
+    padding: 0 0.875rem 0 0.375rem;
+    border-radius: 0 var(--r-pill) var(--r-pill) 0;
+    font-variant-numeric: tabular-nums;
+    white-space: nowrap;
+  }
+
+  .fila__linea {
+    position: relative;
+    flex: 1;
+    height: 2px;
+    margin-left: 0.75rem;
+    background: var(--linea-fuerte);
+  }
+
+  .fila__linea::after {
+    content: '';
+    position: absolute;
+    right: 0;
+    top: 50%;
+    width: 0.5rem;
+    height: 0.5rem;
+    border-top: 2px solid var(--linea-fuerte);
+    border-right: 2px solid var(--linea-fuerte);
+    translate: 0 -50%;
+    rotate: 45deg;
+  }
+
+  /* El último no lleva flecha: después viene el cierre */
+  .fila__paso:last-child .fila__linea {
+    visibility: hidden;
+  }
+
+  .fila__lamina {
+    position: relative;
+    aspect-ratio: 24 / 14;
+    margin-bottom: 0.75rem;
+    border-radius: var(--r);
+    overflow: hidden;
+  }
+
+  .fila__lamina :global(svg) {
     position: absolute;
     inset: 0;
   }
 
-  .prueba--foto::after {
-    content: '';
-    position: absolute;
-    z-index: -1;
-    inset: auto 0 0;
-    height: 18%;
-    background: linear-gradient(180deg, rgb(var(--crema-rgb) / 0), var(--crema));
-    pointer-events: none;
+  .fila__titulo {
+    font-size: 1.25rem;
+    line-height: 1.25;
+    letter-spacing: -0.01em;
+    font-weight: 400;
   }
 
-  .prueba :global(.prueba__seguir) {
-    margin-top: clamp(2rem, 1rem + 2.5vw, 3.5rem);
-  }
-
-  .prueba__rejilla {
-    display: block;
-  }
-
-  .prueba__texto {
-    max-width: min(36rem, 46%);
-  }
-
-  .prueba__titulo {
-    max-width: 11ch;
-    text-wrap: balance;
-  }
-
-  .prueba__intro {
-    max-width: 36ch;
-    margin-top: 1.5rem;
+  .fila__texto {
+    margin-top: 0.375rem;
+    font-size: 1rem;
+    line-height: 1.5;
     color: var(--tinta-60);
   }
 
+  /* El final del recorrido: un sol lleno y la frase que da paso a reservar */
+  .cierre {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: 0.5rem 0.75rem;
+    margin-top: clamp(1.75rem, 1rem + 2vw, 2.5rem);
+    font-size: 1.125rem;
+  }
+
+  .cierre__sol {
+    width: 1.25rem;
+    height: 1.25rem;
+    border-radius: 50%;
+    background: var(--sol-500);
+  }
+
+  /* ───────── Reservar, después del recorrido ───────── */
+  /* Franja Naranja 100 de borde a borde, como la de la app en la portada */
   .reservar {
-    margin-top: clamp(2.25rem, 1.5rem + 2vw, 3rem);
-    padding-top: 2rem;
-    border-top: 1px solid var(--linea-fuerte);
+    padding-block: var(--seccion);
+    background: var(--n100);
   }
 
-  .reservar__titulo {
-    font-size: 1.5rem;
-    line-height: 1.2;
-    letter-spacing: -0.015em;
+  .reservar__panel {
+    display: grid;
+    grid-template-columns: minmax(0, 1fr) auto;
+    gap: 2rem clamp(2rem, 1rem + 4vw, 5rem);
+    align-items: end;
   }
 
-  .reservar__texto {
-    margin-top: 0.5rem;
+  .reservar__intro {
+    max-width: 36ch;
+    margin-top: 1rem;
     color: var(--tinta-60);
   }
 
@@ -184,7 +282,6 @@ const dibujos = ['reformer', 'app', 'entrada', 'ipad'] as const;
     display: flex;
     flex-wrap: wrap;
     gap: 0.75rem;
-    margin-top: 1.5rem;
   }
 
   .boton {
@@ -220,152 +317,54 @@ const dibujos = ['reformer', 'app', 'entrada', 'ipad'] as const;
     margin-top: 1.25rem;
   }
 
-  /* Qué hacemos en los 45 minutos */
-  .incluye__titulo {
-    max-width: 18ch;
-    margin-bottom: var(--titulo-contenido);
-  }
-
-  /* Cuatro columnas, y encima la franja con las mismas columnas para que cada tramo caiga sobre su paso */
-  .incluye {
-    --tramo-1: var(--sol-100);
-    --tramo-2: var(--sol-200);
-    --tramo-3: var(--sol-300);
-    --tramo-4: var(--sol-500);
-    --hueco: clamp(1.25rem, 0.5rem + 2vw, 2.25rem);
-  }
-
-  .tramos,
-  .incluye__lista {
-    display: grid;
-    grid-template-columns: repeat(4, minmax(0, 1fr));
-    column-gap: var(--hueco);
-  }
-
-  .tramos {
-    position: relative;
-    margin-bottom: 2.75rem;
-  }
-
-  /* Cada tramo tapa el hueco hasta el siguiente: la franja se lee de un tirón */
-  .tramo {
-    display: flex;
-    align-items: center;
-    height: 2.25rem;
-    margin-right: calc(-1 * var(--hueco));
-    padding-left: 0.875rem;
-    background: var(--tramo);
-    color: var(--tinta);
-    font-size: 0.875rem;
-    font-variant-numeric: tabular-nums;
-  }
-
-  .tramo:first-child {
-    border-radius: var(--r-pill) 0 0 var(--r-pill);
-  }
-
-  .tramo:nth-child(4) {
-    margin-right: 0;
-    border-radius: 0 var(--r-pill) var(--r-pill) 0;
-  }
-
-  .tramos__marca {
-    position: absolute;
-    top: calc(100% + 0.5rem);
-    color: var(--tinta-60);
-    font-size: 0.875rem;
-    font-variant-numeric: tabular-nums;
-  }
-
-  .tramos__marca--inicio {
-    left: 0;
-  }
-
-  .tramos__marca--fin {
-    right: 0;
-  }
-
-  .paso {
-    display: grid;
-    align-content: start;
-    gap: 1.25rem;
-  }
-
-  .paso__lamina {
-    position: relative;
-    max-width: 100%;
-    aspect-ratio: 24 / 17;
-    border-radius: var(--r);
-    overflow: hidden;
-  }
-
-
-  .paso__texto {
-    font-size: 1.0625rem;
-    line-height: 1.55;
-    color: var(--tinta);
-  }
-
-  /* El número solo hace falta cuando no está la franja */
-  .paso__num {
-    display: none;
-  }
-
-  /* Tableta y móvil: la franja se reparte entre los pasos, como un canto de color a la izquierda */
+  /* Tableta: dos pasos por fila; la línea se corta al final de cada fila */
   @media (max-width: 64rem) {
-    .tramos {
-      display: none;
-    }
-
-    .incluye__lista {
+    .fila {
       grid-template-columns: repeat(2, minmax(0, 1fr));
-      row-gap: 2.5rem;
     }
 
-    .paso {
-      padding-left: 1.25rem;
-      border-left: 0.5rem solid var(--tramo);
+    .fila__paso:nth-child(2n) .fila__linea {
+      visibility: hidden;
     }
 
-    .paso__num {
-      display: inline-grid;
-      place-items: center;
-      width: 1.75rem;
-      height: 1.75rem;
-      margin-right: 0.5rem;
-      border-radius: 50%;
-      background: var(--tramo);
-      font-size: 0.875rem;
-      font-variant-numeric: tabular-nums;
-      vertical-align: 0.05em;
+    .reservar__panel {
+      grid-template-columns: 1fr;
+      align-items: start;
     }
   }
 
-  /* Móvil: la foto arriba, de borde a borde, fundida en crema por abajo (como la portada) */
-  @media (max-width: 56.25rem) {
-    .prueba--foto {
-      padding-top: min(40svh, 22rem);
+  /* Móvil: los pasos se deslizan de lado en vez de apilarse, y la línea sigue de uno a otro */
+  @media (max-width: 36rem) {
+    .camino {
+      --hueco: 1rem;
     }
 
-    .prueba__foto {
-      inset: 0 0 auto;
-      height: min(54svh, 30rem);
-      -webkit-mask-image: linear-gradient(180deg, #000 45%, rgb(0 0 0 / 0.5) 72%, transparent 100%);
-      mask-image: linear-gradient(180deg, #000 45%, rgb(0 0 0 / 0.5) 72%, transparent 100%);
+    .fila {
+      display: flex;
+      gap: var(--hueco);
+      margin-inline: calc(-1 * var(--gutter));
+      padding-inline: var(--gutter);
+      overflow-x: auto;
+      scroll-snap-type: x mandatory;
+      scroll-padding-inline: var(--gutter);
+      scrollbar-width: none;
     }
 
-    .prueba--foto::after {
+    .fila::-webkit-scrollbar {
       display: none;
     }
 
-    .prueba__texto {
-      max-width: none;
+    .fila__paso {
+      flex: 0 0 78%;
+      scroll-snap-align: start;
     }
-  }
 
-  @media (max-width: 36rem) {
-    .incluye__lista {
-      grid-template-columns: 1fr;
+    .fila__paso:nth-child(2n) .fila__linea {
+      visibility: visible;
+    }
+
+    .fila__paso:last-child .fila__linea {
+      visibility: hidden;
     }
 
     .boton {
