@@ -39,7 +39,7 @@ menu:
     submenu:
       - texto: "Reformer"
         pagina: "reformer"
-        descripcion: "6 reformers con iPad y cascos. Esa hora, el reformer es tuyo."
+        descripcion: "6 reformers con pantalla y cascos. Esa hora, el reformer es tuyo."
       - texto: "Luz roja"
         pagina: "luz-roja"
         descripcion: "Una sala con paneles de luz roja para relajarte."
@@ -93,7 +93,7 @@ porQue:
     - titulo: "Todo es autónomo"
       texto: "Reservas tu reformer en la app y la puerta se abre con tu reserva. Sin llaves, sin recepción, sin esperas."
     - titulo: "Tu clase, a tu ritmo"
-      texto: "iPad y cascos en cada reformer: eliges clase de 10 a 45 min y le das al play. Esa hora el reformer es tuyo."
+      texto: "Pantalla y cascos en cada reformer: eliges clase de 10 a 45 min y le das al play. Esa hora el reformer es tuyo."
   app:
     titulo: "Tu llave es la *app*"
     texto: "Con ella reservas tu reformer, pagas y abres la puerta del estudio. Sin la app no se entra: descárgala antes de venir."
@@ -111,21 +111,17 @@ explora:
 # PÁGINA DE LA PRIMERA SESIÓN GRATIS (a ella lleva el botón principal)
 primeraSesion:
   titulo: "Tu primera sesión es *gratis*."
-  texto: "45 minutos con nosotros antes de entrenar por tu cuenta. Es obligatoria."
-  incluyeTitulo: "Qué hacemos en esos 45 minutos"
+  texto: "Una explicación rápida y a entrenar, con nosotros al lado. Es obligatoria antes de entrenar por tu cuenta."
+  incluyeTitulo: "Qué hacemos en tu primera sesión"
   incluye:
-    - minutos: 20
-      titulo: "El reformer"
-      texto: "Te enseñamos el reformer y cómo usarlo con seguridad."
-    - minutos: 10
-      titulo: "La app"
-      texto: "Configuramos contigo la app: reservar y cancelar."
-    - minutos: 5
-      titulo: "La entrada"
-      texto: "Te explicamos cómo entrar al estudio con el móvil."
-    - minutos: 10
-      titulo: "El iPad"
-      texto: "Te enseñamos a elegir tu clase en el iPad."
+    - titulo: "El reformer"
+      texto: "Lo justo para usarlo con seguridad, sin teoría de más."
+    - titulo: "La app y la entrada"
+      texto: "Configuramos la app contigo: reservar, cancelar y entrar al estudio con el móvil."
+    - titulo: "La pantalla"
+      texto: "Eliges tu clase en la pantalla de tu reformer y le das al play."
+    - titulo: "Entrenas"
+      texto: "Haces la clase con nosotros al lado. Es tu primer entreno, no una charla."
   cierre: "Y listo: a partir de aquí entrenas por tu cuenta."
   reservarTitulo: "Resérvala"
   reservarTexto: "Desde la app, en la web o escribiéndonos por WhatsApp: tú eliges."
@@ -139,14 +135,14 @@ comoFunciona:
   pasos:
     - icono: "arco"
       titulo: "Ven a tu primera sesión. Es gratis."
-      texto: "45 minutos con nosotros: te enseñamos el reformer, la app, cómo entrar y cómo elegir tu clase. Es obligatoria antes de entrenar por tu cuenta."
+      texto: "Te enseñamos lo justo (el reformer, la app, cómo entrar y cómo elegir tu clase) y entrenas con nosotros. Es obligatoria antes de entrenar por tu cuenta."
     # Reservar y entrar van en un solo paso: los dos son «desde el móvil».
     - icono: "pantalla"
       titulo: "Reserva en la app y entra con el móvil."
       texto: "Eliges día y hora: esa hora el reformer es tuyo. La puerta se abre con tu reserva, sin llaves ni recepción."
     - icono: "punto"
       titulo: "Elige tu clase y dale al play."
-      texto: "En el iPad de tu reformer: full body, core, pierna, movilidad… de 10 a 45 minutos."
+      texto: "En la pantalla de tu reformer: full body, core, pierna, movilidad… de 10 a 45 minutos."
   notaFinal: "Al terminar, deja tu reformer listo para la siguiente persona."
   # PENDIENTE: confirmar con bsport el plazo de reserva. Cancelación gratuita: hasta 2 horas antes.
   datos:
@@ -198,7 +194,7 @@ recovery:
       texto: "Una máquina de Pilates con un carro que se desliza sobre raíles, muelles y correas. Los muelles marcan la resistencia, así que se ajusta a ti, tanto si empiezas de cero como si no."
       puntos:
         - "6 reformers, una persona por máquina."
-        - "iPad con tu clase y cascos bluetooth en cada reformer."
+        - "Pantalla con tu clase y cascos bluetooth en cada reformer."
         - "En tu primera sesión te enseñamos a usarlo con seguridad."
       membresia:
         - plan: "Basic"
@@ -347,7 +343,7 @@ faq:
         - pregunta: "¿Tengo que saber Pilates?"
           respuesta: "No. La primera sesión, gratis y con nosotros, está pensada para quien empieza de cero."
         - pregunta: "¿Qué pasa en la primera sesión?"
-          respuesta: "45 minutos en los que te enseñamos el reformer, la app, cómo entrar al estudio y cómo elegir clase. Sin ella no se puede entrenar por libre."
+          respuesta: "Una explicación rápida del reformer, la app, cómo entrar al estudio y cómo elegir clase, y luego entrenas con nosotros. Sin ella no se puede entrenar por libre."
         - pregunta: "¿Y si después se me olvida algo?"
           respuesta: "Escríbenos por WhatsApp o ven cuando haya alguien del equipo y lo repasamos."
     - titulo: "Reservar y entrar"
@@ -365,7 +361,7 @@ faq:
     - titulo: "Las clases"
       preguntas:
         - pregunta: "¿Cómo es una clase?"
-          respuesta: "Eliges en el iPad de tu reformer y sigues el vídeo. Hay clases de 10 a 45 minutos: full body, core, pierna, brazo, movilidad y estiramientos."
+          respuesta: "Eliges en la pantalla de tu reformer y sigues el vídeo. Hay clases de 10 a 45 minutos: full body, core, pierna, brazo, movilidad y estiramientos."
         - pregunta: "¿En qué idioma?"
           respuesta: "En castellano, inglés, alemán y francés. El catálogo más grande es en inglés, pero hay clases de sobra en castellano."
         - pregunta: "¿Necesito auriculares?"
@@ -419,7 +415,7 @@ panel:
     pie: ""
   abierto:
     titulo: "Reserva tu primera sesión gratis"
-    texto: "45 minutos con nosotros: te enseñamos el reformer, la app, cómo entrar y cómo elegir tu clase."
+    texto: "Una explicación rápida y tu primer entreno, con nosotros al lado."
     boton: "Reservar"
     # Texto opcional sobre la reserva (se deja vacío hasta integrar bsport).
     widget: ""

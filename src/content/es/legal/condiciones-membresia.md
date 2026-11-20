@@ -16,7 +16,7 @@ Las membresías son mensuales. Los planes, los precios y lo que incluye cada uno
 
 ## Primera sesión
 
-La primera sesión es gratuita, dura 45 minutos y es obligatoria antes de entrenar por tu cuenta. Explica el funcionamiento del estudio y el uso seguro del reformer. No es una valoración médica.
+La primera sesión es gratuita y obligatoria antes de entrenar por tu cuenta. Explica el funcionamiento del estudio y el uso seguro del reformer, e incluye un primer entrenamiento acompañado. No es una valoración médica.
 
 ## Reservas
 

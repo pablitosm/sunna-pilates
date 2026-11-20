@@ -36,7 +36,7 @@ menu:
     submenu:
       - texto: "Reformer"
         pagina: "reformer"
-        descripcion: "6 reformers avec iPad et casque. Pendant une heure, il est à toi."
+        descripcion: "6 reformers avec écran et casque. Pendant une heure, il est à toi."
       - texto: "Lumière rouge"
         pagina: "luz-roja"
         descripcion: "Une salle avec des panneaux de lumière rouge pour te détendre."
@@ -83,7 +83,7 @@ porQue:
     - titulo: "Tout est autonome"
       texto: "Tu réserves ton reformer dans l'app et la porte s'ouvre avec ta réservation. Pas de clés, pas d'accueil, pas d'attente."
     - titulo: "Ton cours, à ton rythme"
-      texto: "Un iPad et un casque sur chaque reformer : choisis un cours de 10 à 45 min et appuie sur play. Pendant cette heure, le reformer est à toi."
+      texto: "Un écran et un casque sur chaque reformer : choisis un cours de 10 à 45 min et appuie sur play. Pendant cette heure, le reformer est à toi."
   app:
     titulo: "Ta clé, c'est l'*app*"
     texto: "Avec elle, tu réserves ton reformer, tu paies et tu ouvres la porte du studio. Sans l'app, pas d'accès : télécharge-la avant de venir."
@@ -99,21 +99,17 @@ explora:
 
 primeraSesion:
   titulo: "Ta première séance est *gratuite*."
-  texto: "45 minutes avec nous avant de t'entraîner en autonomie. Elle est obligatoire."
-  incluyeTitulo: "Ce qu'on fait pendant ces 45 minutes"
+  texto: "Une explication rapide, puis tu t'entraînes, avec nous à tes côtés. Elle est obligatoire avant de t'entraîner en autonomie."
+  incluyeTitulo: "Ce qu'on fait pendant ta première séance"
   incluye:
-    - minutos: 20
-      titulo: "Le reformer"
-      texto: "On te montre le reformer et comment l'utiliser en toute sécurité."
-    - minutos: 10
-      titulo: "L'app"
-      texto: "On configure l'app avec toi : réserver et annuler."
-    - minutos: 5
-      titulo: "L'entrée"
-      texto: "On t'explique comment entrer au studio avec ton téléphone."
-    - minutos: 10
-      titulo: "L'iPad"
-      texto: "On te montre comment choisir ton cours sur l'iPad."
+    - titulo: "Le reformer"
+      texto: "Juste ce qu'il faut pour l'utiliser en toute sécurité, sans long discours."
+    - titulo: "L'app et l'entrée"
+      texto: "On configure l'app avec toi : réserver, annuler et entrer au studio avec ton téléphone."
+    - titulo: "L'écran"
+      texto: "Tu choisis ton cours sur l'écran de ton reformer et tu appuies sur play."
+    - titulo: "Tu t'entraînes"
+      texto: "Tu fais le cours avec nous à tes côtés. C'est ton premier entraînement, pas un exposé."
   cierre: "Et voilà : à partir de là, tu t'entraînes en autonomie."
   reservarTitulo: "Réserve-la"
   reservarTexto: "Dans l'app, sur le web ou en nous écrivant sur WhatsApp : c'est toi qui choisis."
@@ -127,14 +123,14 @@ comoFunciona:
   pasos:
     - icono: "arco"
       titulo: "Viens à ta première séance. C'est gratuit."
-      texto: "45 minutes avec nous : on te montre le reformer, l'app, comment entrer et comment choisir ton cours. Elle est obligatoire avant de t'entraîner en autonomie."
+      texto: "On te montre l'essentiel (le reformer, l'app, comment entrer et comment choisir ton cours) et tu t'entraînes avec nous. Elle est obligatoire avant de t'entraîner en autonomie."
     # Reservar y entrar van en un solo paso: los dos son «desde el móvil».
     - icono: "pantalla"
       titulo: "Réserve dans l'app et entre avec ton téléphone."
       texto: "Tu choisis le jour et l'heure : pendant cette heure, le reformer est à toi. La porte s'ouvre avec ta réservation, sans clés ni accueil."
     - icono: "punto"
       titulo: "Choisis ton cours et appuie sur play."
-      texto: "Sur l'iPad de ton reformer : full body, core, jambes, mobilité… de 10 à 45 minutes."
+      texto: "Sur l'écran de ton reformer : full body, core, jambes, mobilité… de 10 à 45 minutes."
   notaFinal: "À la fin, laisse ton reformer prêt pour la personne suivante."
   datos:
     reserva: "Chaque réservation est un créneau d'1 heure : jusqu'à 50 min de cours + le temps d'entrer, de t'installer et de repartir."
@@ -177,7 +173,7 @@ recovery:
       texto: "Une machine de Pilates avec un chariot qui glisse sur des rails, des ressorts et des sangles. Les ressorts règlent la résistance : il s'adapte à toi, que tu partes de zéro ou non."
       puntos:
         - "6 reformers, une personne par machine."
-        - "Un iPad avec ton cours et un casque bluetooth sur chaque reformer."
+        - "Un écran avec ton cours et un casque bluetooth sur chaque reformer."
         - "Lors de ta première séance, on te montre comment l'utiliser en toute sécurité."
       membresia:
         - plan: "Basic"
@@ -321,7 +317,7 @@ faq:
         - pregunta: "Faut-il savoir faire du Pilates ?"
           respuesta: "Non. La première séance, gratuite et avec nous, est pensée pour celles et ceux qui partent de zéro."
         - pregunta: "Que se passe-t-il lors de la première séance ?"
-          respuesta: "45 minutes pendant lesquelles on te montre le reformer, l'app, comment entrer au studio et comment choisir ton cours. Sans elle, impossible de s'entraîner en autonomie."
+          respuesta: "Une explication rapide du reformer, de l'app, de l'entrée au studio et du choix du cours, puis tu t'entraînes avec nous. Sans elle, impossible de s'entraîner en autonomie."
         - pregunta: "Et si j'oublie quelque chose ensuite ?"
           respuesta: "Écris-nous sur WhatsApp ou passe quand quelqu'un de l'équipe est là et on revoit ça ensemble."
     - titulo: "Réserver et entrer"
@@ -339,7 +335,7 @@ faq:
     - titulo: "Les cours"
       preguntas:
         - pregunta: "Comment se passe un cours ?"
-          respuesta: "Tu choisis sur l'iPad de ton reformer et tu suis la vidéo. Il y a des cours de 10 à 45 minutes : full body, core, jambes, bras, mobilité et étirements."
+          respuesta: "Tu choisis sur l'écran de ton reformer et tu suis la vidéo. Il y a des cours de 10 à 45 minutes : full body, core, jambes, bras, mobilité et étirements."
         - pregunta: "En quelle langue ?"
           respuesta: "En espagnol, anglais, allemand et français. Le plus grand catalogue est en anglais, mais il y a aussi largement de quoi faire en espagnol."
         - pregunta: "Ai-je besoin d'écouteurs ?"
@@ -389,7 +385,7 @@ panel:
     pie: ""
   abierto:
     titulo: "Réserve ta première séance gratuite"
-    texto: "45 minutes avec nous : on te montre le reformer, l'app, comment entrer et comment choisir ton cours."
+    texto: "Une explication rapide et ton premier entraînement, avec nous à tes côtés."
     boton: "Réserver"
     widget: ""
   whatsapp: "WhatsApp"

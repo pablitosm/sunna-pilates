@@ -11,7 +11,7 @@ Memberships are monthly. The plans, prices and what each one includes (reformer,
 
 ## First session
 
-The first session is free, lasts 45 minutes and is required before you train on your own. It explains how the studio works and how to use the reformer safely. It is not a medical assessment.
+The first session is free and required before you train on your own. It explains how the studio works and how to use the reformer safely, and includes a first workout with us. It is not a medical assessment.
 
 ## Bookings
 

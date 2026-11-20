@@ -11,7 +11,7 @@ Les abonnements sont mensuels. Les formules, les prix et ce que chacune comprend
 
 ## Première séance
 
-La première séance est gratuite, dure 45 minutes et est obligatoire avant de t'entraîner en autonomie. Elle explique le fonctionnement du studio et l'utilisation du reformer en toute sécurité. Ce n'est pas un bilan médical.
+La première séance est gratuite et obligatoire avant de t'entraîner en autonomie. Elle explique le fonctionnement du studio et l'utilisation du reformer en toute sécurité, et comprend un premier entraînement avec nous. Ce n'est pas un bilan médical.
 
 ## Réservations
 

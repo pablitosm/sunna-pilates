@@ -429,7 +429,7 @@ def filas_clics(clics):
 APARTADOS = {
     "portada": "Portada", "por-que": "Por qué SUNNA", "como-funciona": "Cómo funciona", "explora": "Descubre SUNNA",
     "estudio": "El estudio", "faq": "Preguntas frecuentes", "dudas": "¿Y si…?", "cierre": "Cierre",
-    "precios": "Precios", "fundadores": "Socios fundadores", "incluye": "Qué hacemos en 45 min", "prueba": "Primera sesión",
+    "precios": "Precios", "fundadores": "Socios fundadores", "incluye": "Qué hacemos en la primera sesión", "prueba": "Primera sesión",
     "clases": "Las clases", "recovery": "Reformer, sauna y luz roja",
 }
 PAGINAS = {

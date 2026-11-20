@@ -36,7 +36,7 @@ menu:
     submenu:
       - texto: "Reformer"
         pagina: "reformer"
-        descripcion: "6 Reformer mit iPad und Kopfhörern. Diese Stunde gehört dir."
+        descripcion: "6 Reformer mit Bildschirm und Kopfhörern. Diese Stunde gehört dir."
       - texto: "Rotlicht"
         pagina: "luz-roja"
         descripcion: "Ein Raum mit Rotlichtpaneelen zum Entspannen."
@@ -83,7 +83,7 @@ porQue:
     - titulo: "Alles läuft autonom"
       texto: "Du buchst deinen Reformer in der App, und die Tür öffnet sich mit deiner Buchung. Keine Schlüssel, kein Empfang, kein Warten."
     - titulo: "Deine Klasse, dein Tempo"
-      texto: "iPad und Kopfhörer an jedem Reformer: Wähle eine Klasse von 10 bis 45 Min. und drück auf Play. In dieser Stunde gehört der Reformer dir."
+      texto: "Bildschirm und Kopfhörer an jedem Reformer: Wähle eine Klasse von 10 bis 45 Min. und drück auf Play. In dieser Stunde gehört der Reformer dir."
   app:
     titulo: "Dein Schlüssel ist die *App*"
     texto: "Damit buchst du deinen Reformer, bezahlst und öffnest die Studiotür. Ohne App kein Zutritt: Lade sie herunter, bevor du kommst."
@@ -99,21 +99,17 @@ explora:
 
 primeraSesion:
   titulo: "Deine erste Session ist *gratis*."
-  texto: "45 Minuten mit uns, bevor du allein trainierst. Sie ist Pflicht."
-  incluyeTitulo: "Was wir in diesen 45 Minuten machen"
+  texto: "Eine kurze Einführung, dann trainierst du – mit uns an deiner Seite. Sie ist Pflicht, bevor du allein trainierst."
+  incluyeTitulo: "Was wir in deiner ersten Session machen"
   incluye:
-    - minutos: 20
-      titulo: "Der Reformer"
-      texto: "Wir zeigen dir den Reformer und wie du ihn sicher benutzt."
-    - minutos: 10
-      titulo: "Die App"
-      texto: "Wir richten mit dir die App ein: buchen und stornieren."
-    - minutos: 5
-      titulo: "Der Eingang"
-      texto: "Wir erklären dir, wie du mit dem Handy ins Studio kommst."
-    - minutos: 10
-      titulo: "Das iPad"
-      texto: "Wir zeigen dir, wie du deine Klasse auf dem iPad wählst."
+    - titulo: "Der Reformer"
+      texto: "Nur das Nötige, damit du ihn sicher benutzt, ohne lange Theorie."
+    - titulo: "Die App und der Eingang"
+      texto: "Wir richten mit dir die App ein: buchen, stornieren und mit dem Handy ins Studio kommen."
+    - titulo: "Der Bildschirm"
+      texto: "Du wählst deine Klasse auf dem Bildschirm deines Reformers und drückst auf Play."
+    - titulo: "Du trainierst"
+      texto: "Du machst die Klasse mit uns an deiner Seite. Dein erstes Training, kein Vortrag."
   cierre: "Fertig: Ab jetzt trainierst du allein."
   reservarTitulo: "Buche sie"
   reservarTexto: "In der App, im Web oder per WhatsApp – wie du willst."
@@ -127,14 +123,14 @@ comoFunciona:
   pasos:
     - icono: "arco"
       titulo: "Komm zu deiner ersten Session. Sie ist gratis."
-      texto: "45 Minuten mit uns: Wir zeigen dir den Reformer, die App, wie du reinkommst und wie du deine Klasse auswählst. Sie ist Pflicht, bevor du allein trainierst."
+      texto: "Wir zeigen dir das Nötige (den Reformer, die App, wie du reinkommst und wie du deine Klasse auswählst), und du trainierst mit uns. Sie ist Pflicht, bevor du allein trainierst."
     # Reservar y entrar van en un solo paso: los dos son «desde el móvil».
     - icono: "pantalla"
       titulo: "Buche in der App und komm mit dem Handy rein."
       texto: "Du wählst Tag und Uhrzeit: In dieser Stunde gehört der Reformer dir. Die Tür öffnet sich mit deiner Buchung, ohne Schlüssel und ohne Rezeption."
     - icono: "punto"
       titulo: "Wähl deine Klasse und drück auf Play."
-      texto: "Auf dem iPad deines Reformers: Full Body, Core, Beine, Mobilität … von 10 bis 45 Minuten."
+      texto: "Auf dem Bildschirm deines Reformers: Full Body, Core, Beine, Mobilität … von 10 bis 45 Minuten."
   notaFinal: "Wenn du fertig bist, lass deinen Reformer bereit für die nächste Person."
   datos:
     reserva: "Jede Buchung ist ein Block von 1 Stunde: bis zu 50 Min. Klasse + Zeit zum Ankommen, Einstellen und Gehen."
@@ -177,7 +173,7 @@ recovery:
       texto: "Ein Pilates-Gerät mit einem Schlitten, der auf Schienen gleitet, mit Federn und Schlaufen. Die Federn bestimmen den Widerstand – so passt er sich dir an, ob du bei null anfängst oder nicht."
       puntos:
         - "6 Reformer, eine Person pro Gerät."
-        - "iPad mit deiner Klasse und Bluetooth-Kopfhörer an jedem Reformer."
+        - "Bildschirm mit deiner Klasse und Bluetooth-Kopfhörer an jedem Reformer."
         - "In deiner ersten Session zeigen wir dir, wie du ihn sicher benutzt."
       membresia:
         - plan: "Basic"
@@ -321,7 +317,7 @@ faq:
         - pregunta: "Muss ich Pilates können?"
           respuesta: "Nein. Die erste Session, gratis und mit uns, ist für alle gedacht, die bei null anfangen."
         - pregunta: "Was passiert in der ersten Session?"
-          respuesta: "45 Minuten, in denen wir dir den Reformer, die App, den Zugang zum Studio und die Auswahl der Klasse zeigen. Ohne sie kannst du nicht allein trainieren."
+          respuesta: "Eine kurze Einführung in den Reformer, die App, den Zugang zum Studio und die Auswahl der Klasse, danach trainierst du mit uns. Ohne sie kannst du nicht allein trainieren."
         - pregunta: "Und wenn ich später etwas vergesse?"
           respuesta: "Schreib uns auf WhatsApp oder komm vorbei, wenn jemand vom Team da ist, und wir gehen es noch einmal durch."
     - titulo: "Buchen und reinkommen"
@@ -339,7 +335,7 @@ faq:
     - titulo: "Die Klassen"
       preguntas:
         - pregunta: "Wie läuft eine Klasse ab?"
-          respuesta: "Du wählst auf dem iPad deines Reformers und folgst dem Video. Es gibt Klassen von 10 bis 45 Minuten: Full Body, Core, Beine, Arme, Mobilität und Dehnen."
+          respuesta: "Du wählst auf dem Bildschirm deines Reformers und folgst dem Video. Es gibt Klassen von 10 bis 45 Minuten: Full Body, Core, Beine, Arme, Mobilität und Dehnen."
         - pregunta: "In welcher Sprache?"
           respuesta: "Auf Spanisch, Englisch, Deutsch und Französisch. Das größte Angebot gibt es auf Englisch, aber auch auf Spanisch gibt es reichlich Klassen."
         - pregunta: "Brauche ich Kopfhörer?"
@@ -389,7 +385,7 @@ panel:
     pie: ""
   abierto:
     titulo: "Erste Session gratis buchen"
-    texto: "45 Minuten mit uns: Wir zeigen dir den Reformer, die App, wie du reinkommst und wie du deine Klasse auswählst."
+    texto: "Eine kurze Einführung und dein erstes Training, mit uns an deiner Seite."
     boton: "Buchen"
     widget: ""
   whatsapp: "WhatsApp"

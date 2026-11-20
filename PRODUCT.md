@@ -12,7 +12,7 @@ Astro (static output) + Vue 3 islands only where interaction is needed. Editable
 
 ## What it is
 
-SUNNA is a semi-autonomous Pilates Reformer studio in Santa Cruz de Tenerife (C/ San Francisco Javier 5, bajo exterior, 38001 — final confirmation pending). Six reformers, one person per machine, guided video classes on an iPad at each reformer, bluetooth headphones at each reformer, access with the phone. No permanent instructor in the room. Recovery (infrared sauna and red light) is part of the opening.
+SUNNA is a semi-autonomous Pilates Reformer studio in Santa Cruz de Tenerife (C/ San Francisco Javier 5, bajo exterior, 38001 — final confirmation pending). Six reformers, one person per machine, guided video classes on a touchscreen at each reformer (not an Apple iPad: never say iPad), bluetooth headphones at each reformer, access with the phone. No permanent instructor in the room. Recovery (infrared sauna and red light) is part of the opening.
 
 ## Who it is for
 
@@ -20,7 +20,7 @@ Someone who has never heard of SUNNA, usually arriving on a phone from Instagram
 
 ## The single job
 
-Book the first session: a free 45-minute onboarding with the SUNNA team. It is the primary button everywhere and must always be at hand (fixed at the bottom on mobile). Everything else is secondary. Success = a first-time visitor understands how it works in 30 seconds and books.
+Book the first session: a free onboarding with the SUNNA team (a quick explanation, then they train; no duration is shown). It is the primary button everywhere and must always be at hand (fixed at the bottom on mobile). Everything else is secondary. Success = a first-time visitor understands how it works in 30 seconds and books.
 
 ## The single message
 
@@ -32,7 +32,7 @@ Short home: hero (free trial + "Ver precios") → Por qué SUNNA (long hours, ev
 
 ## Two states
 
-- **Open (current):** primary action "Reserva tu primera sesión gratis" goes to the free-trial page, which explains the 45 minutes and offers bsport (when its link exists), WhatsApp with a prefilled booking message, and the app badges ("Próximamente" until the store links exist).
+- **Open (current):** primary action "Reserva tu primera sesión gratis" goes to the free-trial page, which walks through what happens in it (no minutes) and offers bsport (when its link exists), WhatsApp with a prefilled booking message, and the app badges ("Próximamente" until the store links exist).
 - **Pre-opening:** primary action becomes "Quiero ser socio/a fundador/a" and opens the waitlist form.
 Switchable with one setting in the content files (no code change).
 
@@ -46,7 +46,7 @@ Switchable with one setting in the content files (no code change).
 - Founding members: only 40 places; founder price protected forever while they stay subscribed (leaving and returning means current rate); opening booking priority; private opening event invite; recognition as founding member; early access to news, workshops and events; welcome pack (socks, tote bag, stickers and more).
 - Memberships (provisional, to be confirmed): Basic 55 €/mes (4 sessions, 1 red light), Standard 100 € (8 sessions, 2 red light + 1 sauna), Pro 140 € (12 sessions, 3 red light + 2 sauna), Premium 180 € (unlimited subject to availability, "desde 3 € por sesión", unlimited recovery with booking + booking priority; highlighted).
 - Not on the opening site: single class, bonos, recovery packs, tourist passes.
-- The first session explains how things work and safe use of the machine. It is NOT a medical assessment and must never be presented as one. Recovery: no health promises.
+- The first session briefly explains how things work and safe use of the machine, then the person trains: it is a real workout, not a lecture. It is NOT a medical assessment and must never be presented as one. Recovery: no health promises.
 
 ## Open decisions (SUNNA to confirm)
 

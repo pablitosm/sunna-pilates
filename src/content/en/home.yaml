@@ -36,7 +36,7 @@ menu:
     submenu:
       - texto: "Reformer"
         pagina: "reformer"
-        descripcion: "6 reformers with iPad and headphones. For that hour, it’s yours."
+        descripcion: "6 reformers with a screen and headphones. For that hour, it’s yours."
       - texto: "Red light"
         pagina: "luz-roja"
         descripcion: "A room with red light panels to unwind."
@@ -83,7 +83,7 @@ porQue:
     - titulo: "Everything runs on its own"
       texto: "Book your reformer in the app and the door opens with your booking. No keys, no reception, no waiting."
     - titulo: "Your class, your pace"
-      texto: "An iPad and headphones on every reformer: pick a class from 10 to 45 min and press play. For that hour, the reformer is yours."
+      texto: "A screen and headphones on every reformer: pick a class from 10 to 45 min and press play. For that hour, the reformer is yours."
   app:
     titulo: "Your key is the *app*"
     texto: "Book your reformer, pay and open the studio door with it. No app, no entry: download it before you come."
@@ -99,21 +99,17 @@ explora:
 
 primeraSesion:
   titulo: "Your first session is *free*."
-  texto: "45 minutes with us before you train on your own. It's required."
-  incluyeTitulo: "What we do in those 45 minutes"
+  texto: "A quick walkthrough, then you train, with us by your side. It's required before you train on your own."
+  incluyeTitulo: "What we do in your first session"
   incluye:
-    - minutos: 20
-      titulo: "The reformer"
-      texto: "We show you the reformer and how to use it safely."
-    - minutos: 10
-      titulo: "The app"
-      texto: "We set up the app with you: booking and cancelling."
-    - minutos: 5
-      titulo: "Getting in"
-      texto: "We explain how to get into the studio with your phone."
-    - minutos: 10
-      titulo: "The iPad"
-      texto: "We show you how to pick your class on the iPad."
+    - titulo: "The reformer"
+      texto: "Just what you need to use it safely, no long lecture."
+    - titulo: "The app and getting in"
+      texto: "We set up the app with you: booking, cancelling and getting into the studio with your phone."
+    - titulo: "The screen"
+      texto: "You pick your class on your reformer's screen and press play."
+    - titulo: "You train"
+      texto: "You do the class with us by your side. It's your first workout, not a talk."
   cierre: "That's it: from here on, you train on your own."
   reservarTitulo: "Book it"
   reservarTexto: "In the app, on the web or by messaging us on WhatsApp: your choice."
@@ -127,14 +123,14 @@ comoFunciona:
   pasos:
     - icono: "arco"
       titulo: "Come to your first session. It's free."
-      texto: "45 minutes with us: we show you the reformer, the app, how to get in and how to choose your class. It's required before you train on your own."
+      texto: "We show you just what you need (the reformer, the app, how to get in and how to choose your class) and you train with us. It's required before you train on your own."
     # Reservar y entrar van en un solo paso: los dos son «desde el móvil».
     - icono: "pantalla"
       titulo: "Book in the app and get in with your phone."
       texto: "Pick a day and time: for that hour, the reformer is yours. The door opens with your booking, no keys, no reception."
     - icono: "punto"
       titulo: "Choose your class and press play."
-      texto: "On your reformer's iPad: full body, core, legs, mobility… from 10 to 45 minutes."
+      texto: "On your reformer's screen: full body, core, legs, mobility… from 10 to 45 minutes."
   notaFinal: "When you finish, leave your reformer ready for the next person."
   datos:
     reserva: "Each booking is a 1-hour block: up to 50 min of class + time to come in, set up and leave."
@@ -177,7 +173,7 @@ recovery:
       texto: "A Pilates machine with a carriage that slides on rails, springs and straps. The springs set the resistance, so it adapts to you, whether you're starting from zero or not."
       puntos:
         - "6 reformers, one person per machine."
-        - "An iPad with your class and bluetooth headphones on every reformer."
+        - "A screen with your class and bluetooth headphones on every reformer."
         - "In your first session we show you how to use it safely."
       membresia:
         - plan: "Basic"
@@ -321,7 +317,7 @@ faq:
         - pregunta: "Do I need to know Pilates?"
           respuesta: "No. The first session, free and with us, is designed for complete beginners."
         - pregunta: "What happens in the first session?"
-          respuesta: "45 minutes in which we show you the reformer, the app, how to get into the studio and how to choose a class. You can't train on your own without it."
+          respuesta: "A quick walkthrough of the reformer, the app, how to get into the studio and how to choose a class, then you train with us. You can't train on your own without it."
         - pregunta: "What if I forget something later?"
           respuesta: "Message us on WhatsApp or come by when someone from the team is in and we'll go over it."
     - titulo: "Booking and getting in"
@@ -339,7 +335,7 @@ faq:
     - titulo: "The classes"
       preguntas:
         - pregunta: "What is a class like?"
-          respuesta: "You choose on your reformer's iPad and follow the video. There are classes from 10 to 45 minutes: full body, core, legs, arms, mobility and stretching."
+          respuesta: "You choose on your reformer's screen and follow the video. There are classes from 10 to 45 minutes: full body, core, legs, arms, mobility and stretching."
         - pregunta: "In what language?"
           respuesta: "In Spanish, English, German and French. The largest catalogue is in English, and there are plenty of classes in Spanish too."
         - pregunta: "Do I need headphones?"
@@ -389,7 +385,7 @@ panel:
     pie: ""
   abierto:
     titulo: "Book your free first session"
-    texto: "45 minutes with us: we show you the reformer, the app, how to get in and how to choose your class."
+    texto: "A quick walkthrough and your first workout, with us by your side."
     boton: "Book"
     widget: ""
   whatsapp: "WhatsApp"

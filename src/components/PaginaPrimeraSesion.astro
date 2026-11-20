@@ -1,9 +1,9 @@
 ---
 /*
  * Página de la primera sesión gratis (a ella lleva el botón principal).
- * Es un recorrido por esos 45 minutos, en el orden en que pasan:
- *   1. Arriba, el titular en una línea y la frase de los 45 minutos.
- *   2. Los pasos en fila, cada uno con su píldora (número y minutos) y una flecha al siguiente,
+ * Es un recorrido por la sesión, en el orden en que pasa (sin tiempos: se explica rápido y se entrena):
+ *   1. Arriba, el titular en una línea y la frase que lo resume.
+ *   2. Los pasos en fila, cada uno con su número y una flecha al siguiente,
  *      su recorte, su título y su texto. En móvil se deslizan de lado. Acaba en el cierre.
  *   3. Después, y no antes, reservarla: la web de bsport (cuando haya enlace), WhatsApp con
  *      un mensaje ya escrito y la app.
@@ -25,14 +25,9 @@ const { ajustes, home } = await getSite(lang);
 const ps = home.primeraSesion!;
 const web = ajustes.reservas.primeraSesionUrl;
 const wa = whatsappUrl(ajustes.contacto.whatsapp, ps.whatsappMensaje);
-const dibujos = ['reformer', 'app', 'entrada', 'ipad'] as const;
+const dibujos = ['reformer', 'entrada', 'pantalla', 'entreno'] as const;
 
-// Cada paso con el minuto en que empieza y en el que acaba
-const total = ps.incluye.reduce((suma, p) => suma + p.minutos, 0);
-const pasos = ps.incluye.map((p, i) => {
-  const desde = ps.incluye.slice(0, i).reduce((suma, q) => suma + q.minutos, 0);
-  return { ...p, desde, hasta: desde + p.minutos, dibujo: dibujos[i % dibujos.length] };
-});
+const pasos = ps.incluye.map((p, i) => ({ ...p, dibujo: dibujos[i % dibujos.length] }));
 ---
 
 <Base lang={lang} titulo={home.botones.principalCorto.abierto} descripcion={ps.texto} pagina="primera-sesion" alternos sinBarraMovil>
@@ -55,9 +50,6 @@ const pasos = ps.incluye.map((p, i) => {
                 <span class="fila__num" aria-hidden="true">
                   {i + 1}
                 </span>
-                <span class="etiqueta fila__min">
-                  min {p.desde}–{p.hasta}
-                </span>
                 <span class="fila__linea" aria-hidden="true" />
               </div>
               <div class="fila__lamina grano">
@@ -74,7 +66,6 @@ const pasos = ps.incluye.map((p, i) => {
         ps.cierre && (
           <p class="cierre">
             <span class="cierre__sol" aria-hidden="true" />
-            <span class="etiqueta">min {total}</span>
             {ps.cierre}
           </p>
         )
@@ -157,35 +148,24 @@ const pasos = ps.incluye.map((p, i) => {
     gap: 2rem var(--hueco);
   }
 
-  /* Encima de cada paso, una píldora de su color con el número y los minutos, y una flecha
-     hacia el siguiente */
+  /* Encima de cada paso, una píldora de su color con el número, y una flecha hacia el siguiente */
   .fila__marca {
     display: flex;
     align-items: center;
     margin-bottom: 1rem;
   }
 
-  .fila__num,
-  .fila__min {
+  .fila__num {
     display: grid;
     place-items: center;
+    min-width: 2.25rem;
     height: 2.25rem;
+    padding: 0 0.75rem;
+    border-radius: var(--r-pill);
     background: var(--tramo);
     color: var(--tinta);
-  }
-
-  .fila__num {
-    padding: 0 0.375rem 0 0.875rem;
-    border-radius: var(--r-pill) 0 0 var(--r-pill);
     font-size: 0.9375rem;
     font-variant-numeric: tabular-nums;
-  }
-
-  .fila__min {
-    padding: 0 0.875rem 0 0.375rem;
-    border-radius: 0 var(--r-pill) var(--r-pill) 0;
-    font-variant-numeric: tabular-nums;
-    white-space: nowrap;
   }
 
   .fila__linea {

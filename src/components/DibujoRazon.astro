@@ -6,12 +6,13 @@
  * Los arcos (autonomo, entrada, tarde) llevan el hueco concéntrico: la banda tiene el mismo grueso
  * arriba que en los lados.
  * ritmo: tres semicírculos con el tamaño de cada clase (10, 25 y 45 minutos).
- * Y los cuatro pasos de la primera sesión: reformer, app, entrada e ipad.
+ * Y los pasos de la primera sesión: reformer, app, entrada, pantalla (la táctil del reformer, con el play)
+ * y entreno (el estudio en marcha: el reformer con su pantalla y el play, el arco con el sol y una planta).
  * Y un momento del día por membresía: alba (mar), manana (olivos), tarde (arco) y mediodia (cacao).
  * Los colores salen de la paleta (sol, arena, terracota, oliva), así siguen al tema.
  */
 interface Props {
-  tipo: 'horario' | 'autonomo' | 'ritmo' | 'reformer' | 'app' | 'entrada' | 'ipad' | 'alba' | 'manana' | 'tarde' | 'mediodia';
+  tipo: 'horario' | 'autonomo' | 'ritmo' | 'reformer' | 'app' | 'entrada' | 'pantalla' | 'entreno' | 'alba' | 'manana' | 'tarde' | 'mediodia';
   /** Apertura y cierre del día, en el dibujo del horario (ajustes.yaml → horarios). */
   horas?: [string, string];
   class?: string;
@@ -182,7 +183,7 @@ const momento = ['alba', 'manana', 'tarde', 'mediodia'].includes(tipo);
   }
 
   {
-    tipo === 'ipad' && (
+    tipo === 'pantalla' && (
       <>
         <rect class="r-fondo" width="240" height="170" />
         <rect class="r-arena" y="136" width="240" height="34" />
@@ -193,6 +194,33 @@ const momento = ['alba', 'manana', 'tarde', 'mediodia'].includes(tipo);
         <path class="r-fondo" d="M114 64v20l16-10z" />
         <rect class="r-medio" x="66" y="108" width="108" height="4" rx="2" />
         <rect class="r-sol" x="66" y="108" width="40" height="4" rx="2" />
+      </>
+    )
+  }
+  {
+    tipo === 'entreno' && (
+      <>
+        <rect class="r-arena" width="240" height="170" />
+        <rect class="r-arena-tostada" y="132" width="240" height="38" />
+        <path class="r-terracota" d="M160 132V66a32 32 0 0 1 64 0v66z" />
+        <path class="r-luz" d="M172 132V66a20 20 0 0 1 40 0v66z" />
+        <circle class="r-sol" cx="192" cy="76" r="10" />
+        <path class="r-luz autonomo__suelo" d="M172 132h40l-20 38h-56z" />
+        <rect class="r-terracota" x="12" y="116" width="108" height="11" rx="5.5" />
+        <rect class="r-terracota" x="20" y="125" width="8" height="18" rx="2" />
+        <rect class="r-terracota" x="102" y="125" width="8" height="18" rx="2" />
+        <rect class="r-medio" x="26" y="106" width="52" height="12" rx="4" />
+        <rect class="r-luz" x="34" y="96" width="8" height="12" rx="3" />
+        <rect class="r-luz" x="48" y="96" width="8" height="12" rx="3" />
+        <path class="r-terracota" d="M102 118V92a5 5 0 0 1 10 0v26z" />
+        <rect class="r-sol" x="94" y="88" width="26" height="7" rx="3.5" />
+        <rect class="r-terracota" x="135" y="60" width="4" height="72" rx="2" />
+        <rect class="r-terracota" x="127" y="129" width="20" height="5" rx="2.5" />
+        <rect class="r-terracota" x="116" y="36" width="42" height="28" rx="5" />
+        <rect class="r-fondo" x="119.5" y="39.5" width="35" height="21" rx="2" />
+        <path class="r-sol" d="M133 44v12l10-6z" />
+        <path class="r-hoja" d="M228 132c-4-22 0-38 12-48 1 20-3 36-12 48z" />
+        <path class="r-hoja-clara" d="M226 132c-6-12-14-18-24-20 4 12 12 18 24 20z" />
       </>
     )
   }

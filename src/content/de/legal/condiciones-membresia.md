@@ -11,7 +11,7 @@ Die Mitgliedschaften laufen monatlich. Es gelten die Pläne, Preise und Leistung
 
 ## Erste Session
 
-Die erste Session ist gratis, dauert 45 Minuten und ist Pflicht, bevor du allein trainierst. Sie erklärt, wie das Studio funktioniert und wie du den Reformer sicher benutzt. Sie ist keine medizinische Untersuchung.
+Die erste Session ist gratis und Pflicht, bevor du allein trainierst. Sie erklärt, wie das Studio funktioniert und wie du den Reformer sicher benutzt, und enthält ein erstes Training mit uns. Sie ist keine medizinische Untersuchung.
 
 ## Buchungen
 
