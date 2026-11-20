@@ -67,6 +67,9 @@ reservas:
   primeraSesionPase:
     companyId: 6981
     paseId: null
+  # WhatsApp del botón «Reservar por WhatsApp» de la página de la primera sesión.
+  # Vacío ("") = se usa el WhatsApp general de contacto.
+  primeraSesionWhatsapp: "+34 746 05 45 03"
   # Ver horarios (aparece junto al horario, en Cómo funciona).
   horariosUrl: ""
   # Comprar membresías (aparece debajo de las tarjetas de precios).

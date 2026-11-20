@@ -29,7 +29,7 @@ const pase = ajustes.reservas.primeraSesionPase;
 const web = pase.paseId
   ? `https://backoffice.bsport.io/customer/payment/pass/${pase.paseId}`
   : ajustes.reservas.primeraSesionUrl;
-const wa = whatsappUrl(ajustes.contacto.whatsapp, ps.whatsappMensaje);
+const wa = whatsappUrl(ajustes.reservas.primeraSesionWhatsapp || ajustes.contacto.whatsapp, ps.whatsappMensaje);
 const dibujos = ['reformer', 'entrada', 'pantalla', 'entreno'] as const;
 
 const pasos = ps.incluye.map((p, i) => ({ ...p, dibujo: dibujos[i % dibujos.length] }));
