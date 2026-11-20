@@ -23,7 +23,8 @@ interface Props {
 const { lang } = Astro.props;
 const { ajustes, home } = await getSite(lang);
 const ps = home.primeraSesion!;
-const pase = ajustes.reservas.primeraSesionPase;
+// Si el ajuste no llega (p. ej. el servidor de desarrollo aún tiene los ajustes viejos), sin pase
+const pase = ajustes.reservas.primeraSesionPase ?? { companyId: 0, paseId: null };
 // Con el pase de bsport, el enlace va a su compra (sin JavaScript o antes de que cargue el widget);
 // con el widget montado, el clic la abre en la ventana de bsport sin salir de la web.
 const web = pase.paseId
