@@ -23,7 +23,12 @@ interface Props {
 const { lang } = Astro.props;
 const { ajustes, home } = await getSite(lang);
 const ps = home.primeraSesion!;
-const web = ajustes.reservas.primeraSesionUrl;
+const pase = ajustes.reservas.primeraSesionPase;
+// Con el pase de bsport, el enlace va a su compra (sin JavaScript o antes de que cargue el widget);
+// con el widget montado, el clic la abre en la ventana de bsport sin salir de la web.
+const web = pase.paseId
+  ? `https://backoffice.bsport.io/customer/payment/pass/${pase.paseId}`
+  : ajustes.reservas.primeraSesionUrl;
 const wa = whatsappUrl(ajustes.contacto.whatsapp, ps.whatsappMensaje);
 const dibujos = ['reformer', 'entrada', 'pantalla', 'entreno'] as const;
 
@@ -84,7 +89,13 @@ const pasos = ps.incluye.map((p, i) => ({ ...p, dibujo: dibujos[i % dibujos.leng
           <div class="reservar__botones">
             {
               web && (
-                <a class="boton boton-sol" href={web} target="_blank" rel="noopener">
+                <a
+                  class="boton boton-sol"
+                  href={web}
+                  target="_blank"
+                  rel="noopener"
+                  data-pase-bsport={pase.paseId ?? undefined}
+                >
                   {ps.web}
                   <Icon name="flecha" size={20} />
                 </a>
@@ -106,6 +117,63 @@ const pasos = ps.incluye.map((p, i) => ({ ...p, dibujo: dibujos[i % dibujos.leng
   </section>
 
   <Dudas home={home} />
+
+  {
+    pase.paseId && (
+      <>
+        <div id="bsport-pase" hidden />
+        <script is:inline type="module" define:vars={{ companyId: pase.companyId }}>
+          // Widget de pases de bsport, oculto: solo se usa su ventana de compra.
+          // Ver https://intercom.help/bsport-helpcenter/fr/articles/14422125
+          const ID = 'sunna-primera-sesion';
+          let listo = false;
+          addEventListener('message', (e) => {
+            if (e.source === window && e.data?.type === 'bsport:widget:mount:done') listo = true;
+          });
+          const montar = (intento = 1) => {
+            if (window.BsportWidget) {
+              window.BsportWidget.mount({
+                parentElement: 'bsport-pase',
+                uniqueWidgetId: ID,
+                companyId,
+                franchiseId: null,
+                dialogMode: 1,
+                widgetType: 'pass',
+                showFab: false,
+                fullScreenPopup: false,
+                styles: undefined,
+                config: { pass: { paymentPackCategories: [], privatePassCategories: [] } },
+              });
+            } else if (intento < 50) {
+              setTimeout(() => montar(intento + 1), 100 * intento);
+            }
+          };
+          if (!document.getElementById('bsport-widget-cdn')) {
+            const s = document.createElement('script');
+            s.id = 'bsport-widget-cdn';
+            s.src = 'https://cdn.bsport.io/scripts/widget.js';
+            s.async = true;
+            document.head.append(s);
+          }
+          montar();
+          // Antes de que el widget esté listo, el enlace abre la compra en otra pestaña
+          document.querySelectorAll('[data-pase-bsport]').forEach((boton) =>
+            boton.addEventListener('click', (e) => {
+              if (!listo) return;
+              e.preventDefault();
+              window.postMessage(
+                {
+                  type: 'bsport:pass:add-to-cart:payment-pack',
+                  data: { payment_pack_id: Number(boton.dataset.paseBsport), uniqueWidgetId: ID },
+                },
+                window.location.origin,
+              );
+            }),
+          );
+        </script>
+      </>
+    )
+  }
 </Base>
 
 <style>

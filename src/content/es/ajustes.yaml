@@ -60,6 +60,13 @@ reservas:
   # Enlaces de bsport. Cada enlace solo aparece en la web cuando está relleno.
   # Reservar la primera sesión gratis (estado "abierto").
   primeraSesionUrl: ""
+  # Pase de la primera sesión gratis en bsport. Con el ID puesto, el botón «Reservar en
+  # la web» de la página de la primera sesión abre la compra de ese pase en la ventana
+  # de bsport, sin salir de la web. El ID está en la URL del pase en el backoffice
+  # (Productos > Pases). Vacío (null) = se usa primeraSesionUrl.
+  primeraSesionPase:
+    companyId: 6981
+    paseId: null
   # Ver horarios (aparece junto al horario, en Cómo funciona).
   horariosUrl: ""
   # Comprar membresías (aparece debajo de las tarjetas de precios).

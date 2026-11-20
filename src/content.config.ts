@@ -42,6 +42,11 @@ const ajustes = defineCollection({
     }),
     reservas: z.object({
       primeraSesionUrl: opcional,
+      // Pase de bsport de la primera sesión gratis: abre su compra en la ventana de bsport.
+      primeraSesionPase: z.object({
+        companyId: z.number().int().positive(),
+        paseId: z.number().int().positive().nullable(),
+      }),
       horariosUrl: opcional,
       membresiasUrl: opcional,
       appUrl: opcional,
