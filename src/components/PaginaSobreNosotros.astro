@@ -1,0 +1,339 @@
+---
+/*
+ * Página «Sobre nosotros»: qué es SUNNA, contado en frases cortas y datos sueltos.
+ * Está pensada para que se entienda de un vistazo y para que buscadores y asistentes de IA
+ * (ChatGPT, Claude, Perplexity, Gemini…) puedan citar a SUNNA con datos exactos:
+ *   1. Titular y una o dos frases: qué es SUNNA y dónde está.
+ *   2. SUNNA en datos: una lista de pares nombre → valor (dirección, reformers, clases, horario…).
+ *   3. Cómo lo hacemos: las ideas que distinguen a SUNNA.
+ *   4. Nuestra historia (solo si home.yaml → sobreNosotros.historia tiene texto).
+ *   5. Cierre con el botón principal y los espacios.
+ * Los textos viven en src/content/<idioma>/home.yaml → sobreNosotros; {horario} y {direccion}
+ * se cambian por los de ajustes.yaml.
+ */
+import { acentuar, sinAcento } from '../lib/acento';
+import Base from '../layouts/Base.astro';
+import CtaButton from './CtaButton.astro';
+import Explora from './secciones/Explora.astro';
+import { direccionCompleta, getSite, urlPagina, type Lang } from '../lib/content';
+import { conHorario } from '../lib/horario';
+
+interface Props {
+  lang: Lang;
+}
+const { lang } = Astro.props;
+const { ajustes, home } = await getSite(lang);
+const sn = home.sobreNosotros!;
+const rellenar = (t: string) => conHorario(t, ajustes, lang).replaceAll('{direccion}', direccionCompleta(ajustes));
+const datos = sn.datos.map((d) => ({ nombre: d.nombre, valor: rellenar(d.valor) })).filter((d) => d.valor.trim());
+const texto = rellenar(sn.texto);
+const preguntas = sn.preguntas
+  .map((p) => ({ pregunta: p.pregunta, respuesta: rellenar(p.respuesta) }))
+  .filter((p) => p.respuesta.trim());
+
+// Para buscadores y asistentes de IA: esta página habla del negocio descrito en Base.astro (#negocio),
+// con su equipo (si lo hay) y sus preguntas como FAQPage
+const url = Astro.site ? new URL(urlPagina(lang, 'sobre-nosotros'), Astro.site).href : undefined;
+const negocio = Astro.site ? { '@id': new URL('/#negocio', Astro.site).href } : undefined;
+const esquema = [
+  {
+    '@context': 'https://schema.org',
+    '@type': 'AboutPage',
+    name: sinAcento(sn.titulo),
+    description: texto,
+    inLanguage: lang,
+    ...(url ? { url } : {}),
+    ...(negocio ? { about: negocio } : {}),
+    ...(sn.equipo.length
+      ? {
+          mentions: sn.equipo.map((e) => ({
+            '@type': 'Person',
+            name: e.nombre,
+            jobTitle: e.cargo,
+            ...(e.enlace ? { sameAs: [e.enlace] } : {}),
+            ...(negocio ? { worksFor: negocio } : {}),
+          })),
+        }
+      : {}),
+  },
+  ...(preguntas.length
+    ? [
+        {
+          '@context': 'https://schema.org',
+          '@type': 'FAQPage',
+          inLanguage: lang,
+          mainEntity: preguntas.map((p) => ({
+            '@type': 'Question',
+            name: p.pregunta,
+            acceptedAnswer: { '@type': 'Answer', text: p.respuesta },
+          })),
+        },
+      ]
+    : []),
+];
+---
+
+<Base lang={lang} titulo={sn.titulo} descripcion={texto} pagina="sobre-nosotros" alternos esquema={esquema}>
+  <section class="inicio" aria-labelledby="inicio-titulo">
+    <div class="envoltura">
+      <h1 id="inicio-titulo" class="t-display inicio__titulo" set:html={acentuar(sn.titulo)} />
+      <p class="t-lead inicio__intro">{texto}</p>
+    </div>
+  </section>
+
+  <section id="datos" class="seccion" aria-labelledby="datos-titulo">
+    <div class="envoltura">
+      <h2 id="datos-titulo" class="t-h2 bloque__titulo" set:html={acentuar(sn.datosTitulo)} />
+      <dl class="datos">
+        {
+          datos.map((d) => (
+            <div class="datos__fila">
+              <dt class="etiqueta">{d.nombre}</dt>
+              <dd>{d.valor}</dd>
+            </div>
+          ))
+        }
+      </dl>
+    </div>
+  </section>
+
+  <section id="claves" class="claves seccion" aria-labelledby="claves-titulo">
+    <div class="envoltura">
+      <h2 id="claves-titulo" class="t-h2 bloque__titulo" set:html={acentuar(sn.clavesTitulo)} />
+      <ol role="list" class="claves__lista">
+        {
+          sn.claves.map((c, i) => (
+            <li class="clave">
+              <span class="clave__num" aria-hidden="true">
+                {i + 1}
+              </span>
+              <h3 class="clave__titulo">{c.titulo}</h3>
+              <p class="clave__texto">{rellenar(c.texto)}</p>
+            </li>
+          ))
+        }
+      </ol>
+    </div>
+  </section>
+
+  {
+    sn.equipo.length > 0 && (
+      <section id="equipo" class="seccion" aria-labelledby="equipo-titulo">
+        <div class="envoltura">
+          <h2 id="equipo-titulo" class="t-h2 bloque__titulo" set:html={acentuar(sn.equipoTitulo)} />
+          <ul role="list" class="equipo">
+            {sn.equipo.map((e) => (
+              <li class="persona">
+                <h3 class="clave__titulo">
+                  {e.enlace ? (
+                    <a href={e.enlace} target="_blank" rel="noopener me">
+                      {e.nombre}
+                    </a>
+                  ) : (
+                    e.nombre
+                  )}
+                </h3>
+                <p class="etiqueta persona__cargo">{e.cargo}</p>
+                {e.texto && <p class="clave__texto">{e.texto}</p>}
+              </li>
+            ))}
+          </ul>
+        </div>
+      </section>
+    )
+  }
+
+  {
+    sn.historia.trim() && (
+      <section id="historia" class="seccion" aria-labelledby="historia-titulo">
+        <div class="envoltura">
+          <h2 id="historia-titulo" class="t-h2 bloque__titulo" set:html={acentuar(sn.historiaTitulo)} />
+          {sn.historia
+            .split(/\n\s*\n/)
+            .filter((p) => p.trim())
+            .map((p) => (
+              <p class="historia__parrafo">{rellenar(p.trim())}</p>
+            ))}
+        </div>
+      </section>
+    )
+  }
+
+  {
+    preguntas.length > 0 && (
+      <section id="preguntas" class="seccion" aria-labelledby="preguntas-titulo">
+        <div class="envoltura">
+          <h2 id="preguntas-titulo" class="t-h2 bloque__titulo" set:html={acentuar(sn.preguntasTitulo)} />
+          <div class="preguntas">
+            {preguntas.map((p) => (
+              <div class="pregunta">
+                <h3 class="clave__titulo">{p.pregunta}</h3>
+                <p class="clave__texto">{p.respuesta}</p>
+              </div>
+            ))}
+          </div>
+        </div>
+      </section>
+    )
+  }
+
+  <section id="cierre" class="cierre seccion" aria-labelledby="cierre-titulo">
+    <div class="envoltura cierre__panel">
+      <div>
+        <h2 id="cierre-titulo" class="t-h2" set:html={acentuar(sn.cierreTitulo)} />
+        {sn.cierreTexto && <p class="t-lead cierre__texto">{rellenar(sn.cierreTexto)}</p>}
+      </div>
+      <CtaButton ajustes={ajustes} home={home} />
+    </div>
+  </section>
+
+  <Explora home={home} />
+</Base>
+
+<style>
+  .inicio {
+    padding: var(--pagina-arriba) 0 0;
+    background: var(--crema);
+  }
+
+  .inicio__titulo {
+    text-wrap: balance;
+  }
+
+  .inicio__intro {
+    max-width: 46ch;
+    margin-top: 1rem;
+    color: var(--tinta-60);
+  }
+
+  .bloque__titulo {
+    margin-bottom: clamp(1.5rem, 1rem + 2vw, 2.25rem);
+    text-wrap: balance;
+  }
+
+  /* ───────── SUNNA en datos: pares nombre → valor ───────── */
+  .datos {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    column-gap: clamp(2rem, 1rem + 4vw, 5rem);
+    border-top: 1px solid var(--linea);
+  }
+
+  .datos__fila {
+    display: grid;
+    grid-template-columns: minmax(7.5rem, 0.6fr) minmax(0, 1fr);
+    gap: 0.25rem 1.25rem;
+    padding: 1rem 0;
+    border-bottom: 1px solid var(--linea);
+  }
+
+  .datos dt {
+    padding-top: 0.2rem;
+  }
+
+  .datos dd {
+    margin: 0;
+    font-size: 1.0625rem;
+    line-height: 1.5;
+  }
+
+  /* ───────── Cómo lo hacemos ───────── */
+  .claves {
+    background: var(--n100);
+  }
+
+  .claves__lista {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(14rem, 1fr));
+    gap: 2rem clamp(1.5rem, 1rem + 2vw, 2.5rem);
+  }
+
+  .clave__num {
+    display: grid;
+    place-items: center;
+    width: 2.25rem;
+    height: 2.25rem;
+    margin-bottom: 1rem;
+    border-radius: 50%;
+    background: var(--crema);
+    font-size: 0.9375rem;
+    font-variant-numeric: tabular-nums;
+  }
+
+  .clave__titulo {
+    font-size: 1.25rem;
+    line-height: 1.25;
+    letter-spacing: -0.01em;
+    font-weight: 400;
+  }
+
+  .clave__texto {
+    margin-top: 0.375rem;
+    font-size: 1rem;
+    line-height: 1.5;
+    color: var(--tinta-60);
+  }
+
+  /* ───────── Equipo y preguntas ───────── */
+  .equipo,
+  .preguntas {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(16rem, 1fr));
+    gap: 2rem clamp(1.5rem, 1rem + 2vw, 2.5rem);
+  }
+
+  .persona__cargo {
+    margin-top: 0.25rem;
+  }
+
+  .persona a {
+    color: inherit;
+  }
+
+  .pregunta {
+    padding-top: 1rem;
+    border-top: 1px solid var(--linea);
+  }
+
+  /* ───────── Nuestra historia ───────── */
+  .historia__parrafo {
+    max-width: 60ch;
+    font-size: 1.0625rem;
+    line-height: 1.6;
+  }
+
+  .historia__parrafo + .historia__parrafo {
+    margin-top: 1rem;
+  }
+
+  /* ───────── Cierre ───────── */
+  .cierre__panel {
+    display: grid;
+    grid-template-columns: minmax(0, 1fr) auto;
+    gap: 2rem clamp(2rem, 1rem + 4vw, 5rem);
+    align-items: end;
+  }
+
+  .cierre__texto {
+    max-width: 40ch;
+    margin-top: 1rem;
+    color: var(--tinta-60);
+  }
+
+  @media (max-width: 56.25rem) {
+    .datos {
+      grid-template-columns: 1fr;
+    }
+
+    .cierre__panel {
+      grid-template-columns: 1fr;
+      align-items: start;
+    }
+  }
+
+  @media (max-width: 30rem) {
+    .datos__fila {
+      grid-template-columns: 1fr;
+    }
+  }
+</style>

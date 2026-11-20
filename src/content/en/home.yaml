@@ -45,6 +45,8 @@ menu:
         descripcion: "An infrared sauna, gentler than a traditional one."
   - texto: "Pricing"
     pagina: "precios"
+  - texto: "About us"
+    pagina: "sobre-nosotros"
 
 botones:
   principal:
@@ -120,6 +122,74 @@ primeraSesion:
   web: "Book on the web"
   whatsapp: "Book on WhatsApp"
   whatsappMensaje: "Hi, I'd like to book my free first session at SUNNA Pilates."
+
+# SOBRE NOSOTROS (página propia). Qué es SUNNA en datos cortos: lo leen también Google y
+# los asistentes de IA (ChatGPT, Claude, Perplexity…). {direccion} y {horario} se rellenan solos.
+sobreNosotros:
+  titulo: "About *SUNNA*"
+  texto: "SUNNA is a semi-autonomous Pilates Reformer studio in Santa Cruz de Tenerife: 6 reformers, one person per machine, video-guided classes on an iPad at each reformer and access with your phone."
+  datosTitulo: "SUNNA at a glance"
+  datos:
+    - nombre: "What it is"
+      valor: "A semi-autonomous Pilates Reformer studio, with an infrared sauna and a red light room."
+    - nombre: "Where"
+      valor: "{direccion}."
+    - nombre: "Reformers"
+      valor: "6 reformers, one person per machine."
+    - nombre: "Classes"
+      valor: "Video-guided on the iPad at each reformer: Full Body, Legs, Arms, Core, Mobility and Stretching, from 10 to 45 minutes."
+    - nombre: "Languages"
+      valor: "Spanish, English, German and French, with bluetooth headphones at each reformer."
+    - nombre: "Opening hours"
+      valor: "{horario}."
+    - nombre: "Access"
+      valor: "With your phone: the door opens with your booking. No keys, no reception."
+    - nombre: "First session"
+      valor: "Free: 45 minutes with the SUNNA team before you train on your own."
+    - nombre: "Memberships"
+      valor: "Four monthly memberships, from €55 a month."
+    - nombre: "Safety"
+      valor: "Only people with a booking can enter, with cameras, a help phone and WhatsApp."
+    - nombre: "Minimum age"
+      valor: "18 to train on your own."
+  clavesTitulo: "How we do it"
+  claves:
+    - titulo: "You never start alone"
+      texto: "Your first session is free and with us: we show you the reformer, the app, how to get in and how to choose your class."
+    - titulo: "A guided class on your reformer"
+      texto: "An iPad at every machine with classes from 10 to 45 min. The video guides you step by step and you can pause."
+    - titulo: "You choose the time"
+      texto: "Book in the app, no fixed group schedules. For that hour, the reformer is yours."
+    - titulo: "No permanent instructor in the room"
+      texto: "That's why the studio can open so many hours. At first there will always be someone from SUNNA; after that, only people with a booking can enter."
+  # PENDIENTE (SUNNA): quién está detrás. Una entrada por persona; mientras esté vacío, no se ve.
+  #   - nombre: "Nombre Apellido"
+  #     cargo: "Fundadora · Instructora de Pilates certificada"
+  #     texto: "Una o dos frases sobre su experiencia."
+  #     enlace: "https://www.linkedin.com/in/..."
+  equipoTitulo: "The team"
+  equipo: []
+  # PENDIENTE (SUNNA): años en el sector, de dónde nace SUNNA… Vacío = no se ve.
+  # Párrafos separados por una línea en blanco.
+  historiaTitulo: "Our story"
+  historia: ""
+  preguntasTitulo: "What people ask us most"
+  preguntas:
+    - pregunta: "Where can I do reformer Pilates in Santa Cruz de Tenerife?"
+      respuesta: "At SUNNA, {direccion}. You book your reformer in the app and train with a class guided on screen, at your own pace."
+    - pregunta: "Can I try reformer Pilates for free in Tenerife?"
+      respuesta: "Yes. At SUNNA your first session is free: 45 minutes with us to show you the reformer, the app, how to get in and how to choose your class."
+    - pregunta: "Are there reformer Pilates classes in English, German or French in Tenerife?"
+      respuesta: "Yes. At SUNNA classes are in Spanish, English, German and French, with bluetooth headphones at each reformer. The largest catalogue is in English."
+    - pregunta: "Do I need experience to do reformer Pilates?"
+      respuesta: "No. The first session is designed for complete beginners, and the reformer's springs adjust to you."
+    - pregunta: "How much does reformer Pilates cost at SUNNA?"
+      respuesta: "There are four monthly memberships, from €55 a month. With Premium it works out from €3 per session."
+    - pregunta: "When can I go?"
+      respuesta: "{horario}. You book the time that suits you, with no group schedules."
+  cierreTitulo: "Your first session is *free*."
+  cierreTexto: "Book it and we'll show you everything."
+
 
 # 3 · CÓMO FUNCIONA
 comoFunciona:

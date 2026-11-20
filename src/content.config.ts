@@ -101,13 +101,13 @@ const home = defineCollection({
       menu: z.array(
         z.object({
           texto,
-          pagina: z.enum(['primera-sesion', 'precios', 'reformer', 'luz-roja', 'sauna']).optional(),
+          pagina: z.enum(['primera-sesion', 'precios', 'reformer', 'luz-roja', 'sauna', 'sobre-nosotros']).optional(),
           ancla: opcional,
           submenu: z
             .array(
               z.object({
                 texto,
-                pagina: z.enum(['primera-sesion', 'precios', 'reformer', 'luz-roja', 'sauna']),
+                pagina: z.enum(['primera-sesion', 'precios', 'reformer', 'luz-roja', 'sauna', 'sobre-nosotros']),
                 // Una línea bajo el nombre, en el desplegable del escritorio.
                 descripcion: opcional,
               }),
@@ -170,6 +170,36 @@ const home = defineCollection({
           web: texto,
           whatsapp: texto,
           whatsappMensaje: texto,
+        })
+        .optional(),
+      // Página «Sobre nosotros»: qué es SUNNA, en datos cortos y fáciles de citar (también para
+      // buscadores y asistentes de IA). En los textos, {horario} y {direccion} se cambian solos.
+      sobreNosotros: z
+        .object({
+          titulo: texto,
+          // Una o dos frases: qué es SUNNA y dónde está. Es también la descripción para buscadores.
+          texto,
+          datosTitulo: texto,
+          datos: z.array(z.object({ nombre: texto, valor: texto })),
+          // Metodología: cómo funciona SUNNA, en pocas ideas.
+          clavesTitulo: texto,
+          claves: z.array(z.object({ titulo: texto, texto })),
+          // Equipo: quién está detrás. Sin personas, el bloque no se muestra.
+          // enlace: LinkedIn o Instagram de la persona (opcional).
+          equipoTitulo: opcional,
+          equipo: z
+            .array(z.object({ nombre: texto, cargo: texto, texto: opcional, enlace: opcional }))
+            .default([]),
+          // Historia: años en el sector, de dónde viene SUNNA… Vacía (""): no se muestra.
+          // Párrafos separados por una línea en blanco.
+          historiaTitulo: opcional,
+          historia: opcional,
+          // Preguntas como se las haría alguien a un buscador o a una IA, con respuesta corta.
+          // Una pregunta con la respuesta vacía no se muestra.
+          preguntasTitulo: opcional,
+          preguntas: z.array(z.object({ pregunta: texto, respuesta: opcional })).default([]),
+          cierreTitulo: texto,
+          cierreTexto: opcional,
         })
         .optional(),
       comoFunciona: z.object({

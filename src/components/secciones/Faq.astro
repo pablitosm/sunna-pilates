@@ -23,7 +23,19 @@ const grupos = faq.grupos
       .filter((p) => p.respuesta.trim()),
   }))
   .filter((g) => g.preguntas.length);
+
+// Las mismas preguntas como FAQPage (schema.org), para buscadores y asistentes de IA
+const esquemaFaq = {
+  '@context': 'https://schema.org',
+  '@type': 'FAQPage',
+  inLanguage: lang,
+  mainEntity: grupos.flatMap((g) =>
+    g.preguntas.map((p) => ({ '@type': 'Question', name: p.pregunta, acceptedAnswer: { '@type': 'Answer', text: p.respuesta } })),
+  ),
+};
 ---
+
+<script type="application/ld+json" set:html={JSON.stringify(esquemaFaq).replace(/</g, '\\u003c')} />
 
 <section id="preguntas" class="faq seccion" aria-labelledby="faq-titulo" data-faq>
   <div class="envoltura faq__rejilla">

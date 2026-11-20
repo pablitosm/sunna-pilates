@@ -1,4 +1,45 @@
+# SUNNA Pilates · estudio de Pilates Reformer en Santa Cruz de Tenerife
+# Buscadores y asistentes de IA son bienvenidos: queremos que nos encuentren y nos citen.
+# Resumen para modelos de lenguaje: https://sunnapilates.es/llms.txt
+
+# Buscadores
+User-agent: Googlebot
+User-agent: Bingbot
+User-agent: Applebot
+User-agent: DuckDuckBot
+User-agent: YandexBot
+Allow: /
+Disallow: /login
+Disallow: /api/
+
+# Asistentes y buscadores de IA (ChatGPT, Claude, Perplexity, Gemini, Copilot, Meta AI, Mistral…)
+User-agent: GPTBot
+User-agent: OAI-SearchBot
+User-agent: ChatGPT-User
+User-agent: ClaudeBot
+User-agent: Claude-SearchBot
+User-agent: Claude-User
+User-agent: anthropic-ai
+User-agent: PerplexityBot
+User-agent: Perplexity-User
+User-agent: Google-Extended
+User-agent: Applebot-Extended
+User-agent: Meta-ExternalAgent
+User-agent: Meta-ExternalFetcher
+User-agent: Amazonbot
+User-agent: DuckAssistBot
+User-agent: MistralAI-User
+User-agent: cohere-ai
+User-agent: YouBot
+User-agent: CCBot
+Allow: /
+Disallow: /login
+Disallow: /api/
+
+# Resto
 User-agent: *
 Allow: /
+Disallow: /login
+Disallow: /api/
 
 Sitemap: https://sunnapilates.es/sitemap-index.xml
