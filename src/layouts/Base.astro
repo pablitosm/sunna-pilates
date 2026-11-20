@@ -10,7 +10,8 @@ import { sinAcento } from '../lib/acento';
 // Las dos letras de los títulos, precargadas: llegan antes de pintar y el texto no salta al cambiar de letra
 import fuenteTexto from '@fontsource-variable/dm-sans/files/dm-sans-latin-opsz-normal.woff2?url';
 import fuenteAcento from '@fontsource/ephesis/files/ephesis-latin-400-normal.woff2?url';
-import { colorTema, getSite, idiomas, localeOg, mapsUrl, urlLegal, urlPagina, whatsappUrl, type Lang, type Pagina, type PaginaLegal } from '../lib/content';
+import { tramosHorario } from '../lib/horario';
+import { colorTema, getSite, nombresIdioma, idiomas, localeOg, mapsUrl, urlLegal, urlPagina, whatsappUrl, type Lang, type Pagina, type PaginaLegal } from '../lib/content';
 
 interface Props {
   titulo?: string;
@@ -25,8 +26,10 @@ interface Props {
   legal?: PaginaLegal;
   /** Sin la barra fija del móvil (la página ya tiene sus propios botones de reservar). */
   sinBarraMovil?: boolean;
+  /** Datos estructurados propios de la página (schema.org), además de los del negocio. */
+  esquema?: object | object[];
 }
-const { titulo, descripcion, lang = 'es', indexar = true, alternos = false, pagina, legal, sinBarraMovil = false } = Astro.props;
+const { titulo, descripcion, lang = 'es', indexar = true, alternos = false, pagina, legal, sinBarraMovil = false, esquema } = Astro.props;
 const { ajustes, home } = await getSite(lang);
 
 // Página para la analítica: igual en los 4 idiomas (inicio, precios, sauna…); legales y 404 son «otra»
@@ -37,13 +40,18 @@ const canonical = Astro.site ? new URL(Astro.url.pathname, Astro.site).href : un
 const wa = whatsappUrl(ajustes.contacto.whatsapp, home.ui.whatsappMensaje);
 const hayMedicion = Boolean(ajustes.medicion.googleAnalyticsId || ajustes.medicion.metaPixelId);
 
-// Datos estructurados de negocio local (SEO local).
+// Datos estructurados de negocio local (SEO local y asistentes de IA). Todo sale de ajustes.yaml
+// y de home.yaml: horario, dirección, coordenadas del estudio, idiomas de las clases y precios.
+const precios = home.precios.membresias.map((m) => m.precio);
+const absoluta = (ruta: string) => (Astro.site ? new URL(ruta, Astro.site).href : undefined);
 const negocio = {
   '@context': 'https://schema.org',
-  '@type': 'ExerciseGym',
+  '@type': ['ExerciseGym', 'HealthClub'],
+  ...(Astro.site ? { '@id': new URL('/#negocio', Astro.site).href, url: Astro.site.href } : {}),
   name: 'SUNNA Pilates',
+  alternateName: 'SUNNA',
   description: home.seo.descripcion,
-  ...(Astro.site ? { url: Astro.site.href } : {}),
+  ...(absoluta('/favicon.svg') ? { logo: absoluta('/favicon.svg'), image: absoluta('/favicon.svg') } : {}),
   address: {
     '@type': 'PostalAddress',
     streetAddress: ajustes.direccion.calle,
@@ -52,11 +60,38 @@ const negocio = {
     addressRegion: ajustes.direccion.provincia,
     addressCountry: ajustes.direccion.pais,
   },
+  // El punto del estudio en el mapa (scripts/mapa-estudio.mjs → PIN)
+  geo: { '@type': 'GeoCoordinates', latitude: 28.47075, longitude: -16.24915 },
+  areaServed: [
+    { '@type': 'City', name: ajustes.direccion.ciudad },
+    { '@type': 'Place', name: 'Tenerife' },
+  ],
   hasMap: mapsUrl(ajustes),
-  ...(ajustes.contacto.telefonoAyuda ? { telephone: ajustes.contacto.telefonoAyuda } : {}),
+  openingHoursSpecification: tramosHorario(ajustes).map(([opens, closes]) => ({
+    '@type': 'OpeningHoursSpecification',
+    dayOfWeek: ['Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday', 'Sunday'],
+    opens,
+    closes,
+  })),
+  ...(precios.length ? { priceRange: `${Math.min(...precios)}–${Math.max(...precios)} € / mes`, currenciesAccepted: 'EUR' } : {}),
+  knowsLanguage: idiomas.map((l) => nombresIdioma[l]),
+  availableLanguage: idiomas,
+  amenityFeature: home.recovery.apartados.map((a) => ({ '@type': 'LocationFeatureSpecification', name: a.titulo, value: true })),
+  makesOffer: home.precios.membresias.map((m) => ({
+    '@type': 'Offer',
+    name: `${m.nombre} · ${m.pilates}`,
+    price: m.precio,
+    priceCurrency: 'EUR',
+    ...(absoluta(urlPagina(lang, 'precios')) ? { url: absoluta(urlPagina(lang, 'precios')) } : {}),
+  })),
+  ...(ajustes.contacto.telefonoAyuda || ajustes.contacto.whatsapp
+    ? { telephone: ajustes.contacto.telefonoAyuda || ajustes.contacto.whatsapp }
+    : {}),
   ...(ajustes.contacto.email ? { email: ajustes.contacto.email } : {}),
   sameAs: [ajustes.contacto.instagram, ajustes.contacto.googleBusiness].filter(Boolean),
 };
+const esquemas = [negocio, ...(esquema ? [esquema].flat() : [])];
+const json = (o: object) => JSON.stringify(o).replace(/</g, '\\u003c');
 ---
 
 <!doctype html>
@@ -95,7 +130,7 @@ const negocio = {
     {canonical && <meta property="og:url" content={canonical} />}
     <meta name="geo.region" content="ES-TF" />
     <meta name="geo.placename" content={ajustes.direccion.ciudad} />
-    <script type="application/ld+json" set:html={JSON.stringify(negocio).replace(/</g, '\\u003c')} />
+    {esquemas.map((e) => <script type="application/ld+json" set:html={json(e)} />)}
   </head>
   <body>
     <a class="saltar" href="#contenido">{home.ui.saltar}</a>

@@ -15,7 +15,7 @@
 #    3. Si el primero es otro (italiano, neerlandés…): castellano si su lista incluye
 #       es/ca/gl/eu; si no, el primero de en/de/fr que aparezca; si ninguno, inglés.
 #    4. Sin cabecera de idioma → castellano.
-#  Los buscadores nunca se redirigen (así Google indexa la portada en castellano).
+#  Los buscadores y los asistentes de IA (ChatGPT, Claude, Perplexity…) nunca se redirigen.
 # ─────────────────────────────────────────────────────────────
 
 map "{cookie.sunna-idioma}|{header.Accept-Language}" {idioma_destino} {
@@ -35,7 +35,7 @@ map "{cookie.sunna-idioma}|{header.Accept-Language}" {idioma_destino} {
 @idioma_redirigir {
 	path /
 	method GET HEAD
-	not header_regexp User-Agent (?i)(bot|crawl|spider|slurp|lighthouse|preview|facebookexternalhit|whatsapp)
+	not header_regexp User-Agent (?i)(bot|crawl|spider|slurp|lighthouse|preview|facebookexternalhit|whatsapp|gpt|openai|claude|anthropic|perplexity|google-extended|meta-external|mistral|cohere|duckassist)
 	vars {idioma_destino} en de fr
 }
 redir @idioma_redirigir /{idioma_destino}/{http.request.uri.prefixed_query} 302
