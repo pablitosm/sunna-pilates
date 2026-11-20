@@ -5,8 +5,8 @@
  *   1. Arriba, el titular en una línea y la frase que lo resume.
  *   2. Los pasos en fila, cada uno con su número y una flecha al siguiente,
  *      su recorte, su título y su texto. En móvil se deslizan de lado. Acaba en el cierre.
- *   3. Después, y no antes, reservarla: la web de bsport (cuando haya enlace), WhatsApp con
- *      un mensaje ya escrito y la app.
+ *   3. Después, y no antes, reservarla: el pase de bsport en la web y la app
+ *      (el WhatsApp queda en el pie).
  *   4. Las dudas en una línea.
  */
 import { acentuar } from '../lib/acento';
@@ -15,7 +15,7 @@ import DibujoRazon from './DibujoRazon.astro';
 import Icon from './Icon.astro';
 import TiendasApp from './TiendasApp.astro';
 import Dudas from './secciones/Dudas.astro';
-import { getSite, whatsappUrl, type Lang } from '../lib/content';
+import { getSite, type Lang } from '../lib/content';
 
 interface Props {
   lang: Lang;
@@ -30,7 +30,6 @@ const pase = ajustes.reservas.primeraSesionPase ?? { companyId: 0, paseId: null 
 const web = pase.paseId
   ? `https://backoffice.bsport.io/customer/payment/pass/${pase.paseId}`
   : ajustes.reservas.primeraSesionUrl;
-const wa = whatsappUrl(ajustes.reservas.primeraSesionWhatsapp || ajustes.contacto.whatsapp, ps.whatsappMensaje);
 const dibujos = ['reformer', 'entrada', 'pantalla', 'entreno'] as const;
 
 const pasos = ps.incluye.map((p, i) => ({ ...p, dibujo: dibujos[i % dibujos.length] }));
@@ -99,14 +98,6 @@ const pasos = ps.incluye.map((p, i) => ({ ...p, dibujo: dibujos[i % dibujos.leng
                 >
                   {ps.web}
                   <Icon name="flecha" size={20} />
-                </a>
-              )
-            }
-            {
-              wa && (
-                <a class:list={['boton', web ? 'boton--secundario' : 'boton-sol']} href={wa} target="_blank" rel="noopener">
-                  <Icon name="whatsapp" size={20} />
-                  {ps.whatsapp}
                 </a>
               )
             }
@@ -344,19 +335,7 @@ const pasos = ps.incluye.map((p, i) => ({ ...p, dibujo: dibujos[i % dibujos.leng
     text-decoration: none;
   }
 
-  /* El principal (reservar) es un .boton-sol, con su color y su animación en global.css */
-  .boton--secundario {
-    background: var(--crema);
-    color: var(--tinta);
-    box-shadow: inset 0 0 0 1px var(--n200);
-    transition:
-      background-color 0.3s var(--ease),
-      transform 0.3s var(--ease);
-  }
-
-  .boton--secundario:hover {
-    background: var(--n50);
-  }
+  /* El botón de reservar es un .boton-sol, con su color y su animación en global.css */
 
   .boton:active {
     transform: translateY(1px);

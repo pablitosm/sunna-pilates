@@ -48,7 +48,7 @@ direccion:
 contacto:
   # WhatsApp: botón flotante, pie, menú del móvil y panel de reserva.
   # Número con prefijo; espacios y "+" dan igual. Vacío ("") = no aparece en la web.
-  whatsapp: "+34 675 04 94 60"
+  whatsapp: "+34 746 05 45 03"
   # PENDIENTE: teléfono de ayuda, tal cual quieras que se vea, p. ej. "+34 600 111 222".
   telefonoAyuda: ""
   email: "info@sunnapilates.es"
@@ -67,9 +67,6 @@ reservas:
   primeraSesionPase:
     companyId: 6981
     paseId: 820366
-  # WhatsApp del botón «Reservar por WhatsApp» de la página de la primera sesión.
-  # Vacío ("") = se usa el WhatsApp general de contacto.
-  primeraSesionWhatsapp: "+34 746 05 45 03"
   # Ver horarios (aparece junto al horario, en Cómo funciona).
   horariosUrl: ""
   # Comprar membresías (aparece debajo de las tarjetas de precios).

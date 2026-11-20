@@ -47,8 +47,6 @@ const ajustes = defineCollection({
         companyId: z.number().int().positive(),
         paseId: z.number().int().positive().nullable(),
       }),
-      // WhatsApp del botón de reservar en la página de la primera sesión. Vacío: el general.
-      primeraSesionWhatsapp: opcional,
       horariosUrl: opcional,
       membresiasUrl: opcional,
       appUrl: opcional,
