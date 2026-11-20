@@ -280,7 +280,7 @@ precios:
       sauna: 0
       precioSesion: "13,75 €"
       pilates: "4 sesiones al mes"
-      pilatesSemana: "1 por semana"
+      pilatesSemana: "1 sesión por semana"
       recovery: "1 luz roja a la semana"
     - nombre: "Standard"
       precio: 100
@@ -288,7 +288,7 @@ precios:
       sauna: 1
       precioSesion: "12,50 €"
       pilates: "8 sesiones al mes"
-      pilatesSemana: "2 por semana"
+      pilatesSemana: "2 sesiones por semana"
       recovery: "2 luz roja + 1 sauna a la semana"
     - nombre: "Pro"
       precio: 140
@@ -296,7 +296,7 @@ precios:
       sauna: 2
       precioSesion: "11,67 €"
       pilates: "12 sesiones al mes"
-      pilatesSemana: "3 por semana"
+      pilatesSemana: "3 sesiones por semana"
       recovery: "3 luz roja + 2 sauna a la semana"
     - nombre: "Premium"
       precio: 180
@@ -305,7 +305,7 @@ precios:
       # 180 € entre 60 sesiones al mes, el máximo reservable.
       precioSesion: "3 €"
       pilates: "Ilimitado"
-      pilatesSemana: "Según disponibilidad"
+      pilatesSemana: "Ilimitado, según disponibilidad"
       recovery: "Recovery ilimitado con reserva"
       extra: "Prioridad en reservas"
       destacada: true

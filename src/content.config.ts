@@ -261,7 +261,7 @@ const home = defineCollection({
             precio: z.number(),
             precioSesion: texto,
             pilates: texto,
-            // Equivalencia semanal, en pequeño bajo las sesiones al mes.
+            // Sesiones a la semana: es lo que se ve en la tarjeta (sin ella, se ve «pilates»).
             pilatesSemana: opcional,
             recovery: texto,
             extra: opcional,
