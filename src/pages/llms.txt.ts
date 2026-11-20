@@ -18,7 +18,7 @@ export const GET: APIRoute = async ({ site }) => {
   const paginas: [Pagina | undefined, string][] = [
     [undefined, 'Inicio: qué es SUNNA, cómo funciona, horario y preguntas frecuentes'],
     ['sobre-nosotros', 'Sobre nosotros: SUNNA en datos'],
-    ['primera-sesion', 'Primera sesión gratis (45 minutos)'],
+    ['primera-sesion', 'Primera sesión gratis'],
     ['precios', 'Precios y membresías'],
     ['reformer', 'El reformer y las clases'],
     ['sauna', 'Sauna de infrarrojos'],
