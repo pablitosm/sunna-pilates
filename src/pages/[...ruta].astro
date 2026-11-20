@@ -1,12 +1,11 @@
 ---
 /*
- * Páginas propias en los cuatro idiomas: la primera sesión gratis, los precios, sobre nosotros,
+ * Páginas propias en los cuatro idiomas: la primera sesión gratis, los precios,
  * cada espacio (reformer, luz roja, sauna) y las páginas legales. Las direcciones de
  * cada idioma están en src/lib/content.ts → rutas y rutasLegales.
  */
 import Base from '../layouts/Base.astro';
 import PaginaPrimeraSesion from '../components/PaginaPrimeraSesion.astro';
-import PaginaSobreNosotros from '../components/PaginaSobreNosotros.astro';
 import Recovery from '../components/secciones/Recovery.astro';
 import Clases from '../components/secciones/Clases.astro';
 import Precios from '../components/secciones/Precios.astro';
@@ -34,8 +33,6 @@ const apartado = espacio ? home.recovery.apartados.find((a) => a.tipo === espaci
     <PaginaLegal lang={lang} legal={legal} />
   ) : pagina === 'primera-sesion' ? (
     <PaginaPrimeraSesion lang={lang} />
-  ) : pagina === 'sobre-nosotros' ? (
-    <PaginaSobreNosotros lang={lang} />
   ) : pagina === 'precios' ? (
     <Base lang={lang} titulo={home.precios.titulo} descripcion={home.explora?.precios.texto} pagina="precios" alternos>
       <Precios ajustes={ajustes} home={home} pagina />

@@ -14,16 +14,16 @@ export const nombresIdioma: Record<Lang, string> = {
 /** Portada de cada idioma: castellano en la raíz, el resto en /en/, /de/, /fr/. */
 export const raizIdioma = (lang: Lang) => (lang === 'es' ? '/' : `/${lang}/`);
 
-/** Páginas propias además de la portada: la primera sesión, los precios, cada espacio y sobre nosotros. */
-export const paginas = ['primera-sesion', 'precios', 'reformer', 'luz-roja', 'sauna', 'sobre-nosotros'] as const;
+/** Páginas propias además de la portada: la primera sesión, los precios y cada espacio. */
+export const paginas = ['primera-sesion', 'precios', 'reformer', 'luz-roja', 'sauna'] as const;
 export type Pagina = (typeof paginas)[number];
 
 /** Dirección de cada página en cada idioma (sin el prefijo del idioma). */
 export const rutas: Record<Lang, Record<Pagina, string>> = {
-  es: { 'primera-sesion': 'primera-sesion', precios: 'precios', reformer: 'reformer', 'luz-roja': 'luz-roja', sauna: 'sauna', 'sobre-nosotros': 'sobre-nosotros' },
-  en: { 'primera-sesion': 'first-session', precios: 'pricing', reformer: 'reformer', 'luz-roja': 'red-light', sauna: 'sauna', 'sobre-nosotros': 'about' },
-  de: { 'primera-sesion': 'erste-session', precios: 'preise', reformer: 'reformer', 'luz-roja': 'rotlicht', sauna: 'sauna', 'sobre-nosotros': 'ueber-uns' },
-  fr: { 'primera-sesion': 'premiere-seance', precios: 'tarifs', reformer: 'reformer', 'luz-roja': 'lumiere-rouge', sauna: 'sauna', 'sobre-nosotros': 'a-propos' },
+  es: { 'primera-sesion': 'primera-sesion', precios: 'precios', reformer: 'reformer', 'luz-roja': 'luz-roja', sauna: 'sauna' },
+  en: { 'primera-sesion': 'first-session', precios: 'pricing', reformer: 'reformer', 'luz-roja': 'red-light', sauna: 'sauna' },
+  de: { 'primera-sesion': 'erste-session', precios: 'preise', reformer: 'reformer', 'luz-roja': 'rotlicht', sauna: 'sauna' },
+  fr: { 'primera-sesion': 'premiere-seance', precios: 'tarifs', reformer: 'reformer', 'luz-roja': 'lumiere-rouge', sauna: 'sauna' },
 };
 
 /** Páginas legales, en los cuatro idiomas (src/content/<idioma>/legal/<clave>.md). */

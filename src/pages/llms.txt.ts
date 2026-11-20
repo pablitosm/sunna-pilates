@@ -11,13 +11,10 @@ import { conHorario } from '../lib/horario';
 export const GET: APIRoute = async ({ site }) => {
   const { ajustes, home } = await getSite('es');
   const url = (ruta: string) => (site ? new URL(ruta, site).href : ruta);
-  const rellenar = (t: string) => conHorario(t, ajustes, 'es').replaceAll('{direccion}', direccionCompleta(ajustes));
-  const sn = home.sobreNosotros;
   const wa = whatsappUrl(ajustes.contacto.whatsapp);
 
   const paginas: [Pagina | undefined, string][] = [
     [undefined, 'Inicio: qué es SUNNA, cómo funciona, horario y preguntas frecuentes'],
-    ['sobre-nosotros', 'Sobre nosotros: SUNNA en datos'],
     ['primera-sesion', 'Primera sesión gratis'],
     ['precios', 'Precios y membresías'],
     ['reformer', 'El reformer y las clases'],
@@ -34,13 +31,15 @@ export const GET: APIRoute = async ({ site }) => {
   const lineas = [
     '# SUNNA Pilates',
     '',
-    `> ${sn ? rellenar(sn.texto) : home.seo.descripcion}`,
+    `> ${home.seo.descripcion}`,
     '',
-    `Estudio de Pilates Reformer en ${ajustes.direccion.ciudad} (Tenerife, Islas Canarias, España). ${home.seo.descripcion}`,
+    `Estudio de Pilates Reformer en ${ajustes.direccion.ciudad} (Tenerife, Islas Canarias, España).`,
     '',
     '## Datos',
     '',
-    ...(sn ? sn.datos.map((d) => `- **${d.nombre}:** ${rellenar(d.valor)}`) : []),
+    `- **Dónde:** ${direccionCompleta(ajustes)}.`,
+    ...home.recovery.apartados.map((a) => `- **${a.titulo}:** ${a.texto}`),
+    `- **Idiomas de las clases:** ${home.clases.idiomas.join(', ')}. ${home.clases.idiomasTexto}`,
     `- **Tipos de clase:** ${home.clases.tipos.join(', ')}.`,
     `- **Precios:** ${home.precios.membresias.map((m) => `${m.nombre} ${m.precio} €/mes (${m.pilates}; ${m.recovery})`).join(' · ')}.`,
     `- **Idiomas de la web:** ${idiomas.map((l) => `${nombresIdioma[l]} (${url(urlPagina(l))})`).join(', ')}.`,
@@ -59,8 +58,7 @@ export const GET: APIRoute = async ({ site }) => {
     '',
     '## Preguntas frecuentes',
     '',
-    ...[...(sn?.preguntas ?? []).map((p) => ({ pregunta: p.pregunta, respuesta: rellenar(p.respuesta) })), ...faq]
-      .filter((p) => p.respuesta.trim())
+    ...faq
       .flatMap((p) => [`### ${sinAcento(p.pregunta)}`, '', p.respuesta, '']),
   ];
 

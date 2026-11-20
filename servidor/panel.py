@@ -434,7 +434,7 @@ APARTADOS = {
 }
 PAGINAS = {
     "inicio": "Inicio", "precios": "Precios", "primera-sesion": "Primera sesión", "reformer": "Reformer",
-    "sauna": "Sauna", "luz-roja": "Luz roja", "sobre-nosotros": "Sobre nosotros", "otra": "Otras (legales, 404)",
+    "sauna": "Sauna", "luz-roja": "Luz roja", "otra": "Otras (legales, 404)",
 }
 
 

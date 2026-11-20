@@ -48,8 +48,6 @@ menu:
         descripcion: "Sauna de infrarrojos, más suave que una tradicional."
   - texto: "Precios"
     pagina: "precios"
-  - texto: "Nosotros"
-    pagina: "sobre-nosotros"
 
 botones:
   principal:
@@ -130,52 +128,6 @@ primeraSesion:
   web: "Reservar en la web"
   whatsapp: "Reservar por WhatsApp"
   whatsappMensaje: "Hola, quiero reservar mi primera sesión gratis en SUNNA Pilates."
-
-# SOBRE NOSOTROS (página propia). Qué es SUNNA en datos cortos: lo leen también Google y
-# los asistentes de IA (ChatGPT, Claude, Perplexity…). {direccion} y {horario} se rellenan solos.
-sobreNosotros:
-  titulo: "Sobre *SUNNA*"
-  texto: "SUNNA es un estudio de Pilates Reformer semiautónomo en Santa Cruz de Tenerife: 6 reformers, una persona por máquina, clases guiadas en vídeo desde una pantalla en cada reformer y acceso con el móvil."
-  datosTitulo: "SUNNA en datos"
-  datos:
-    - nombre: "Qué es"
-      valor: "Estudio de Pilates Reformer semiautónomo, con sauna de infrarrojos y sala de luz roja."
-    - nombre: "Dónde"
-      valor: "{direccion}."
-    - nombre: "Reformers"
-      valor: "6 reformers, una persona por máquina."
-    - nombre: "Idiomas"
-      valor: "Castellano, inglés, alemán y francés, con cascos bluetooth en cada reformer."
-  clavesTitulo: "Cómo lo hacemos"
-  claves:
-    - titulo: "Nunca empiezas sola/o"
-      texto: "La primera sesión es gratis y con nosotros: te enseñamos el reformer, la app, cómo entrar y cómo elegir tu clase."
-    - titulo: "Una clase guiada en tu reformer"
-      texto: "Pantalla en cada máquina con clases de 10 a 45 min. El vídeo te guía paso a paso y puedes pausar."
-    - titulo: "Tú eliges la hora"
-      texto: "Reservas en la app, sin horarios fijos de grupo. Esa hora el reformer es tuyo."
-    - titulo: "Sin monitor fijo en sala"
-      texto: "Por eso el estudio puede abrir tantas horas. Al principio siempre habrá alguien de SUNNA; después, solo entra quien ha reservado."
-  # PENDIENTE (SUNNA): quién está detrás. Una entrada por persona; mientras esté vacío, no se ve.
-  #   - nombre: "Nombre Apellido"
-  #     cargo: "Fundadora · Instructora de Pilates certificada"
-  #     texto: "Una o dos frases sobre su experiencia."
-  #     enlace: "https://www.linkedin.com/in/..."
-  equipoTitulo: "El equipo"
-  equipo: []
-  # PENDIENTE (SUNNA): años en el sector, de dónde nace SUNNA… Vacío = no se ve.
-  # Párrafos separados por una línea en blanco.
-  historiaTitulo: "Nuestra historia"
-  historia: ""
-  preguntasTitulo: "Lo que más nos preguntan"
-  preguntas:
-    - pregunta: "¿Dónde hacer Pilates reformer en Santa Cruz de Tenerife?"
-      respuesta: "En SUNNA, en {direccion}. Reservas tu reformer en la app y entrenas con una clase guiada en pantalla, a tu ritmo."
-    - pregunta: "¿Hay clases de Pilates reformer en inglés, alemán o francés en Tenerife?"
-      respuesta: "Sí. En SUNNA las clases están en castellano, inglés, alemán y francés, con cascos bluetooth en cada reformer. El catálogo más grande es en inglés."
-  cierreTitulo: "Tu primera sesión es *gratis*."
-  cierreTexto: "Reserva y te lo enseñamos todo."
-
 
 # 3 · CÓMO FUNCIONA, EN 4 PASOS (el bloque más importante)
 comoFunciona:
