@@ -25,3 +25,11 @@ pnpm-debug.log*
 
 # capturas de revisión de diseño (se regeneran)
 .impeccable/review/
+
+# worktrees y pruebas locales de Claude
+.claude/worktrees/
+.claude/portada-canvas*/
+.claude/portadas-alternativas/
+
+# ajustes personales del editor
+.vscode/settings.json
