@@ -108,7 +108,7 @@ primeraSesion:
   incluyeTitulo: "Was wir in deiner ersten Session machen"
   incluye:
     - titulo: "Der Reformer"
-      texto: "Nur das Nötige, damit du ihn sicher benutzt, ohne lange Theorie."
+      texto: "Wir erklären dir, wie der Reformer funktioniert und wie du ihn sicher benutzt."
     - titulo: "Die App und der Eingang"
       texto: "Wir richten mit dir die App ein: buchen, stornieren und mit dem Handy ins Studio kommen."
     - titulo: "Der Bildschirm"

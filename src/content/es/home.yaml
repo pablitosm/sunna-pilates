@@ -120,7 +120,7 @@ primeraSesion:
   incluyeTitulo: "Qué hacemos en tu primera sesión"
   incluye:
     - titulo: "El reformer"
-      texto: "Lo justo para usarlo con seguridad, sin teoría de más."
+      texto: "Te explicamos cómo funciona el reformer y cómo usarlo con seguridad."
     - titulo: "La app y la entrada"
       texto: "Configuramos la app contigo: reservar, cancelar y entrar al estudio con el móvil."
     - titulo: "La pantalla"

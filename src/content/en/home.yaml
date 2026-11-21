@@ -108,7 +108,7 @@ primeraSesion:
   incluyeTitulo: "What we do in your first session"
   incluye:
     - titulo: "The reformer"
-      texto: "Just what you need to use it safely, no long lecture."
+      texto: "We explain how the reformer works and how to use it safely."
     - titulo: "The app and getting in"
       texto: "We set up the app with you: booking, cancelling and getting into the studio with your phone."
     - titulo: "The screen"

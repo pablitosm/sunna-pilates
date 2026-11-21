@@ -108,7 +108,7 @@ primeraSesion:
   incluyeTitulo: "Ce qu'on fait pendant ta première séance"
   incluye:
     - titulo: "Le reformer"
-      texto: "Juste ce qu'il faut pour l'utiliser en toute sécurité, sans long discours."
+      texto: "On t'explique comment fonctionne le reformer et comment l'utiliser en toute sécurité."
     - titulo: "L'app et l'entrée"
       texto: "On configure l'app avec toi : réserver, annuler et entrer au studio avec ton téléphone."
     - titulo: "L'écran"
