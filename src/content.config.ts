@@ -48,11 +48,11 @@ const ajustes = defineCollection({
         paseId: z.number().int().positive().nullable(),
       }),
       // Calendario de bsport en la página de la primera sesión: con el crédito del pase se
-      // elige día y hora. Sin este bloque, la página no lo muestra.
+      // elige día y hora. Es el número del widget del backoffice; filtros y estilos viven en
+      // bsport. Sin este bloque, la página no lo muestra.
       calendario: z
         .object({
-          establecimientos: z.array(z.number().int().positive()).default([]),
-          metaActividades: z.array(z.number().int().positive()).default([]),
+          widget: z.number().int().positive(),
         })
         .optional(),
       horariosUrl: opcional,

@@ -17,8 +17,6 @@ import Icon from './Icon.astro';
 import TiendasApp from './TiendasApp.astro';
 import Dudas from './secciones/Dudas.astro';
 import { getSite, type Lang } from '../lib/content';
-// El calendario de bsport, vestido de SUNNA (solo en esta página)
-import '../styles/bsport-calendario.css';
 
 interface Props {
   lang: Lang;
@@ -135,7 +133,7 @@ const pasos = ps.incluye.map((p, i) => ({ ...p, dibujo: dibujos[i % dibujos.leng
               {ps.calendarioTitulo && <h3 class="calendario__titulo">{ps.calendarioTitulo}</h3>}
               {ps.calendarioTexto && <p class="calendario__intro">{ps.calendarioTexto}</p>}
             </div>
-            <div id="bsport-calendario" class="calendario__widget" />
+            <div id={`bsport-widget-${calendario.widget}`} class="calendario__widget" />
           </div>
         )
       }
@@ -147,14 +145,11 @@ const pasos = ps.incluye.map((p, i) => ({ ...p, dibujo: dibujos[i % dibujos.leng
       <script
         is:inline
         type="module"
-        define:vars={{
-          companyId: pase.companyId,
-          establecimientos: calendario.establecimientos,
-          metaActividades: calendario.metaActividades,
-        }}
+        define:vars={{ companyId: pase.companyId, contenedor: `bsport-widget-${calendario.widget}` }}
       >
-        // Calendario de bsport dentro de la página: cada hueco del reformer se reserva desde aquí,
-        // con el crédito del pase. Comparte el script de bsport con el pase (se carga una vez).
+        // Calendario de bsport dentro de la página, tal cual el código del backoffice: filtros,
+        // vista y estilos se cambian en bsport. Cada hueco del reformer se reserva desde aquí con
+        // el crédito del pase. Comparte el script de bsport con el pase (se carga una vez).
         if (!document.getElementById('bsport-widget-cdn')) {
           const s = document.createElement('script');
           s.id = 'bsport-widget-cdn';
@@ -165,7 +160,7 @@ const pasos = ps.incluye.map((p, i) => ({ ...p, dibujo: dibujos[i % dibujos.leng
         const montar = (intento = 1) => {
           if (window.BsportWidget) {
             window.BsportWidget.mount({
-              parentElement: 'bsport-calendario',
+              parentElement: contenedor,
               companyId,
               franchiseId: null,
               dialogMode: 1,
@@ -173,17 +168,7 @@ const pasos = ps.incluye.map((p, i) => ({ ...p, dibujo: dibujos[i % dibujos.leng
               showFab: false,
               fullScreenPopup: false,
               styles: undefined,
-              config: {
-                calendar: {
-                  coaches: [],
-                  establishments: establecimientos,
-                  metaActivities: metaActividades,
-                  levels: [],
-                  variant: 'activityName',
-                  groupSessionByPeriod: true,
-                  establishmentGroups: [],
-                },
-              },
+              config: { calendar: {} },
             });
           } else if (intento < 50) {
             setTimeout(() => montar(intento + 1), 100 * intento);
