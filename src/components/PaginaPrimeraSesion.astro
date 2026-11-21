@@ -6,7 +6,8 @@
  *   2. Los pasos en fila, cada uno con su número y una flecha al siguiente,
  *      su recorte, su título y su texto. En móvil se deslizan de lado. Acaba en el cierre.
  *   3. Después, y no antes, reservarla: el pase de bsport en la web y la app
- *      (el WhatsApp queda en el pie).
+ *      (el WhatsApp queda en el pie). Debajo, el calendario de bsport, para elegir día y hora
+ *      con el crédito del pase (ajustes.yaml → reservas.calendario).
  *   4. Las dudas en una línea.
  */
 import { acentuar } from '../lib/acento';
@@ -16,6 +17,8 @@ import Icon from './Icon.astro';
 import TiendasApp from './TiendasApp.astro';
 import Dudas from './secciones/Dudas.astro';
 import { getSite, type Lang } from '../lib/content';
+// El calendario de bsport, vestido de SUNNA (solo en esta página)
+import '../styles/bsport-calendario.css';
 
 interface Props {
   lang: Lang;
@@ -30,6 +33,8 @@ const pase = ajustes.reservas.primeraSesionPase ?? { companyId: 0, paseId: null 
 const web = pase.paseId
   ? `https://backoffice.bsport.io/customer/payment/pass/${pase.paseId}`
   : ajustes.reservas.primeraSesionUrl;
+// Calendario de bsport (los mismos filtros que el código del widget del backoffice)
+const calendario = ajustes.reservas.calendario;
 const dibujos = ['reformer', 'entrada', 'pantalla', 'entreno'] as const;
 
 const pasos = ps.incluye.map((p, i) => ({ ...p, dibujo: dibujos[i % dibujos.length] }));
@@ -123,8 +128,71 @@ const pasos = ps.incluye.map((p, i) => ({ ...p, dibujo: dibujos[i % dibujos.leng
           {home.porQue && <TiendasApp ajustes={ajustes} textos={home.porQue.app} class="reservar__tiendas" ligeras />}
         </div>
       </div>
+      {
+        calendario && (
+          <div class="calendario">
+            <div class="calendario__texto">
+              {ps.calendarioTitulo && <h3 class="calendario__titulo">{ps.calendarioTitulo}</h3>}
+              {ps.calendarioTexto && <p class="calendario__intro">{ps.calendarioTexto}</p>}
+            </div>
+            <div id="bsport-calendario" class="calendario__widget" />
+          </div>
+        )
+      }
     </div>
   </section>
+
+  {
+    calendario && (
+      <script
+        is:inline
+        type="module"
+        define:vars={{
+          companyId: pase.companyId,
+          establecimientos: calendario.establecimientos,
+          metaActividades: calendario.metaActividades,
+        }}
+      >
+        // Calendario de bsport dentro de la página: cada hueco del reformer se reserva desde aquí,
+        // con el crédito del pase. Comparte el script de bsport con el pase (se carga una vez).
+        if (!document.getElementById('bsport-widget-cdn')) {
+          const s = document.createElement('script');
+          s.id = 'bsport-widget-cdn';
+          s.src = 'https://cdn.bsport.io/scripts/widget.js';
+          s.async = true;
+          document.head.append(s);
+        }
+        const montar = (intento = 1) => {
+          if (window.BsportWidget) {
+            window.BsportWidget.mount({
+              parentElement: 'bsport-calendario',
+              companyId,
+              franchiseId: null,
+              dialogMode: 1,
+              widgetType: 'calendar',
+              showFab: false,
+              fullScreenPopup: false,
+              styles: undefined,
+              config: {
+                calendar: {
+                  coaches: [],
+                  establishments: establecimientos,
+                  metaActivities: metaActividades,
+                  levels: [],
+                  variant: 'activityName',
+                  groupSessionByPeriod: true,
+                  establishmentGroups: [],
+                },
+              },
+            });
+          } else if (intento < 50) {
+            setTimeout(() => montar(intento + 1), 100 * intento);
+          }
+        };
+        montar();
+      </script>
+    )
+  }
 
   <Dudas home={home} />
 
@@ -374,6 +442,39 @@ const pasos = ps.incluye.map((p, i) => ({ ...p, dibujo: dibujos[i % dibujos.leng
 
   .reservar :global(.reservar__tiendas) {
     margin-top: 1.25rem;
+  }
+
+  /* El calendario de bsport, debajo del pase, en una hoja crema dentro de la franja */
+  .calendario {
+    margin-top: clamp(3rem, 2rem + 3vw, 4.5rem);
+    padding-top: clamp(2.5rem, 2rem + 2vw, 3.5rem);
+    border-top: 1px solid var(--linea-fuerte);
+  }
+
+  .calendario__titulo {
+    font-size: var(--t-h3);
+    font-weight: 400;
+    line-height: 1.15;
+    letter-spacing: -0.015em;
+  }
+
+  .calendario__intro {
+    max-width: 44ch;
+    margin-top: 0.75rem;
+    color: var(--tinta-60);
+  }
+
+  .calendario__widget {
+    min-height: 24rem;
+    margin-top: 2rem;
+    padding: clamp(0.75rem, 0.25rem + 2vw, 2rem);
+    border-radius: var(--r);
+    background: var(--crema);
+  }
+
+  /* bsport estira su widget al ancho de la página: aquí, al de la hoja */
+  .calendario__widget :global(div[id*='bsport-widget']) {
+    width: 100%;
   }
 
   /* Tableta: dos pasos por fila; la línea se corta al final de cada fila */

@@ -121,6 +121,9 @@ primeraSesion:
   web: "Book on bsport"
   # Bajo el botón: avisa de que la reserva se hace en bsport (se abre su ventana).
   webNota: "bsport, our booking platform, will open so you can create your account and book your first session."
+  # Debajo del pase: el calendario de bsport para elegir día y hora con el crédito.
+  calendarioTitulo: "Pick a day and time"
+  calendarioTexto: "Your pass gives you the credit: choose the slot that suits you in the calendar."
   whatsapp: "Book on WhatsApp"
   whatsappMensaje: "Hi, I'd like to book my free first session at SUNNA Pilates."
 

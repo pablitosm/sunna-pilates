@@ -47,6 +47,14 @@ const ajustes = defineCollection({
         companyId: z.number().int().positive(),
         paseId: z.number().int().positive().nullable(),
       }),
+      // Calendario de bsport en la página de la primera sesión: con el crédito del pase se
+      // elige día y hora. Sin este bloque, la página no lo muestra.
+      calendario: z
+        .object({
+          establecimientos: z.array(z.number().int().positive()).default([]),
+          metaActividades: z.array(z.number().int().positive()).default([]),
+        })
+        .optional(),
       horariosUrl: opcional,
       membresiasUrl: opcional,
       appUrl: opcional,
@@ -181,6 +189,9 @@ const home = defineCollection({
           reservarTexto: opcional,
           web: texto,
           webNota: opcional,
+          // Debajo, el calendario de bsport para elegir día y hora con el pase.
+          calendarioTitulo: opcional,
+          calendarioTexto: opcional,
           whatsapp: texto,
           whatsappMensaje: texto,
         })

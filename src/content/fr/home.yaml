@@ -121,6 +121,9 @@ primeraSesion:
   web: "Réserver sur bsport"
   # Bajo el botón: avisa de que la reserva se hace en bsport (se abre su ventana).
   webNota: "bsport, notre plateforme de réservation, va s'ouvrir pour que tu crées ton compte et réserves ta première séance."
+  # Debajo del pase: el calendario de bsport para elegir día y hora con el crédito.
+  calendarioTitulo: "Choisis le jour et l'heure"
+  calendarioTexto: "Avec ton pass, tu as ton crédit : choisis dans le calendrier le créneau qui te convient."
   whatsapp: "Réserver sur WhatsApp"
   whatsappMensaje: "Bonjour, je voudrais réserver ma première séance gratuite chez SUNNA Pilates."
 

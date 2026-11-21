@@ -67,6 +67,13 @@ reservas:
   primeraSesionPase:
     companyId: 6981
     paseId: 820366
+  # Calendario de bsport, debajo del pase en la página de la primera sesión: con el crédito
+  # del pase se elige día y hora. Son los filtros del código del widget de calendario del
+  # backoffice (Ajustes > Widgets): "establishments" y "metaActivities". Borrar el bloque
+  # entero = la página no muestra el calendario.
+  calendario:
+    establecimientos: [23075]
+    metaActividades: []
   # Ver horarios (aparece junto al horario, en Cómo funciona).
   horariosUrl: ""
   # Comprar membresías (aparece debajo de las tarjetas de precios).
