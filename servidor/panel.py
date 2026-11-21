@@ -395,9 +395,14 @@ def cifra_comparada(titulo, valor, anterior, mostrado, destacada=False, nota="")
 
 
 def cifras_html(hoy, prev):
-    """Las cinco cifras de la analítica, comparadas con el periodo anterior."""
-    return '<div class="cifras">{}{}{}{}{}</div>'.format(
+    """Las seis cifras de la analítica, comparadas con el periodo anterior."""
+    nota_pase = "{} clics".format(numero(hoy["pase_clics"]))
+    if hoy["ven_primera"]:
+        nota_pase += " · {:.0f}% de quien ve la primera sesión".format(100.0 * hoy["pase"] / hoy["ven_primera"])
+    return '<div class="cifras">{}{}{}{}{}{}</div>'.format(
         cifra_comparada("Visitantes", hoy["visitantes"], prev["visitantes"], numero(hoy["visitantes"]), True),
+        cifra_comparada("Pulsan «Reservar en bsport»", hoy["pase"], prev["pase"], numero(hoy["pase"]), True,
+                        nota=nota_pase),
         cifra_comparada("Páginas vistas", hoy["vistas"], prev["vistas"], numero(hoy["vistas"]),
                         nota="{:.1f} por visitante".format(hoy["vistas"] / hoy["visitantes"]) if hoy["visitantes"] else ""),
         cifra_comparada("Clics para reservar", hoy["reservas"], prev["reservas"], numero(hoy["reservas"]),
@@ -417,9 +422,16 @@ def tarjeta_grafico(serie, hay_datos, titulo="Visitas por día"):
         '<p class="vacio">Aún no hay visitas en este periodo. La web empieza a medir en cuanto se publica con la analítica.</p>')
 
 
+# Clics en «Reservar en bsport» de la primera sesión: los dos botones (data-evento) y, de antes de
+# distinguirlos, los enlaces a bsport desde esa página
+CLIC_PASE = "(nombre IN ('pase-gratis-arriba', 'pase-gratis-abajo') OR (nombre = 'bsport' AND pagina = 'primera-sesion'))"
+CLICS = {"pase-gratis-arriba": "Pase gratis, botón de arriba", "pase-gratis-abajo": "Pase gratis, botón de abajo"}
+
+
 def filas_clics(clics):
     filas = []
     for nombre, etiqueta, zona, n, objetivo in clics:
+        nombre = CLICS.get(nombre, nombre)
         detalle = [x for x in (nombre if etiqueta and etiqueta != nombre else "", nombre_apartado(zona) if zona else "") if x]
         filas.append((etiqueta or nombre, " · ".join(detalle), n, numero(n), objetivo))
     return filas
@@ -431,6 +443,7 @@ APARTADOS = {
     "estudio": "El estudio", "faq": "Preguntas frecuentes", "dudas": "¿Y si…?", "cierre": "Cierre",
     "precios": "Precios", "fundadores": "Socios fundadores", "incluye": "Qué hacemos en la primera sesión", "prueba": "Primera sesión",
     "clases": "Las clases", "recovery": "Reformer, sauna y luz roja",
+    "arriba": "Primera sesión, arriba", "reservar": "Primera sesión, reservar",
 }
 PAGINAS = {
     "inicio": "Inicio", "precios": "Precios", "primera-sesion": "Primera sesión", "reformer": "Reformer",
@@ -1017,12 +1030,16 @@ class Panel(BaseHTTPRequestHandler):
         v = self.bd.uno(
             "SELECT count(DISTINCT visitante) FILTER (WHERE tipo = 'vista'), count(*) FILTER (WHERE tipo = 'vista'), "
             "count(*) FILTER (WHERE tipo = 'clic' AND objetivo), "
-            "count(DISTINCT visitante) FILTER (WHERE tipo = 'clic' AND objetivo) "
+            "count(DISTINCT visitante) FILTER (WHERE tipo = 'clic' AND objetivo), "
+            "count(*) FILTER (WHERE tipo = 'clic' AND " + CLIC_PASE + "), "
+            "count(DISTINCT visitante) FILTER (WHERE tipo = 'clic' AND " + CLIC_PASE + "), "
+            "count(DISTINCT visitante) FILTER (WHERE tipo = 'vista' AND pagina = 'primera-sesion') "
             "FROM eventos WHERE creado >= %s AND creado < %s", (inicio, fin))
         t = self.bd.uno(
             "SELECT avg(s), avg(p) FROM (SELECT max(segundos) s, max(profundidad) p FROM eventos "
             "WHERE tipo = 'salida' AND creado >= %s AND creado < %s GROUP BY vista) x", (inicio, fin))
         return {"visitantes": v[0], "vistas": v[1], "reservas": v[2], "convertidos": v[3],
+                "pase_clics": v[4], "pase": v[5], "ven_primera": v[6],
                 "conversion": 100.0 * v[3] / v[0] if v[0] else 0,
                 "tiempo": float(t[0] or 0), "profundidad": float(t[1] or 0)}
 
@@ -1109,7 +1126,7 @@ class Panel(BaseHTTPRequestHandler):
             "SELECT count(DISTINCT visitante) FROM eventos WHERE tipo = 'vista' AND creado >= %s "
             "AND pagina IN ('precios', 'primera-sesion')", (desde,))[0]
         pasos = (("Visitan la web", hoy["visitantes"]), ("Ven precios o la primera sesión", interes),
-                 ("Pulsan para reservar", hoy["convertidos"]))
+                 ("Pulsan para reservar", hoy["convertidos"]), ("Pulsan «Reservar en bsport»", hoy["pase"]))
         base = hoy["visitantes"] or 1
         embudo = '<div class="embudo">{}</div>'.format("".join(
             '<div class="embudo__paso"><div class="embudo__fila"><span>{}</span><strong>{} · {:.0f}%</strong></div>'

@@ -18,7 +18,9 @@ const { ajustes, home, corto = false, tamano = 'normal', class: className } = As
 const textos = corto ? home.botones.principalCorto : home.botones.principal;
 // Abierto y con plazas de fundador: invita a hacerse socio/a fundador/a en vez de a la primera sesión.
 const label = (ctaEsFundador(ajustes) && textos.fundador) || textos[ajustes.estado];
-const href = ctaHref(ajustes, idiomaDe(Astro.currentLocale));
+const destino = ctaHref(ajustes, idiomaDe(Astro.currentLocale));
+// Ya en la página a la que lleva (la primera sesión): baja a su apartado de reservar
+const href = destino === Astro.url.pathname ? '#reservar' : destino;
 const abrePanel = ajustes.estado === 'preapertura';
 ---
 

@@ -36,10 +36,26 @@ const pasos = ps.incluye.map((p, i) => ({ ...p, dibujo: dibujos[i % dibujos.leng
 ---
 
 <Base lang={lang} titulo={home.botones.principalCorto.abierto} descripcion={home.seo.primeraSesion || ps.texto} pagina="primera-sesion" alternos sinBarraMovil>
-  <section class="inicio" aria-labelledby="inicio-titulo">
+  <section id="arriba" class="inicio" aria-labelledby="inicio-titulo">
     <div class="envoltura">
       <h1 id="inicio-titulo" class="t-display inicio__titulo" set:html={acentuar(ps.titulo)} />
       <p class="t-lead inicio__intro">{ps.texto}</p>
+      {/* Para quien ya lo tiene claro: reservar sin bajar. Cada botón se mide por separado en el panel. */}
+      {
+        web && (
+          <a
+            class="boton boton-sol inicio__boton"
+            href={web}
+            target="_blank"
+            rel="noopener"
+            data-pase-bsport={pase.paseId ?? undefined}
+            data-evento="pase-gratis-arriba"
+          >
+            {ps.web}
+            <Icon name="flecha" size={20} />
+          </a>
+        )
+      }
     </div>
   </section>
 
@@ -78,7 +94,7 @@ const pasos = ps.incluye.map((p, i) => ({ ...p, dibujo: dibujos[i % dibujos.leng
     </div>
   </section>
 
-  <section class="reservar" aria-labelledby="reservar-titulo">
+  <section id="reservar" class="reservar" aria-labelledby="reservar-titulo">
     <div class="envoltura">
       <div class="reservar__panel">
         <div class="reservar__texto">
@@ -95,6 +111,7 @@ const pasos = ps.incluye.map((p, i) => ({ ...p, dibujo: dibujos[i % dibujos.leng
                   target="_blank"
                   rel="noopener"
                   data-pase-bsport={pase.paseId ?? undefined}
+                  data-evento="pase-gratis-abajo"
                 >
                   {ps.web}
                   <Icon name="flecha" size={20} />
@@ -186,6 +203,10 @@ const pasos = ps.incluye.map((p, i) => ({ ...p, dibujo: dibujos[i % dibujos.leng
     max-width: 40ch;
     margin-top: 1rem;
     color: var(--tinta-60);
+  }
+
+  .inicio__boton {
+    margin-top: 1.75rem;
   }
 
   /* ───────── Los pasos en fila ───────── */
