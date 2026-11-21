@@ -235,10 +235,25 @@ const papeles: Record<string, string> = {
     }
   }
 
-  /* Tableta y móvil: las píldoras arriba y el mazo debajo */
+  /* Las cartas giradas (y la que sale volando) nunca ensanchan la página: si lo hacen, en el
+     móvil la página mide más que la pantalla y la barra fija de reservar se queda fuera */
+  .como {
+    overflow-x: clip;
+  }
+
+  /* Tableta y móvil: las píldoras arriba y el mazo debajo, con el abanico más cerrado para
+     que la última carta asome sin salirse del ancho */
   @media (max-width: 56.25rem) {
     .mazo {
       grid-template-columns: 1fr;
+    }
+
+    .mazo__pila {
+      padding-right: 1.75rem;
+    }
+
+    .carta {
+      transform: translate(calc(var(--d) * 0.55rem), calc(var(--d) * -0.5rem)) rotate(calc(var(--d) * 1.5deg));
     }
   }
 </style>
