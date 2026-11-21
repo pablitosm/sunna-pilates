@@ -33,3 +33,6 @@ pnpm-debug.log*
 
 # ajustes personales del editor
 .vscode/settings.json
+
+# Caché de Python
+__pycache__/
