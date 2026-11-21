@@ -2,6 +2,8 @@
 /*
  * Móvil: barra fija inferior con el botón principal (siempre a mano) y WhatsApp.
  * Escritorio: solo el botón flotante de WhatsApp.
+ * sinBarra (páginas con sus propios botones de reservar, como la primera sesión): sin la barra
+ * del móvil, pero el WhatsApp flotante de escritorio se queda, como en el resto de la web.
  */
 import CtaButton from './CtaButton.astro';
 import Icon from './Icon.astro';
@@ -10,23 +12,26 @@ import { whatsappUrl, type Ajustes, type Home } from '../lib/content';
 interface Props {
   ajustes: Ajustes;
   home: Home;
+  sinBarra?: boolean;
 }
-const { ajustes, home } = Astro.props;
+const { ajustes, home, sinBarra = false } = Astro.props;
 const wa = whatsappUrl(ajustes.contacto.whatsapp, home.ui.whatsappMensaje);
 ---
 
-<div class="barra">
-  <div class="barra__pildora">
-    <CtaButton ajustes={ajustes} home={home} corto class="barra__cta" />
-    {
-      wa && (
-        <a class="barra__wa" href={wa} target="_blank" rel="noopener" aria-label={home.panel.whatsapp}>
-          <Icon name="whatsapp" size={22} />
-        </a>
-      )
-    }
-  </div>
-</div>
+{
+  !sinBarra && (
+    <div class="barra">
+      <div class="barra__pildora">
+        <CtaButton ajustes={ajustes} home={home} corto class="barra__cta" />
+        {wa && (
+          <a class="barra__wa" href={wa} target="_blank" rel="noopener" aria-label={home.panel.whatsapp}>
+            <Icon name="whatsapp" size={22} />
+          </a>
+        )}
+      </div>
+    </div>
+  )
+}
 
 {
   wa && (

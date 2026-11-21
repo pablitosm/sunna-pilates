@@ -148,7 +148,7 @@ const json = (o: object) => JSON.stringify(o).replace(/</g, '\\u003c');
       <slot />
     </main>
     <Footer ajustes={ajustes} home={home} />
-    {!sinBarraMovil && <MobileBar ajustes={ajustes} home={home} />}
+    <MobileBar ajustes={ajustes} home={home} sinBarra={sinBarraMovil} />
 
     {
       ajustes.estado === 'preapertura' && (
