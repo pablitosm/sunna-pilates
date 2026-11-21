@@ -355,15 +355,86 @@ def grafico_dias(serie):
     )
     puntos = "" if n > 31 else "".join(
         '<circle cx="{:.1f}" cy="{:.1f}" r="3" class="g-punto"/>'.format(x(i), y(f[1])) for i, f in enumerate(serie))
-    zonas = "".join(
-        '<rect x="{:.1f}" y="{}" width="{:.1f}" height="{}" class="g-zona"><title>{}: {} {} · {} {}</title></rect>'.format(
-            x(i) - paso / 2, arriba, paso, plano_h, f[0].strftime("%d/%m/%Y"),
-            numero(f[1]), "visitante" if f[1] == 1 else "visitantes", numero(f[2]), "vista" if f[2] == 1 else "vistas")
-        for i, f in enumerate(serie))
-    return ('<svg class="grafico" viewBox="0 0 {} {}" role="img" aria-label="Visitantes y páginas vistas por día">'
+    # Datos del hover: por día, posición y cifras ya escritas (GRAFICO_JS pinta la guía y la tarjeta).
+    # La serie siempre acaba hoy (hora de Canarias, ver serie_dias): el último día es «Hoy».
+    datos = [{"x": round(x(i), 1), "yv": round(y(f[1]), 1), "yp": round(y(f[2]), 1),
+              "fecha": "Hoy, " + fecha_larga(f[0]) if i == n - 1 else fecha_larga(f[0]),
+              "v": numero(f[1]), "p": numero(f[2])}
+             for i, f in enumerate(serie)]
+    # Lectura accesible: el mismo dato en texto, por si no se puede usar el ratón
+    resumen = "; ".join("{}: {} visitantes, {} páginas vistas".format(d["fecha"], d["v"], d["p"]) for d in datos)
+    return ('<div class="grafico-caja" data-serie="{}" data-arriba="{}" data-abajo="{}" data-ancho="{}">'
+            '<svg class="grafico" viewBox="0 0 {} {}" role="img" tabindex="0" aria-label="Visitantes y páginas vistas por día. {}">'
             '{}<path d="{}" class="g-area"/><polyline points="{}" class="g-linea"/>'
-            '<polyline points="{}" class="g-linea g-linea--vistas"/>{}{}{}</svg>').format(
-        ancho, alto, rejilla, area, puntos_vis, puntos_vistas, puntos, etiquetas, zonas)
+            '<polyline points="{}" class="g-linea g-linea--vistas"/>{}{}'
+            '<g class="g-foco"><line class="g-guia" y1="{}" y2="{}"/><circle class="g-foco__vistas" r="4"/>'
+            '<circle class="g-foco__vis" r="5"/></g></svg>'
+            '<div class="g-tip" aria-hidden="true"><p class="g-tip__fecha"></p>'
+            '<p class="g-tip__fila"><i></i>Visitantes<strong class="g-tip__v"></strong></p>'
+            '<p class="g-tip__fila"><i class="vistas"></i>Páginas vistas<strong class="g-tip__p"></strong></p></div>'
+            '</div>').format(
+        e(json.dumps(datos)), arriba, arriba + plano_h, ancho, ancho, alto, e(resumen), rejilla, area, puntos_vis,
+        puntos_vistas, puntos, etiquetas, arriba, arriba + plano_h) + GRAFICO_JS
+
+
+DIAS_SEMANA = ("lunes", "martes", "miércoles", "jueves", "viernes", "sábado", "domingo")
+MESES = ("enero", "febrero", "marzo", "abril", "mayo", "junio", "julio", "agosto", "septiembre", "octubre",
+         "noviembre", "diciembre")
+
+
+def fecha_larga(dia):
+    """«jueves, 20 de noviembre»"""
+    return "{}, {} de {}".format(DIAS_SEMANA[dia.weekday()], dia.day, MESES[dia.month - 1])
+
+
+# Hover del gráfico: el día más cercano al puntero (ratón o dedo) o el elegido con las flechas.
+# Mueve la guía y los dos puntos del día y coloca la tarjeta a su lado, sin salirse del gráfico.
+GRAFICO_JS = """<script>
+document.querySelectorAll('.grafico-caja').forEach(function (caja) {
+  var datos = JSON.parse(caja.dataset.serie), svg = caja.querySelector('svg'), foco = caja.querySelector('.g-foco');
+  var tip = caja.querySelector('.g-tip'), actual = -1, ancho = +caja.dataset.ancho;
+  var guia = foco.querySelector('.g-guia'), pv = foco.querySelector('.g-foco__vis'), pp = foco.querySelector('.g-foco__vistas');
+  function mostrar(i) {
+    i = Math.max(0, Math.min(datos.length - 1, i));
+    var d = datos[i];
+    actual = i;
+    guia.setAttribute('x1', d.x); guia.setAttribute('x2', d.x);
+    pv.setAttribute('cx', d.x); pv.setAttribute('cy', d.yv);
+    pp.setAttribute('cx', d.x); pp.setAttribute('cy', d.yp);
+    tip.querySelector('.g-tip__fecha').textContent = d.fecha;
+    tip.querySelector('.g-tip__v').textContent = d.v;
+    tip.querySelector('.g-tip__p').textContent = d.p;
+    caja.classList.add('activo');
+    // Coordenadas de pantalla: la tarjeta va a la derecha del día y, si no cabe en la parte visible
+    // (en móvil el gráfico es más ancho que la pantalla y se desplaza), a la izquierda
+    var r = svg.getBoundingClientRect(), escala = r.width / ancho, punto = r.left + d.x * escala;
+    var marco = (caja.closest('.grafico-envoltura') || caja).getBoundingClientRect();
+    var minimo = Math.max(marco.left, 0) + 4, maximo = Math.min(marco.right, innerWidth) - tip.offsetWidth - 4;
+    var izq = punto + 14;
+    if (izq > maximo) izq = punto - 14 - tip.offsetWidth;
+    izq = Math.max(minimo, izq);
+    tip.style.transform = 'translate(' + Math.round(izq - caja.getBoundingClientRect().left) + 'px,' +
+      Math.round(+caja.dataset.arriba * escala) + 'px)';
+  }
+  function ocultar() { caja.classList.remove('activo'); actual = -1; }
+  function cercano(ev) {
+    var r = svg.getBoundingClientRect(), xv = (ev.clientX - r.left) * ancho / r.width, mejor = 0;
+    datos.forEach(function (d, i) { if (Math.abs(d.x - xv) < Math.abs(datos[mejor].x - xv)) mejor = i; });
+    return mejor;
+  }
+  svg.addEventListener('pointermove', function (ev) { mostrar(cercano(ev)); });
+  svg.addEventListener('pointerdown', function (ev) { mostrar(cercano(ev)); });
+  svg.addEventListener('pointerleave', function (ev) { if (ev.pointerType === 'mouse') ocultar(); });
+  svg.addEventListener('focus', function () { mostrar(actual < 0 ? datos.length - 1 : actual); });
+  svg.addEventListener('blur', ocultar);
+  svg.addEventListener('keydown', function (ev) {
+    var paso = {ArrowLeft: -1, ArrowRight: 1}[ev.key];
+    if (paso) { ev.preventDefault(); mostrar((actual < 0 ? datos.length - 1 : actual) + paso); }
+    else if (ev.key === 'Home' || ev.key === 'End') { ev.preventDefault(); mostrar(ev.key === 'Home' ? 0 : datos.length - 1); }
+    else if (ev.key === 'Escape') ocultar();
+  });
+});
+</script>"""
 
 
 def lista_barras(filas, vacio="Sin datos en este periodo."):
@@ -620,8 +691,26 @@ background:var(--verde-claro);color:var(--verde)}
 .g-linea{fill:none;stroke:var(--naranja);stroke-width:2;stroke-linejoin:round;stroke-linecap:round}
 .g-linea--vistas{stroke:#98a2b3;stroke-width:1.5;stroke-dasharray:4 4}
 .g-punto{fill:var(--blanco);stroke:var(--naranja);stroke-width:2}
-.g-zona{fill:transparent}
-.g-zona:hover{fill:rgb(29 41 57/.04)}
+.grafico-caja{position:relative}
+.grafico-caja svg{cursor:crosshair;touch-action:pan-y;outline:0}
+.grafico-caja svg:focus-visible{outline:2px solid var(--naranja);outline-offset:4px;border-radius:4px}
+.g-foco{opacity:0;transition:opacity .15s;pointer-events:none}
+.grafico-caja.activo .g-foco{opacity:1}
+.g-guia{stroke:#98a2b3;stroke-width:1;stroke-dasharray:3 3}
+.g-foco__vis{fill:var(--naranja);stroke:var(--blanco);stroke-width:2.5}
+.g-foco__vistas{fill:#98a2b3;stroke:var(--blanco);stroke-width:2}
+.g-tip{position:absolute;top:0;left:0;z-index:2;min-width:12.5rem;padding:.625rem .75rem;border-radius:var(--r-g);
+background:var(--texto);color:#fff;box-shadow:0 12px 28px -6px rgb(16 24 40/.28),0 4px 8px -4px rgb(16 24 40/.16);
+font-size:.8125rem;line-height:1.4;pointer-events:none;opacity:0;transition:opacity .15s,transform .12s ease-out}
+.grafico-caja.activo .g-tip{opacity:1}
+.g-tip__fecha{margin-bottom:.375rem;font-size:.75rem;color:#d0d5dd}
+.g-tip__fecha::first-letter{text-transform:uppercase}
+.g-tip__fila{display:flex;align-items:center;gap:.5rem}
+.g-tip__fila+.g-tip__fila{margin-top:.125rem}
+.g-tip__fila i{flex:none;width:.625rem;height:.625rem;border-radius:50%;background:var(--naranja)}
+.g-tip__fila i.vistas{background:#98a2b3}
+.g-tip__fila strong{margin-left:auto;padding-left:1rem;font-weight:600;font-variant-numeric:tabular-nums}
+@media (prefers-reduced-motion:reduce){.g-tip,.g-foco{transition:none}}
 .barras{list-style:none;padding:.5rem .75rem .75rem;display:grid;gap:2px}
 .barra{position:relative;display:flex;align-items:center;justify-content:space-between;gap:1rem;min-height:2.25rem;
 padding:.375rem .625rem;border-radius:var(--r);overflow:hidden}
@@ -666,7 +755,7 @@ border-top:1px solid var(--borde)}
 .tarjeta__cabeza.herramientas input{max-width:none!important}
 .campos{grid-template-columns:1fr}
 .rejilla,.rejilla--tres{grid-template-columns:minmax(0,1fr);gap:1rem;margin-top:1rem}
-.grafico{min-width:36rem}
+.grafico-caja{min-width:36rem}
 .cabeza .periodo{width:100%}.periodo a{flex:1;text-align:center}
 .nav{grid-template-columns:repeat(4,1fr)}
 /* Tablas como fichas: una por registro, con la etiqueta de cada dato */
