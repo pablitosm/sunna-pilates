@@ -168,7 +168,9 @@ const pasos = ps.incluye.map((p, i) => ({ ...p, dibujo: dibujos[i % dibujos.leng
               showFab: false,
               fullScreenPopup: false,
               styles: undefined,
-              config: { calendar: {} },
+              // Siempre la semana en lista: bsport pasa a tarjetas si el contenedor supera
+              // cardModeDisplayMinWidth (unos 1280 px por defecto); con este umbral no llega nunca
+              config: { calendar: { cardModeDisplayMinWidth: 100000 } },
             });
           } else if (intento < 50) {
             setTimeout(() => montar(intento + 1), 100 * intento);
