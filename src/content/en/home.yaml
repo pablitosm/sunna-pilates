@@ -8,8 +8,11 @@
 # ─────────────────────────────────────────────────────────────
 
 seo:
-  titulo: "SUNNA · Reformer Pilates in Santa Cruz de Tenerife"
-  descripcion: "Reformer Pilates in Santa Cruz de Tenerife. Train whenever you want, at your own pace, with a class guided on screen, and you never start alone: the first time, we show you everything."
+  titulo: "SUNNA Pilates · Reformer Pilates in Santa Cruz de Tenerife"
+  descripcion: "SUNNA Pilates: Reformer Pilates in Santa Cruz de Tenerife. Train on your schedule with on-screen guided classes, sauna and red light. First session free."
+  # Descripciones para Google de la página de precios y de la primera sesión.
+  precios: "SUNNA Pilates prices in Santa Cruz de Tenerife: Reformer Pilates memberships from €55 a month, with red light and sauna. Your first session is free."
+  primeraSesion: "Book your free first Reformer Pilates session at SUNNA Pilates, Santa Cruz de Tenerife: we show you the reformer and the app, and you train with us."
 
 ui:
   idioma: "Language"

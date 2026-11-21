@@ -34,7 +34,7 @@ const apartado = espacio ? home.recovery.apartados.find((a) => a.tipo === espaci
   ) : pagina === 'primera-sesion' ? (
     <PaginaPrimeraSesion lang={lang} />
   ) : pagina === 'precios' ? (
-    <Base lang={lang} titulo={home.precios.titulo} descripcion={home.explora?.precios.texto} pagina="precios" alternos>
+    <Base lang={lang} titulo={home.precios.titulo} descripcion={home.seo.precios || home.explora?.precios.texto} pagina="precios" alternos>
       <Precios ajustes={ajustes} home={home} pagina />
     </Base>
   ) : (

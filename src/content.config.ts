@@ -79,7 +79,13 @@ const home = defineCollection({
     const foto = z.object({ imagen: image(), alt: texto }).optional();
     return z.object({
       // Título y descripción para Google y al compartir el enlace.
-      seo: z.object({ titulo: texto, descripcion: texto }),
+      seo: z.object({
+        titulo: texto,
+        descripcion: texto,
+        // Descripciones para buscadores de páginas propias; vacías, el texto de la página.
+        precios: opcional,
+        primeraSesion: opcional,
+      }),
       // Textos pequeños de la interfaz (accesibilidad, pie, selector de idioma…).
       ui: z.object({
         idioma: texto,

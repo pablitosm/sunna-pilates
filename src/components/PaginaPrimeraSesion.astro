@@ -35,7 +35,7 @@ const dibujos = ['reformer', 'entrada', 'pantalla', 'entreno'] as const;
 const pasos = ps.incluye.map((p, i) => ({ ...p, dibujo: dibujos[i % dibujos.length] }));
 ---
 
-<Base lang={lang} titulo={home.botones.principalCorto.abierto} descripcion={ps.texto} pagina="primera-sesion" alternos sinBarraMovil>
+<Base lang={lang} titulo={home.botones.principalCorto.abierto} descripcion={home.seo.primeraSesion || ps.texto} pagina="primera-sesion" alternos sinBarraMovil>
   <section class="inicio" aria-labelledby="inicio-titulo">
     <div class="envoltura">
       <h1 id="inicio-titulo" class="t-display inicio__titulo" set:html={acentuar(ps.titulo)} />

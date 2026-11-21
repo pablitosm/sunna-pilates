@@ -34,7 +34,8 @@ const { ajustes, home } = await getSite(lang);
 
 // Página para la analítica: igual en los 4 idiomas (inicio, precios, sauna…); legales y 404 son «otra»
 const paginaAnalitica = pagina ?? (alternos ? 'inicio' : 'otra');
-const title = titulo ? `${sinAcento(titulo)} · SUNNA` : home.seo.titulo;
+// Las páginas propias llevan la marca como la busca la gente y dónde está
+const title = titulo ? `${sinAcento(titulo)} · SUNNA Pilates Tenerife` : home.seo.titulo;
 const description = descripcion ?? home.seo.descripcion;
 const canonical = Astro.site ? new URL(Astro.url.pathname, Astro.site).href : undefined;
 const wa = whatsappUrl(ajustes.contacto.whatsapp, home.ui.whatsappMensaje);
@@ -51,7 +52,8 @@ const negocio = {
   name: 'SUNNA Pilates',
   alternateName: 'SUNNA',
   description: home.seo.descripcion,
-  ...(absoluta('/favicon.svg') ? { logo: absoluta('/favicon.svg'), image: absoluta('/favicon.svg') } : {}),
+  // Logo, y como imagen la foto del estudio (la misma que sale al compartir el enlace)
+  ...(absoluta('/favicon.svg') ? { logo: absoluta('/favicon.svg'), image: absoluta('/og.jpg') } : {}),
   address: {
     '@type': 'PostalAddress',
     streetAddress: ajustes.direccion.calle,
@@ -128,6 +130,12 @@ const json = (o: object) => JSON.stringify(o).replace(/</g, '\\u003c');
     <meta property="og:title" content={title} />
     <meta property="og:description" content={description} />
     {canonical && <meta property="og:url" content={canonical} />}
+    {/* La foto del estudio al compartir el enlace (WhatsApp, redes, buscadores e IAs) */}
+    {Astro.site && <meta property="og:image" content={new URL('/og.jpg', Astro.site).href} />}
+    {Astro.site && <meta property="og:image:width" content="1200" />}
+    {Astro.site && <meta property="og:image:height" content="630" />}
+    <meta property="og:image:alt" content="SUNNA Pilates: sala de reformers en Santa Cruz de Tenerife" />
+    <meta name="twitter:card" content="summary_large_image" />
     <meta name="geo.region" content="ES-TF" />
     <meta name="geo.placename" content={ajustes.direccion.ciudad} />
     {esquemas.map((e) => <script type="application/ld+json" set:html={json(e)} />)}
