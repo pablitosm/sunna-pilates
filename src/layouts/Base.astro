@@ -266,9 +266,10 @@ const json = (o: object) => JSON.stringify(o).replace(/</g, '\\u003c');
             // El texto tal y como se ve (innerText separa título y descripción de las opciones del menú)
             const etiqueta = (el.getAttribute('aria-label') || (el as HTMLElement).innerText || '').replace(/\s+/g, ' ').trim().slice(0, 80);
             const zona = el.closest('header') ? 'cabecera' : el.closest('footer') ? 'pie' : el.closest('section[id], aside[id]')?.id ?? '';
-            // Botones de reservar: los principales (sol), WhatsApp, las apps y bsport
+            // Clics para reservar: solo los que salen a donde se reserva (bsport, WhatsApp, las apps y
+            // los botones del pase). Los enlaces internos, aunque parezcan de reserva, no cuentan.
             const objetivo =
-              el.matches('.cta, .boton-sol, [data-objetivo]') || ['whatsapp', 'app-store', 'google-play', 'bsport'].includes(nombre);
+              ['whatsapp', 'app-store', 'google-play', 'bsport'].includes(nombre) || nombre.startsWith('pase-gratis');
             enviar({ t: 'clic', nombre, etiqueta, zona, objetivo });
           },
           { capture: true },

@@ -409,7 +409,7 @@ def cifras_html(hoy, prev):
         cifra_comparada("Pulsan para reservar", hoy["convertidos"], prev["convertidos"], numero(hoy["convertidos"]), True,
                         nota=nota_reservar),
         cifra_comparada("Conversión", hoy["conversion"], prev["conversion"], "{:.1f}%".format(hoy["conversion"]),
-                        nota="Visitantes que pulsan para reservar"),
+                        nota="Visitantes que van a bsport, WhatsApp o las apps"),
         cifra_comparada("Tiempo en una página", hoy["tiempo"], prev["tiempo"], duracion(hoy["tiempo"]),
                         nota="Lo habitual (mediana) · bajan hasta el {:.0f}%".format(hoy["profundidad"])
                         if hoy["profundidad"] else "Lo habitual (mediana)"),
@@ -427,15 +427,19 @@ def tarjeta_grafico(serie, hay_datos, titulo="Visitas por día"):
 # Clics en «Reservar en bsport» de la primera sesión: los dos botones (data-evento) y, de antes de
 # distinguirlos, los enlaces a bsport desde esa página
 CLIC_PASE = "(nombre IN ('pase-gratis-arriba', 'pase-gratis-abajo') OR (nombre = 'bsport' AND pagina = 'primera-sesion'))"
-# Cualquier clic para reservar (botones de reserva, WhatsApp, apps, bsport). El pase se suma por si
-# algún día deja de llevar la clase de botón de reserva: así el embudo nunca pierde gente por el camino.
-CLIC_RESERVA = "(tipo = 'clic' AND (objetivo OR " + CLIC_PASE + "))"
+# Clic para reservar: solo los que salen de la web hacia donde de verdad se reserva (bsport, WhatsApp,
+# las apps y los dos botones del pase). Va por el destino y no por la columna «objetivo», que hasta
+# noviembre de 2026 también marcaba enlaces internos como «Primera sesión gratis» de la cabecera:
+# así los datos antiguos se cuentan con el mismo criterio.
+NOMBRES_RESERVA = ("bsport", "whatsapp", "app-store", "google-play", "pase-gratis-arriba", "pase-gratis-abajo")
+CLIC_RESERVA = "(tipo = 'clic' AND nombre IN ({}))".format(", ".join("'{}'".format(n) for n in NOMBRES_RESERVA))
 CLICS = {"pase-gratis-arriba": "Pase gratis, botón de arriba", "pase-gratis-abajo": "Pase gratis, botón de abajo"}
 
 
 def filas_clics(clics):
     filas = []
-    for nombre, etiqueta, zona, n, objetivo in clics:
+    for nombre, etiqueta, zona, n in clics:
+        objetivo = nombre in NOMBRES_RESERVA
         nombre = CLICS.get(nombre, nombre)
         detalle = [x for x in (nombre if etiqueta and etiqueta != nombre else "", nombre_apartado(zona) if zona else "") if x]
         filas.append((etiqueta or nombre, " · ".join(detalle), n, numero(n), objetivo))
@@ -1124,7 +1128,7 @@ class Panel(BaseHTTPRequestHandler):
     def top_clics(self, desde, limite):
         return self.bd.todos(
             "SELECT nombre, mode() WITHIN GROUP (ORDER BY etiqueta), mode() WITHIN GROUP (ORDER BY zona), "
-            "count(*), bool_or(objetivo) FROM eventos "
+            "count(*) FROM eventos "
             "WHERE tipo = 'clic' AND creado >= %s GROUP BY nombre ORDER BY 4 DESC LIMIT %s", (desde, limite))
 
     # Vistas

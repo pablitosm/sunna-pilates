@@ -42,7 +42,7 @@ CREATE TABLE IF NOT EXISTS eventos (
   nombre       text NOT NULL DEFAULT '',     -- clic: destino (whatsapp, /precios/…); seccion: id del apartado
   etiqueta     text NOT NULL DEFAULT '',     -- clic: texto del botón o enlace
   zona         text NOT NULL DEFAULT '',     -- clic: dónde estaba (cabecera, pie, portada, precios…)
-  objetivo     boolean NOT NULL DEFAULT false, -- clic en un botón de reservar (CTA, WhatsApp, apps)
+  objetivo     boolean NOT NULL DEFAULT false, -- clic que sale a reservar (bsport, WhatsApp, apps, pase); el panel cuenta por «nombre»
   segundos     integer,                      -- salida: tiempo con la página visible
   profundidad  smallint                      -- salida: porcentaje de la página recorrido
 );
