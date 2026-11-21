@@ -464,6 +464,20 @@ const pasos = ps.incluye.map((p, i) => ({ ...p, dibujo: dibujos[i % dibujos.leng
     width: 100%;
   }
 
+  /* Solo lo que aún se puede reservar. bsport marca las sesiones ya empezadas o
+     terminadas («Ongoing», «Closed») con el icono del reloj «past»: fuera de la lista */
+  .calendario__widget :global(.bs-offer-list-item:has(.bs-book-button-card__inner__icon__past)) {
+    display: none !important;
+  }
+
+  /* Los días de esta semana anteriores a hoy (los que van antes del día marcado como hoy)
+     quedan apagados y sin clic; se mantienen para que la semana siga teniendo sus 7 días */
+  .calendario__widget
+    :global(.bs-week-list > button:has(~ button .bs-week__header__date__weekDay--is-today)) {
+    opacity: 0.35 !important;
+    pointer-events: none !important;
+  }
+
   /* Tableta: dos pasos por fila; la línea se corta al final de cada fila */
   @media (max-width: 64rem) {
     .fila {
