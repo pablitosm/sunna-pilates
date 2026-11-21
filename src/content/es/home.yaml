@@ -132,7 +132,7 @@ primeraSesion:
   reservarTexto: "Desde la app de SUNNA o en bsport, nuestra plataforma de reservas. Si tienes dudas, escríbenos por WhatsApp."
   web: "Reservar en bsport"
   # Bajo el botón: avisa de que la reserva se hace en bsport (se abre su ventana).
-  webNota: "Se abrirá bsport, nuestra plataforma de reservas, para que crees tu cuenta y consigas tu sesión gratis."
+  webNota: "Se abrirá bsport, nuestra plataforma de reservas, para crear tu cuenta y reservar tu primera sesión."
   whatsapp: "Reservar por WhatsApp"
   whatsappMensaje: "Hola, quiero reservar mi primera sesión gratis en SUNNA Pilates."
 
