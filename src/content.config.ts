@@ -81,6 +81,7 @@ const home = defineCollection({
       // Título y descripción para Google y al compartir el enlace.
       seo: z.object({
         titulo: texto,
+        marca: texto,
         descripcion: texto,
         // Descripciones para buscadores de páginas propias; vacías, el texto de la página.
         precios: opcional,

@@ -9,7 +9,9 @@
 
 # Título y descripción para Google y al compartir el enlace.
 seo:
-  titulo: "SUNNA Pilates · Pilates reformer semiautónomo en Tenerife"
+  # Todas las páginas: «tema · marca». Aquí, el tema de la portada y la marca.
+  titulo: "Pilates reformer semiautónomo"
+  marca: "SUNNA Pilates Tenerife"
   descripcion: "El primer estudio de Pilates reformer semiautónomo de Tenerife, en Santa Cruz. Entrena a tu hora, con sauna y luz roja. Primera sesión gratis."
   # Descripciones para Google de la página de precios y de la primera sesión.
   precios: "Precios de SUNNA Pilates en Santa Cruz de Tenerife: membresías de Pilates reformer desde 55 € al mes, con luz roja y sauna. Tu primera sesión es gratis."

@@ -34,8 +34,8 @@ const { ajustes, home } = await getSite(lang);
 
 // Página para la analítica: igual en los 4 idiomas (inicio, precios, sauna…); legales y 404 son «otra»
 const paginaAnalitica = pagina ?? (alternos ? 'inicio' : 'otra');
-// Las páginas propias llevan la marca como la busca la gente y dónde está
-const title = titulo ? `${sinAcento(titulo)} · SUNNA Pilates Tenerife` : home.seo.titulo;
+// Todas las páginas igual: el tema primero y luego la marca y dónde está («Precios · SUNNA Pilates Tenerife»)
+const title = `${titulo ? sinAcento(titulo) : home.seo.titulo} · ${home.seo.marca}`;
 const description = descripcion ?? home.seo.descripcion;
 const canonical = Astro.site ? new URL(Astro.url.pathname, Astro.site).href : undefined;
 const wa = whatsappUrl(ajustes.contacto.whatsapp, home.ui.whatsappMensaje);

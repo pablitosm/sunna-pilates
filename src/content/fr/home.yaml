@@ -8,7 +8,9 @@
 # ─────────────────────────────────────────────────────────────
 
 seo:
-  titulo: "SUNNA Pilates · Pilates Reformer semi-autonome à Tenerife"
+  # Todas las páginas: «tema · marca». Aquí, el tema de la portada y la marca.
+  titulo: "Pilates Reformer semi-autonome"
+  marca: "SUNNA Pilates Tenerife"
   descripcion: "Le premier studio de Pilates Reformer semi-autonome de Tenerife, à Santa Cruz. Entraîne-toi à ton heure, avec sauna et lumière rouge. 1re séance offerte."
   # Descripciones para Google de la página de precios y de la primera sesión.
   precios: "Tarifs de SUNNA Pilates à Santa Cruz de Tenerife : abonnements de Pilates Reformer dès 55 € par mois, avec lumière rouge et sauna. 1re séance offerte."
