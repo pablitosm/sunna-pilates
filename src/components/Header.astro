@@ -134,6 +134,8 @@ const opcionesIdioma = idiomas.map((l) => ({
     >
       <!-- El logo, en el mismo sitio que en la cabecera mientras el menú está abierto -->
       <Logo label="SUNNA" />
+      <!-- El botón principal, debajo de los enlaces: con el menú abierto no se ve la barra fija -->
+      <CtaButton slot="accion" ajustes={ajustes} home={home} corto />
     </MobileMenu>
   </div>
 </header>

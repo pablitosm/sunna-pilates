@@ -10,8 +10,10 @@ interface Props {
   ajustes: Ajustes;
   textos: NonNullable<Home['porQue']>['app'];
   class?: string;
+  /** Contorno en vez de chocolate: junto al botón de reservar, para no quitarle protagonismo. */
+  ligeras?: boolean;
 }
-const { ajustes, textos, class: className } = Astro.props;
+const { ajustes, textos, class: className, ligeras = false } = Astro.props;
 const tiendas = [
   {
     nombre: textos.appStore,
@@ -27,7 +29,7 @@ const tiendas = [
 ];
 ---
 
-<div class:list={['tiendas', className]}>
+<div class:list={['tiendas', { 'tiendas--ligeras': ligeras }, className]}>
   <ul role="list" class="tiendas__lista">
     {
       tiendas.map((t) => (
@@ -80,6 +82,20 @@ const tiendas = [
 
   .tienda__icono {
     flex: none;
+  }
+
+  /* Ligeras: siguen siendo botones, pero de contorno, un escalón por debajo del de reservar */
+  .tiendas--ligeras .tienda {
+    background: transparent;
+    color: var(--tinta);
+    box-shadow: inset 0 0 0 1px var(--linea-fuerte);
+  }
+
+  @media (hover: hover) {
+    .tiendas--ligeras .tienda:hover {
+      background: rgb(var(--tinta-rgb) / 0.04);
+      box-shadow: inset 0 0 0 1px rgb(var(--tinta-rgb) / 0.4);
+    }
   }
 
   @media (prefers-reduced-motion: reduce) {

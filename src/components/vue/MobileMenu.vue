@@ -81,6 +81,12 @@ function alCerrar() {
         </ul>
       </nav>
 
+      <!-- El botón principal también aquí: el menú tapa la barra fija del móvil. Llega hecho
+           desde Header.astro (CtaButton) y cierra el menú al pulsarlo, por si lleva a #reservar -->
+      <div v-if="$slots.accion" class="menu__accion" @click="cerrarMenu">
+        <slot name="accion" />
+      </div>
+
       <div class="menu__pie">
         <nav class="menu__idiomas" :aria-label="props.idiomaTitulo">
           <ul role="list">
@@ -210,7 +216,10 @@ function alCerrar() {
   margin: -0.25rem 0 1rem;
 }
 
+/* Zona táctil de 44 px de alto aunque el texto sea pequeño */
 .menu__sublista a {
+  display: inline-block;
+  padding-block: 0.6875rem;
   font-size: 1.0625rem;
   color: var(--tinta-60);
   text-decoration: underline;
@@ -223,10 +232,19 @@ function alCerrar() {
   color: var(--n900);
 }
 
+.menu__accion {
+  margin-top: 1.75rem;
+}
+
+.menu__accion :deep(.cta) {
+  width: 100%;
+  justify-content: space-between;
+}
+
 /* Idiomas y contacto, abajo del todo */
 .menu__pie {
   margin-top: auto;
-  padding-top: 2.5rem;
+  padding-top: 2rem;
   display: flex;
   flex-wrap: wrap;
   align-items: baseline;
@@ -236,10 +254,15 @@ function alCerrar() {
 
 .menu__idiomas ul {
   display: flex;
-  gap: 1.25rem;
+  gap: 0.25rem;
+  margin-inline-start: -0.625rem;
 }
 
 .menu__idiomas a {
+  display: inline-grid;
+  place-items: center;
+  min-width: 2.75rem;
+  min-height: 2.75rem;
   font-size: 0.9375rem;
   letter-spacing: 0.08em;
   color: var(--tinta-60);
@@ -262,6 +285,8 @@ function alCerrar() {
 }
 
 .menu__contacto a {
+  display: inline-block;
+  padding-block: 0.6875rem;
   color: var(--n900);
 }
 </style>

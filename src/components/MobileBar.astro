@@ -53,8 +53,24 @@ const wa = whatsappUrl(ajustes.contacto.whatsapp, home.ui.whatsappMensaje);
       border-top: 1px solid var(--linea);
       transition: transform 0.4s var(--ease);
     }
-    :global(body.panel-abierto) .barra {
+    :global(body.panel-abierto) .barra,
+    .barra.barra--fuera {
       transform: translateY(calc(100% + 1rem));
+    }
+
+    /* Mientras el botón de la portada se ve, la barra espera abajo (sin foco ni lectores) */
+    .barra.barra--fuera {
+      visibility: hidden;
+      transition:
+        transform 0.4s var(--ease),
+        visibility 0s 0.4s;
+    }
+  }
+
+  @media (max-width: 56.25rem) and (prefers-reduced-motion: reduce) {
+    .barra,
+    .barra.barra--fuera {
+      transition: none;
     }
   }
 
@@ -122,3 +138,14 @@ const wa = whatsappUrl(ajustes.contacto.whatsapp, home.ui.whatsappMensaje);
     }
   }
 </style>
+
+<script>
+  // En la portada el botón principal ya está en la primera pantalla: la barra fija no lo repite
+  // mientras se ve, y sube en cuanto deja de verse. Sin JavaScript (o en las demás páginas), la
+  // barra está siempre.
+  const barra = document.querySelector<HTMLElement>('.barra');
+  const cta = document.querySelector('.portada__acciones .cta');
+  if (barra && cta && 'IntersectionObserver' in window) {
+    new IntersectionObserver(([e]) => barra.classList.toggle('barra--fuera', e.isIntersecting)).observe(cta);
+  }
+</script>
