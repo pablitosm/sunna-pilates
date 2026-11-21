@@ -205,9 +205,14 @@ const json = (o: object) => JSON.stringify(o).replace(/</g, '\\u003c');
     <script>
       // Analítica propia y sin cookies (panel → Analítica): vistas, clics, apartados vistos, tiempo y
       // recorrido. Va a /api/evento; no guarda nada en el navegador. Solo en la web publicada, y nunca
-      // a quien pide no ser seguido (Do Not Track / Global Privacy Control).
+      // a quien pide no ser seguido (Do Not Track / Global Privacy Control) ni a los dispositivos del
+      // equipo: el panel (/panel) deja la marca «sunna-no-contar» al abrirlo.
       const privado = navigator.doNotTrack === '1' || (navigator as Navigator & { globalPrivacyControl?: boolean }).globalPrivacyControl;
-      if (!import.meta.env.DEV && !privado) {
+      let equipo = false;
+      try {
+        equipo = localStorage.getItem('sunna-no-contar') === '1';
+      } catch {}
+      if (!import.meta.env.DEV && !privado && !equipo) {
         const html = document.documentElement;
         const vista = Math.random().toString(36).slice(2, 12) + Date.now().toString(36).slice(-4);
         const base = { v: vista, ruta: location.pathname, pagina: html.dataset.pagina ?? '', idioma: html.lang };

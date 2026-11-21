@@ -395,22 +395,24 @@ def cifra_comparada(titulo, valor, anterior, mostrado, destacada=False, nota="")
 
 
 def cifras_html(hoy, prev):
-    """Las seis cifras de la analítica, comparadas con el periodo anterior."""
-    nota_pase = "{} clics".format(numero(hoy["pase_clics"]))
+    """Las cuatro cifras de la analítica, comparadas con el periodo anterior. Todas cuentan personas
+    (salvo el tiempo); los clics sueltos y el detalle de cada botón están más abajo."""
+    nota_visitantes = "{} páginas vistas".format(numero(hoy["vistas"]))
+    if hoy["visitantes"]:
+        nota_visitantes += " · {:.1f} por visitante".format(hoy["vistas"] / hoy["visitantes"])
+    nota_reservar = "{} en «Reservar en bsport»".format(numero(hoy["pase"]))
     if hoy["ven_primera"]:
-        nota_pase += " · {:.0f}% de quien ve la primera sesión".format(100.0 * hoy["pase"] / hoy["ven_primera"])
-    return '<div class="cifras">{}{}{}{}{}{}</div>'.format(
-        cifra_comparada("Visitantes", hoy["visitantes"], prev["visitantes"], numero(hoy["visitantes"]), True),
-        cifra_comparada("Pulsan «Reservar en bsport»", hoy["pase"], prev["pase"], numero(hoy["pase"]), True,
-                        nota=nota_pase),
-        cifra_comparada("Páginas vistas", hoy["vistas"], prev["vistas"], numero(hoy["vistas"]),
-                        nota="{:.1f} por visitante".format(hoy["vistas"] / hoy["visitantes"]) if hoy["visitantes"] else ""),
-        cifra_comparada("Clics para reservar", hoy["reservas"], prev["reservas"], numero(hoy["reservas"]),
-                        nota="Botones de reserva, WhatsApp y apps"),
+        nota_reservar += " ({:.0f}% de quien ve la primera sesión)".format(100.0 * hoy["pase"] / hoy["ven_primera"])
+    return '<div class="cifras">{}{}{}{}</div>'.format(
+        cifra_comparada("Visitantes", hoy["visitantes"], prev["visitantes"], numero(hoy["visitantes"]), True,
+                        nota=nota_visitantes),
+        cifra_comparada("Pulsan para reservar", hoy["convertidos"], prev["convertidos"], numero(hoy["convertidos"]), True,
+                        nota=nota_reservar),
         cifra_comparada("Conversión", hoy["conversion"], prev["conversion"], "{:.1f}%".format(hoy["conversion"]),
                         nota="Visitantes que pulsan para reservar"),
-        cifra_comparada("Tiempo medio", hoy["tiempo"], prev["tiempo"], duracion(hoy["tiempo"]),
-                        nota="Recorren el {:.0f}% de la página".format(hoy["profundidad"]) if hoy["profundidad"] else ""),
+        cifra_comparada("Tiempo en una página", hoy["tiempo"], prev["tiempo"], duracion(hoy["tiempo"]),
+                        nota="Lo habitual (mediana) · bajan hasta el {:.0f}%".format(hoy["profundidad"])
+                        if hoy["profundidad"] else "Lo habitual (mediana)"),
     )
 
 
@@ -425,6 +427,9 @@ def tarjeta_grafico(serie, hay_datos, titulo="Visitas por día"):
 # Clics en «Reservar en bsport» de la primera sesión: los dos botones (data-evento) y, de antes de
 # distinguirlos, los enlaces a bsport desde esa página
 CLIC_PASE = "(nombre IN ('pase-gratis-arriba', 'pase-gratis-abajo') OR (nombre = 'bsport' AND pagina = 'primera-sesion'))"
+# Cualquier clic para reservar (botones de reserva, WhatsApp, apps, bsport). El pase se suma por si
+# algún día deja de llevar la clase de botón de reserva: así el embudo nunca pierde gente por el camino.
+CLIC_RESERVA = "(tipo = 'clic' AND (objetivo OR " + CLIC_PASE + "))"
 CLICS = {"pase-gratis-arriba": "Pase gratis, botón de arriba", "pase-gratis-abajo": "Pase gratis, botón de abajo"}
 
 
@@ -440,7 +445,7 @@ def filas_clics(clics):
 # Nombres legibles de los apartados (id del <section> en la web)
 APARTADOS = {
     "portada": "Portada", "por-que": "Por qué SUNNA", "como-funciona": "Cómo funciona", "explora": "Descubre SUNNA",
-    "estudio": "El estudio", "faq": "Preguntas frecuentes", "dudas": "¿Y si…?", "cierre": "Cierre",
+    "app": "La app", "estudio": "El estudio", "preguntas": "Preguntas frecuentes", "faq": "Preguntas frecuentes", "dudas": "¿Y si…?", "cierre": "Cierre",
     "precios": "Precios", "fundadores": "Socios fundadores", "incluye": "Qué hacemos en la primera sesión", "prueba": "Primera sesión",
     "clases": "Las clases", "recovery": "Reformer, sauna y luz roja",
     "arriba": "Primera sesión, arriba", "reservar": "Primera sesión, reservar",
@@ -451,8 +456,49 @@ PAGINAS = {
 }
 
 
+# Orden en que aparecen los apartados en cada página (src/components/PaginaInicio.astro y
+# PaginaPrimeraSesion.astro): así se ve dónde deja de bajar la gente. Las páginas que no están aquí
+# y los apartados nuevos van detrás, de más a menos vistos.
+ORDEN_PAGINAS = ("inicio", "primera-sesion", "precios", "reformer", "sauna", "luz-roja", "otra")
+ORDEN_APARTADOS = {
+    "inicio": ("portada", "por-que", "como-funciona", "app", "estudio", "preguntas"),
+    "primera-sesion": ("arriba", "incluye", "reservar"),
+}
+
+
 def nombre_apartado(clave):
     return APARTADOS.get(clave) or clave.replace("-", " ").capitalize()
+
+
+NOTA_CUENTA = ('<p class="nota-privacidad">Cómo se cuenta: cada visitante es anónimo y cambia cada día, así que quien '
+               'vuelve otro día cuenta otra vez. En 30 o 90 días, «Visitantes» suma personas de cada día, no personas '
+               'distintas. No se cuentan los dispositivos con los que has entrado a este panel.</p>')
+
+# El panel está en el mismo dominio que la web: al abrirlo, este dispositivo deja de contar en la
+# analítica (Base.astro mira esta marca antes de enviar nada).
+NO_CONTAR = "<script>try{localStorage.setItem('sunna-no-contar','1')}catch(e){}</script>"
+
+
+def apartados_html(apartados, vistas_pagina):
+    """Por página, cada apartado con el porcentaje de visitas a esa página que llegan a verlo."""
+    paginas = {}
+    for pg, nombre, n in apartados:
+        alcance = min(100.0, 100.0 * n / (vistas_pagina.get(pg) or n))
+        paginas.setdefault(pg, []).append((nombre, alcance))
+    if not paginas:
+        return '<p class="vacio vacio--corto">Aún no hay apartados vistos.</p>'
+
+    def posicion(pg):
+        return (ORDEN_PAGINAS.index(pg) if pg in ORDEN_PAGINAS else len(ORDEN_PAGINAS), pg)
+
+    grupos = ""
+    for pg in sorted(paginas, key=posicion):
+        orden = ORDEN_APARTADOS.get(pg, ())
+        filas = sorted(paginas[pg], key=lambda f: (orden.index(f[0]) if f[0] in orden else len(orden), -f[1]))
+        grupos += '<div class="apartados__pagina"><h3>{}<span>{} visitas</span></h3>{}</div>'.format(
+            e(PAGINAS.get(pg, pg or "Sin página")), numero(vistas_pagina.get(pg, 0)),
+            lista_barras([(nombre_apartado(nombre), "", a, "{:.0f}%".format(a), False) for nombre, a in filas]))
+    return '<div class="apartados">{}</div>'.format(grupos)
 
 
 # ─── Páginas ────────────────────────────────────────────────────
@@ -556,6 +602,7 @@ background:var(--verde-claro);color:var(--verde)}
 .cifra__nota{margin-top:.25rem;font-size:.75rem;color:var(--suave)}
 .rejilla{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:1.5rem;margin-top:1.5rem;align-items:start}
 .rejilla--tres{grid-template-columns:repeat(3,minmax(0,1fr))}
+.rejilla--una{grid-template-columns:minmax(0,1fr)}
 .grafico-envoltura{overflow-x:auto}
 .rejilla .tarjeta+.tarjeta{margin-top:0}
 .leyenda{display:flex;gap:1rem;font-size:.8125rem;color:var(--suave)}
@@ -588,7 +635,14 @@ padding:.375rem .625rem;border-radius:var(--r);overflow:hidden}
 .embudo__fila strong{font-variant-numeric:tabular-nums}
 .embudo__pista{height:.625rem;border-radius:999px;background:var(--fondo);overflow:hidden}
 .embudo__pista span{display:block;height:100%;border-radius:999px;background:var(--naranja)}
+.embudo__fila span small{margin-left:.375rem;font-size:.75rem;color:var(--suave)}
+.apartados{display:grid;grid-template-columns:repeat(auto-fit,minmax(16rem,1fr));gap:.5rem 1.5rem;padding:.5rem .5rem .25rem}
+.apartados__pagina h3{display:flex;justify-content:space-between;gap:1rem;padding:.75rem .75rem 0;font-size:.8125rem;font-weight:600}
+.apartados__pagina h3 span{font-weight:400;color:var(--suave)}
+.hoy{display:flex;flex-wrap:wrap;gap:.25rem 1.25rem;margin-bottom:1rem;color:var(--suave)}
+.hoy strong{color:var(--texto);font-variant-numeric:tabular-nums}
 .nota-privacidad{margin-top:1.5rem;font-size:.75rem;color:var(--suave)}
+.nota-privacidad+.nota-privacidad{margin-top:.375rem}
 @media (max-width:52rem){.marco{grid-template-columns:minmax(0,1fr)}
 .lateral{position:sticky;top:0;z-index:5;height:auto;display:grid;grid-template-columns:1fr auto;border-right:0;
 border-bottom:1px solid var(--borde)}
@@ -667,7 +721,7 @@ def marco(actual, admin, titulo, sub, contenido, acciones=""):
 <main class="principal"><div class="cabeza"><div><h1>{}</h1>{}</div>{}</div>{}</main></div>""".format(
         LOGO, enlaces, FAVICON_URL, e(admin["usuario"]), e(titulo), '<p class="sub">{}</p>'.format(e(sub)) if sub else "", acciones, contenido
     )
-    return documento(titulo, cuerpo)
+    return documento(titulo, cuerpo + NO_CONTAR)
 
 
 def aviso(consulta):
@@ -1029,19 +1083,30 @@ class Panel(BaseHTTPRequestHandler):
     def cifras(self, inicio, fin):
         v = self.bd.uno(
             "SELECT count(DISTINCT visitante) FILTER (WHERE tipo = 'vista'), count(*) FILTER (WHERE tipo = 'vista'), "
-            "count(*) FILTER (WHERE tipo = 'clic' AND objetivo), "
-            "count(DISTINCT visitante) FILTER (WHERE tipo = 'clic' AND objetivo), "
-            "count(*) FILTER (WHERE tipo = 'clic' AND " + CLIC_PASE + "), "
+            "count(DISTINCT visitante) FILTER (WHERE " + CLIC_RESERVA + "), "
             "count(DISTINCT visitante) FILTER (WHERE tipo = 'clic' AND " + CLIC_PASE + "), "
             "count(DISTINCT visitante) FILTER (WHERE tipo = 'vista' AND pagina = 'primera-sesion') "
             "FROM eventos WHERE creado >= %s AND creado < %s", (inicio, fin))
+        # Mediana y no media: una pestaña olvidada abierta una hora no debe mover la cifra
         t = self.bd.uno(
-            "SELECT avg(s), avg(p) FROM (SELECT max(segundos) s, max(profundidad) p FROM eventos "
+            "SELECT percentile_cont(0.5) WITHIN GROUP (ORDER BY s), percentile_cont(0.5) WITHIN GROUP (ORDER BY p) "
+            "FROM (SELECT max(segundos) s, max(profundidad) p FROM eventos "
             "WHERE tipo = 'salida' AND creado >= %s AND creado < %s GROUP BY vista) x", (inicio, fin))
-        return {"visitantes": v[0], "vistas": v[1], "reservas": v[2], "convertidos": v[3],
-                "pase_clics": v[4], "pase": v[5], "ven_primera": v[6],
-                "conversion": 100.0 * v[3] / v[0] if v[0] else 0,
+        return {"visitantes": v[0], "vistas": v[1], "convertidos": v[2], "pase": v[3], "ven_primera": v[4],
+                "conversion": 100.0 * v[2] / v[0] if v[0] else 0,
                 "tiempo": float(t[0] or 0), "profundidad": float(t[1] or 0)}
+
+    def embudo(self, inicio, fin):
+        """Embudo encadenado por visitante: cada paso solo cuenta a quien también dio el anterior.
+        Devuelve los cuatro pasos y cuántos pulsan para reservar sin pasar por el paso 2."""
+        return self.bd.uno(
+            "SELECT count(*), count(*) FILTER (WHERE interes), count(*) FILTER (WHERE interes AND reserva), "
+            "count(*) FILTER (WHERE interes AND reserva AND pase), count(*) FILTER (WHERE reserva AND NOT interes) "
+            "FROM (SELECT visitante, "
+            "bool_or(tipo = 'vista' AND pagina IN ('precios', 'primera-sesion')) interes, "
+            "bool_or(" + CLIC_RESERVA + ") reserva, bool_or(tipo = 'clic' AND " + CLIC_PASE + ") pase "
+            "FROM eventos WHERE creado >= %s AND creado < %s GROUP BY visitante "
+            "HAVING bool_or(tipo = 'vista')) x", (inicio, fin))
 
     def cifras_periodo(self, dias):
         """Cifras del periodo actual y del anterior, y su comienzo."""
@@ -1066,12 +1131,17 @@ class Panel(BaseHTTPRequestHandler):
 
     def vista_resumen(self, admin):
         hoy, prev, desde = self.cifras_periodo(7)
+        d = self.cifras(self.periodo(1)[0], datetime.now(timezone.utc) + timedelta(seconds=1))
+        linea_hoy = ('<p class="hoy"><span>Hoy:</span><span><strong>{}</strong> visitantes</span>'
+                     '<span><strong>{}</strong> pulsan para reservar</span><span><strong>{}</strong> páginas vistas</span></p>').format(
+            numero(d["visitantes"]), numero(d["convertidos"]), numero(d["vistas"]))
         botones = ('<section class="tarjeta"><div class="tarjeta__cabeza"><h2>Botones más pulsados</h2>'
                    '<a class="boton boton--claro boton--pequeno" href="/panel/analitica?dias=7">Ver analítica</a></div>'
                    '{}</section>').format(
             lista_barras(filas_clics(self.top_clics(desde, 5)), "Aún no se ha pulsado ningún botón esta semana."))
-        contenido = (cifras_html(hoy, prev) + tarjeta_grafico(self.serie_dias(7, desde), hoy["vistas"], "Visitas esta semana")
-                     + botones)
+        contenido = (linea_hoy + cifras_html(hoy, prev)
+                     + tarjeta_grafico(self.serie_dias(7, desde), hoy["vistas"], "Visitas esta semana")
+                     + botones + NOTA_CUENTA)
         acciones = '<a class="boton" href="/panel/analitica">Analítica completa</a>'
         return marco("resumen", admin, "Resumen", "Cómo va la web estos 7 días, comparado con los 7 anteriores.",
                      contenido, acciones)
@@ -1101,13 +1171,7 @@ class Panel(BaseHTTPRequestHandler):
             "SELECT pagina, count(DISTINCT vista) FROM eventos WHERE tipo = 'vista' AND creado >= %s GROUP BY 1", (desde,)))
         apartados = self.bd.todos(
             "SELECT pagina, nombre, count(DISTINCT vista) FROM eventos WHERE tipo = 'seccion' AND creado >= %s "
-            "GROUP BY 1, 2 ORDER BY 3 DESC LIMIT 14", (desde,))
-        filas_apartados = []
-        for pg, nombre, n in apartados:
-            alcance = min(100.0, 100.0 * n / (vistas_pagina.get(pg) or n))
-            filas_apartados.append((nombre_apartado(nombre), PAGINAS.get(pg, pg), alcance, "{:.0f}%".format(alcance), False))
-        filas_apartados.sort(key=lambda f: -f[2])
-        apartados_html = lista_barras(filas_apartados, "Aún no hay apartados vistos.")
+            "GROUP BY 1, 2", (desde,))
 
         def reparto(columna, nombres=None, filtro=""):
             filas = self.bd.todos(
@@ -1122,16 +1186,24 @@ class Panel(BaseHTTPRequestHandler):
         dispositivos_html = reparto("dispositivo", {"movil": "Móvil", "tableta": "Tableta", "escritorio": "Ordenador"})
         idiomas_html = reparto("idioma", {"es": "Castellano", "en": "English", "de": "Deutsch", "fr": "Français"})
 
-        interes = self.bd.uno(
-            "SELECT count(DISTINCT visitante) FROM eventos WHERE tipo = 'vista' AND creado >= %s "
-            "AND pagina IN ('precios', 'primera-sesion')", (desde,))[0]
-        pasos = (("Visitan la web", hoy["visitantes"]), ("Ven precios o la primera sesión", interes),
-                 ("Pulsan para reservar", hoy["convertidos"]), ("Pulsan «Reservar en bsport»", hoy["pase"]))
-        base = hoy["visitantes"] or 1
-        embudo = '<div class="embudo">{}</div>'.format("".join(
-            '<div class="embudo__paso"><div class="embudo__fila"><span>{}</span><strong>{} · {:.0f}%</strong></div>'
-            '<div class="embudo__pista"><span style="width:{:.1f}%"></span></div></div>'.format(
-                e(t), numero(n), 100.0 * n / base, 100.0 * n / base) for t, n in pasos))
+        total, interes, reserva, pase, directos = self.embudo(desde, datetime.now(timezone.utc) + timedelta(seconds=1))
+        pasos = (("Visitan la web", total), ("Ven precios o la primera sesión", interes),
+                 ("Y pulsan para reservar", reserva), ("Y pulsan «Reservar en bsport»", pase))
+        base = total or 1
+        filas_embudo = ""
+        anterior = None
+        for t, n in pasos:
+            del_anterior = " <small>{:.0f}% del paso anterior</small>".format(100.0 * n / anterior) if anterior else ""
+            filas_embudo += ('<div class="embudo__paso"><div class="embudo__fila"><span>{}{}</span>'
+                             '<strong>{} · {:.0f}%</strong></div>'
+                             '<div class="embudo__pista"><span style="width:{:.1f}%"></span></div></div>').format(
+                e(t), del_anterior, numero(n), 100.0 * n / base, 100.0 * n / base)
+            anterior = n
+        embudo = '<div class="embudo">{}</div>'.format(filas_embudo)
+        pie_embudo = "Cada paso cuenta solo a quien dio el anterior."
+        if directos:
+            pie_embudo += " Además, {} {} para reservar sin ver precios ni la primera sesión.".format(
+                numero(directos), "pulsa" if directos == 1 else "pulsan")
 
         periodo = '<nav class="periodo" aria-label="Periodo">{}</nav>'.format("".join(
             '<a href="/panel/analitica?dias={0}"{1}>{0} días</a>'.format(d, ' aria-current="true"' if d == dias else "")
@@ -1139,14 +1211,16 @@ class Panel(BaseHTTPRequestHandler):
         contenido = (
             cifras + grafico
             + '<div class="rejilla">{}{}</div>'.format(
-                tarjeta("Páginas más vistas", paginas_html, "Visitantes únicos · páginas vistas"),
+                tarjeta("Embudo de reserva", embudo, pie_embudo),
                 tarjeta("Botones y enlaces más pulsados", clics_html, "Clics en el periodo"))
-            + '<div class="rejilla">{}{}</div>'.format(
-                tarjeta("Apartados vistos", apartados_html, "Porcentaje de visitas a esa página que llegan a verlo"),
-                tarjeta("Embudo de reserva", embudo, "Sobre los visitantes del periodo"))
+            + '<div class="rejilla rejilla--una">{}</div>'.format(
+                tarjeta("Hasta dónde bajan", apartados_html(apartados, vistas_pagina),
+                        "Porcentaje de visitas a cada página que llegan a ver el apartado, en el orden de la página"))
             + '<div class="rejilla rejilla--tres">{}{}{}</div>'.format(
+                tarjeta("Páginas más vistas", paginas_html, "Visitantes · páginas vistas"),
                 tarjeta("De dónde llegan", fuentes_html, "Solo la página por la que entran"),
-                tarjeta("Dispositivos", dispositivos_html), tarjeta("Idiomas", idiomas_html))
+                tarjeta("Dispositivos e idiomas", dispositivos_html + idiomas_html))
+            + NOTA_CUENTA
             + '<p class="nota-privacidad">Analítica propia y sin cookies: no se guarda la IP y cada visitante es anónimo '
               'y cambia cada día. No cuenta a quien pide no ser seguido (Do Not Track / GPC).</p>')
         sub = "Últimos {} días, comparado con los {} anteriores.".format(dias, dias)
