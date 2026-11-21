@@ -180,6 +180,7 @@ const home = defineCollection({
           reservarTitulo: texto,
           reservarTexto: opcional,
           web: texto,
+          webNota: opcional,
           whatsapp: texto,
           whatsappMensaje: texto,
         })

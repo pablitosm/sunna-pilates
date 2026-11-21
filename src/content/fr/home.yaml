@@ -117,8 +117,10 @@ primeraSesion:
       texto: "Tu fais le cours avec nous à tes côtés. C'est ton premier entraînement, pas un exposé."
   cierre: "Et voilà : à partir de là, tu t'entraînes en autonomie."
   reservarTitulo: "Réserve-la"
-  reservarTexto: "Dans l'app, sur le web ou en nous écrivant sur WhatsApp : c'est toi qui choisis."
-  web: "Réserver sur le web"
+  reservarTexto: "Dans l'app SUNNA ou sur bsport, notre plateforme de réservation. Une question ? Écris-nous sur WhatsApp."
+  web: "Réserver sur bsport"
+  # Bajo el botón: avisa de que la reserva se hace en bsport (se abre su ventana).
+  webNota: "bsport, notre plateforme de réservation, va s'ouvrir pour que tu crées ton compte et obtiennes ta séance gratuite."
   whatsapp: "Réserver sur WhatsApp"
   whatsappMensaje: "Bonjour, je voudrais réserver ma première séance gratuite chez SUNNA Pilates."
 

@@ -102,6 +102,7 @@ const pasos = ps.incluye.map((p, i) => ({ ...p, dibujo: dibujos[i % dibujos.leng
               )
             }
           </div>
+          {web && ps.webNota && <p class="reservar__nota">{ps.webNota}</p>}
           {home.porQue && <TiendasApp ajustes={ajustes} textos={home.porQue.app} class="reservar__tiendas" />}
         </div>
       </div>
@@ -339,6 +340,15 @@ const pasos = ps.incluye.map((p, i) => ({ ...p, dibujo: dibujos[i % dibujos.leng
 
   .boton:active {
     transform: translateY(1px);
+  }
+
+  /* Aviso bajo el botón: la reserva se hace en bsport */
+  .reservar__nota {
+    max-width: 36ch;
+    margin-top: 0.75rem;
+    font-size: 0.875rem;
+    line-height: 1.45;
+    color: var(--tinta-60);
   }
 
   .reservar :global(.reservar__tiendas) {
